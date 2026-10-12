@@ -21,11 +21,11 @@ export interface Settings {
 
 export const defaultSettings: Settings = {
   motion: 'system',
-  sound: false,
+  sound: true,
   volume: 40,
-  voice: false,
+  voice: true,
   voiceVolume: 100,
-  language: 'en',
+  language: 'vi',
   textScale: 100,
   tipsSeen: false,
 };

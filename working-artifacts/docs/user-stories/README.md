@@ -69,5 +69,8 @@ One file per story. Source of truth for coverage matrix, design cross-reference,
 | [US-065](release-1.0.2/US-065-cat-card-pairs.md) | Cat card pairs | 1.0.2 | Should (proposed) | Cards and game rules |
 | [US-066](release-1.0.2/US-066-pick-a-card-from-a-fanned-hand.md) | Pick a card from a fanned-out hand | 1.0.2 | Should (proposed) | Cards and game rules |
 | [US-067](release-1.0.2/US-067-vietnamese-player-names.md) | Vietnamese player names | 1.0.2 | Should (proposed) | Rooms and lobby |
+| [US-068](release-1.0.2/US-068-card-counts-names-and-deal.md) | Card counts, new card names and the opening deal | 1.0.2 | Should (proposed) | Cards and game rules |
+| [US-069](release-1.0.2/US-069-explosion-and-winner-animations.md) | Bomb explosion and winner trophy animations | 1.0.2 | Should (proposed) | Gameplay UI, Victory |
+| [US-070](release-1.0.2/US-070-hide-pop-up-messages.md) | Option to hide pop-up messages (toasts) | 1.0.2 | Should (proposed) | Responsive UI and accessibility |
 
-Releases: **1.0.1** = the original scope (US-001 to US-062). **1.0.2** = US-063 to US-067.
+Releases: **1.0.1** = the original scope (US-001 to US-062). **1.0.2** = US-063 to US-070.
