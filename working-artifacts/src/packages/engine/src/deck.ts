@@ -13,6 +13,7 @@ export interface DeckProfile {
   cozyPerDesign: number;
   passItOn: number;
   askAFriend: number;
+  nope: number;
   extraTreats: number;
   startingHandSize: number;
 }
@@ -27,6 +28,7 @@ export const DECK_PROFILES: Record<DeckProfileName, DeckProfile> = {
     cozyPerDesign: 3,
     passItOn: 0,
     askAFriend: 0,
+    nope: 0,
     extraTreats: 2,
     startingHandSize: 4,
   },
@@ -38,6 +40,7 @@ export const DECK_PROFILES: Record<DeckProfileName, DeckProfile> = {
     cozyPerDesign: 3,
     passItOn: 4,
     askAFriend: 4,
+    nope: 5,
     extraTreats: 2,
     startingHandSize: 4,
   },
@@ -87,6 +90,7 @@ export function buildDeal(
   add('SHAKE_UP', profile.shakeUp);
   add('PASS_IT_ON', profile.passItOn);
   add('ASK_A_FRIEND', profile.askAFriend);
+  add('NOPE', profile.nope);
   for (let d = 1; d <= profile.cozyDesigns; d++) {
     for (let i = 0; i < profile.cozyPerDesign; i++) {
       plain.push(make('COZY_CAT', d as 1 | 2 | 3 | 4 | 5));

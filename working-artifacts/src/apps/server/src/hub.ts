@@ -10,7 +10,7 @@ import { serverMessage } from '@wb/protocol';
 import { formatName } from '@wb/protocol';
 import type { Config } from './config';
 import type { Connection } from './connection';
-import { runBot } from './gameService';
+import { expireNopeWindow, runBot } from './gameService';
 import { WindowLimiter } from './limits';
 import { findMember, connectedHumans, deciderId, toRoomView, type Room } from './room';
 import { codeHash, type Clock, type Logger } from './util';
@@ -267,6 +267,9 @@ export class Hub {
       room.idleWarning = warning;
       this.broadcastRoom(room);
     }
+
+    // Nope window out of time.
+    if (room.nopeDeadlineAt !== null && now >= room.nopeDeadlineAt) expireNopeWindow(this, room);
 
     // Bot waiting to act.
     if (room.botDueAt !== null && now >= room.botDueAt) runBot(this, room);

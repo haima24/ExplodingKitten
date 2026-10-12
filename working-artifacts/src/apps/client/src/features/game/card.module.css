@@ -52,6 +52,9 @@ button.card:hover {
 .card[data-kind='ASK_A_FRIEND'] {
   --card-bg: #bdebe6;
 }
+.card[data-kind='NOPE'] {
+  --card-bg: #f4c0c0;
+}
 
 .name {
   font-size: 0.875rem;
@@ -67,8 +70,13 @@ button.card:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  line-height: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 2px 0;
+}
+.art svg {
+  width: min(100%, 3rem);
+  max-height: 100%;
 }
 .effect {
   display: none;
@@ -85,8 +93,8 @@ button.card:hover {
   .effect {
     display: block;
   }
-  .art {
-    font-size: 2.6rem;
+  .art svg {
+    width: min(100%, 3.6rem);
   }
   .name {
     font-size: 1rem;
@@ -145,8 +153,8 @@ button.card:hover {
 .large .name {
   font-size: 1.25rem;
 }
-.large .art {
-  font-size: 4rem;
+.large .art svg {
+  width: min(100%, 6rem);
 }
 .large .effect {
   display: block;

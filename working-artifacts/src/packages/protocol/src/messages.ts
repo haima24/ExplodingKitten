@@ -30,6 +30,8 @@ const gameActionSchema = z.discriminatedUnion('type', [
     position: z.enum(['TOP', 'MIDDLE', 'BOTTOM', 'RANDOM']),
   }),
   z.object({ type: z.literal('PICK_FAVOR_CARD'), cardId: text(64) }),
+  z.object({ type: z.literal('NOPE') }),
+  z.object({ type: z.literal('PASS_NOPE') }),
 ]);
 
 /** Payload schemas by message type. Unknown fields are stripped, never trusted. */

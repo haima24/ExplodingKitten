@@ -41,6 +41,9 @@ export interface Room {
   dedupe: Map<string, Map<string, string>>;
   botActorId: string | null;
   botDueAt: number | null;
+  /** When the open Nope window times out, and which window it belongs to. */
+  nopeDeadlineAt: number | null;
+  nopeKey: string | null;
 }
 
 export const present = (room: Room): Member[] => room.members.filter((m) => !m.left);
@@ -54,6 +57,21 @@ export const connectedHumans = (room: Room): Member[] =>
 /** The player everyone is waiting for (decision owner or current player). */
 export function deciderId(game: GameState): string {
   return game.pending?.playerId ?? game.currentPlayerId;
+}
+
+/**
+ * The bot that should act now: the first bot still allowed to answer a Nope
+ * window, or the bot whose decision/turn it is.
+ */
+export function botToAct(room: Room): string | null {
+  const game = room.game;
+  if (!game || game.phase === 'finished') return null;
+  const isBot = (id: string): boolean => findMember(room, id)?.isBot === true;
+  if (game.pending?.kind === 'NOPE_WINDOW') {
+    return game.pending.responders.find(isBot) ?? null;
+  }
+  const id = deciderId(game);
+  return isBot(id) ? id : null;
 }
 
 export function toRoomView(room: Room, config: Config): RoomView {

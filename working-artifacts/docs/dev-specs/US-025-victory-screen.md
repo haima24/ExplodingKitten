@@ -24,7 +24,7 @@ When one active player remains, every device shows a kind celebration and the ri
 | Element | Rule |
 | --- | --- |
 | Headline | "{name} wins the round!" (H1) |
-| Recap | List of players who took naps (`outReason` BOOM, SKIPPED, REMOVED, LEFT with wording matching US-013) and stats: turns played, Boom Cats defused (`stats.treatsUsed`) |
+| Recap | List of players who took naps (`outReason` BOOM, SKIPPED, REMOVED, LEFT with wording matching US-013) and stats: turns played, Exploding Kittens defused (`stats.treatsUsed`) |
 | Celebration | `Celebration` component: confetti ≤ 1.2 s; static starburst when reduced motion is on |
 | Host actions | **Play again** (US-026) and **Close room** (US-027) |
 | Player actions | Text "Waiting for {host} to play again" and **Leave room** |

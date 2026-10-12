@@ -74,16 +74,35 @@ export function processGameUpdate(input: {
         if (d['playerId'] === me && (kind === 'PEEK' || kind === 'SHAKE_UP')) {
           out.playedThisTurn = true;
         }
+        out.announcements.push(t('log.played', { name: name(d['playerId']), card: cardName(kind) }));
+        break;
+      }
+      case 'EFFECT_APPLIED': {
+        // Shown when the card really takes effect (it may have been stopped by a Nope).
+        const kind = d['kind'] as CardKind;
         if (kind === 'HOP_OVER') {
           out.toast = t('log.hopOver', { name: name(d['playerId']) });
           out.announcements.push(out.toast);
         } else if (kind === 'PASS_IT_ON') {
           out.toast = t('log.passItOn', { name: name(d['playerId']) });
           out.announcements.push(out.toast);
-        } else {
-          out.announcements.push(
-            t('log.played', { name: name(d['playerId']), card: cardName(kind) }),
-          );
+        }
+        break;
+      }
+      case 'NOPE_PLAYED': {
+        const text = t('log.nope', { name: name(d['playerId']) });
+        log(e.seq, text);
+        out.toast = text;
+        out.announcements.push(text);
+        out.sounds.push('play');
+        break;
+      }
+      case 'NOPE_RESOLVED': {
+        if (d['cancelled'] === true) {
+          const text = t('log.stopped', { name: name(d['playerId']), card: cardName(d['kind'] as CardKind) });
+          log(e.seq, text);
+          out.toast = text;
+          out.announcements.push(text);
         }
         break;
       }

@@ -8,7 +8,7 @@
 - **Context:** F-08, DAC-14.
 - **Acceptance criteria:**
   - Given one active player remains, then the victory screen appears on **every** device showing the winner's avatar and "[Name] wins the round!".
-  - Given the screen, then a short recap lists who took naps and a simple stat (turns played, Boom Cats defused).
+  - Given the screen, then a short recap lists who took naps and a simple stat (turns played, Exploding Kittens defused).
   - Given reduced motion, then a static starburst replaces the confetti.
   - Given a screen reader, then the headline is announced and focus lands on the heading.
   - Given I am the host, then the actions are **Play again** and **Close room**.

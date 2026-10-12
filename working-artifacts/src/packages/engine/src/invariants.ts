@@ -1,19 +1,19 @@
+import { pendingBoomCard } from './pending';
 import type { GameState } from './types';
 
 /** Returns a list of violated invariants (empty when the state is healthy). */
 export function checkInvariants(state: GameState): string[] {
   const problems: string[] = [];
   const active = state.players.filter((p) => p.status === 'active');
-  const pendingBoom =
-    state.pending && state.pending.kind !== 'FAVOR_PICK' ? state.pending.boomCard : null;
+  const pendingBoom = pendingBoomCard(state);
 
   const pileBooms = state.drawPile.filter((c) => c.kind === 'BOOM_CAT').length;
   const boomTotal = pileBooms + (pendingBoom ? 1 : 0);
   if (boomTotal !== Math.max(active.length - 1, 0)) {
-    problems.push(`I1: ${boomTotal} Boom Cats for ${active.length} active players`);
+    problems.push(`I1: ${boomTotal} Exploding Kittens for ${active.length} active players`);
   }
   if (active.length >= 2 && !pendingBoom && pileBooms < 1) {
-    problems.push('I2: draw pile has no Boom Cat');
+    problems.push('I2: draw pile has no Exploding Kitten');
   }
 
   const ids: string[] = [

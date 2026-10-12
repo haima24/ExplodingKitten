@@ -9,10 +9,10 @@
 - **Acceptance criteria:**
   - Given a player loses connection, then their chip shows "reconnecting" on every device.
   - Given it is not their turn and no decision of theirs is pending, then the game continues normally.
-  - Given it is their turn, or a decision of theirs is pending (Boom Cat dialog, Ask a Friend), then everyone sees "Waiting for [Name] to come back…" with a 60 s countdown shown as text, and the game waits.
+  - Given it is their turn, or a decision of theirs is pending (Exploding Kitten dialog, Favor), then everyone sees "Waiting for [Name] to come back…" with a 60 s countdown shown as text, and the game waits.
   - Given they reconnect within 60 s, then play resumes exactly where it stopped.
   - Given 60 s pass, then the host sees **Keep waiting** and **Skip [Name]**; other players see "Waiting for the host to decide".
-  - Given the host chooses **Skip [Name]**, then that player is out (their cards go to the discard pile, and a pending Boom Cat counts as a pop), everyone sees "[Name] was skipped", and play continues; if one player remains, they win (US-025).
+  - Given the host chooses **Skip [Name]**, then that player is out (their cards go to the discard pile, and a pending Exploding Kitten counts as a pop), everyone sees "[Name] was skipped", and play continues; if one player remains, they win (US-025).
   - Given the host chooses **Keep waiting**, then the countdown restarts for 60 s and the host is asked again.
   - Given the absent player is the host, then US-059 applies.
   - Negative: Given a player who is not the host, then no skip control is shown and a skip request from their client is rejected by the server.

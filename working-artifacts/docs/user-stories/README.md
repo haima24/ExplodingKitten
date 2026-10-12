@@ -23,14 +23,15 @@ One file per story. Source of truth for coverage matrix, design cross-reference,
 | [US-012](US-012-draw-a-card-to-end-the-turn.md) | Draw a card to end the turn | Must | Gameplay and turn management |
 | [US-013](US-013-recent-action-message-log.md) | Recent-action message log | Should | Gameplay and turn management |
 | [US-014](US-014-build-the-deck-by-player-count.md) | Build the deck by player count | Must | Cards and game rules |
-| [US-015](US-015-draw-a-boom-cat-and-use-a-treat.md) | Draw a Boom Cat and use a Treat | Must | Cards and game rules |
-| [US-016](US-016-tuck-the-boom-cat-back-into-the-deck.md) | Tuck the Boom Cat back into the deck | Must | Cards and game rules |
-| [US-017](US-017-draw-a-boom-cat-without-a-treat-player-is-out.md) | Draw a Boom Cat without a Treat (player is out) | Must | Cards and game rules |
-| [US-018](US-018-hop-over-skip-card.md) | Hop Over (skip) card | Must | Cards and game rules |
-| [US-019](US-019-peek-look-at-the-top-3-cards.md) | Peek (look at the top 3 cards) | Must | Cards and game rules |
-| [US-020](US-020-shake-up-shuffle-card.md) | Shake Up (shuffle) card | Must | Cards and game rules |
-| [US-021](US-021-pass-it-on-extra-turn-attack-card.md) | Pass It On (extra-turn attack) card | Should | Cards and game rules |
-| [US-022](US-022-ask-a-friend-favour-card.md) | Ask a Friend (favour) card | Should | Cards and game rules |
+| [US-015](US-015-draw-a-boom-cat-and-use-a-treat.md) | Draw an Exploding Kitten and use a Defuse | Must | Cards and game rules |
+| [US-016](US-016-tuck-the-boom-cat-back-into-the-deck.md) | Tuck the Exploding Kitten back into the deck | Must | Cards and game rules |
+| [US-017](US-017-draw-a-boom-cat-without-a-treat-player-is-out.md) | Draw an Exploding Kitten without a Defuse (player is out) | Must | Cards and game rules |
+| [US-018](US-018-hop-over-skip-card.md) | Skip (skip) card | Must | Cards and game rules |
+| [US-019](US-019-peek-look-at-the-top-3-cards.md) | See the Future (look at the top 3 cards) | Must | Cards and game rules |
+| [US-020](US-020-shake-up-shuffle-card.md) | Shuffle (shuffle) card | Must | Cards and game rules |
+| [US-021](US-021-pass-it-on-extra-turn-attack-card.md) | Attack (extra-turn attack) card | Should | Cards and game rules |
+| [US-022](US-022-ask-a-friend-favour-card.md) | Favor (favour) card | Should | Cards and game rules |
+| [US-062](US-062-nope-card.md) | Nope card | Should | Cards and game rules |
 | [US-023](US-023-bot-buddies-fill-empty-seats.md) | Bot Buddies fill empty seats | Could | Cards and game rules |
 | [US-025](US-025-victory-screen.md) | Victory screen | Must | Victory, leaving, and rematch |
 | [US-026](US-026-host-starts-a-rematch.md) | Host starts a rematch | Must | Victory, leaving, and rematch |

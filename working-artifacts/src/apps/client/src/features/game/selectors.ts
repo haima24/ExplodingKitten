@@ -34,11 +34,12 @@ export function selectCanAct(s: State): boolean {
   );
 }
 
-export type BannerKind = 'MY_TURN' | 'OTHER_TURN' | 'WAITING' | 'OFFLINE' | 'OUT';
+export type BannerKind = 'MY_TURN' | 'OTHER_TURN' | 'WAITING' | 'OFFLINE' | 'OUT' | 'NOPE';
 
 export interface Banner {
   kind: BannerKind;
   name?: string;
+  card?: string;
 }
 
 export function selectBanner(s: State): Banner {
@@ -46,6 +47,13 @@ export function selectBanner(s: State): Banner {
   if (!view) return { kind: 'OFFLINE' };
   if (s.connection.status !== 'online') return { kind: 'OFFLINE' };
   if (view.you.status === 'out') return { kind: 'OUT' };
+  if (view.nopeWindow) {
+    return {
+      kind: 'NOPE',
+      name: nameOf(s.room.view, view.nopeWindow.actorId),
+      card: CARD_CATALOG[view.nopeWindow.cardKind].name,
+    };
+  }
   if (view.waitingFor) {
     if (view.waitingFor !== view.you.id) {
       return { kind: 'WAITING', name: nameOf(s.room.view, view.waitingFor) };
@@ -67,7 +75,7 @@ export interface Chip {
   cards: number;
   status: 'active' | 'waiting' | 'out';
   connected: boolean;
-  /** "2 turns" badge (Pass It On). */
+  /** "2 turns" badge (Attack). */
   twoTurns: boolean;
   thinking: boolean;
 }
@@ -111,6 +119,8 @@ export function selectHint(s: State): Hint | null {
   if (!view) return null;
   if (s.connection.status !== 'online') return { key: 'hint.reconnecting' };
   if (view.you.status === 'out') return { key: 'hint.out' };
+  if (view.decision?.kind === 'NOPE_WINDOW') return { key: 'hint.nopeMine' };
+  if (view.nopeWindow) return { key: 'hint.nope' };
   if (view.decision) {
     if (view.decision.kind === 'TREAT_DECISION') return { key: 'hint.treat' };
     if (view.decision.kind === 'REINSERT') return { key: 'hint.reinsert' };

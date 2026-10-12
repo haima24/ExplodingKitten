@@ -14,7 +14,7 @@
   - Given I am the host and choose **Remove a player** and confirm, then that player is out of the game and the room (as in US-055) and the others see "[Name] was removed".
   - Given I press Escape in the menu, then it closes and I return to the game.
   - Given only one player remains after a leave or removal, then the game ends and the last player wins (US-025).
-  - Negative: Given a Boom Cat dialog is open (forced choice), then Menu is disabled until it is resolved.
+  - Negative: Given an Exploding Kitten dialog is open (forced choice), then Menu is disabled until it is resolved.
   - Negative: Given I am a player (not host), then End game and Remove a player are not shown, and requests for them are rejected by the server.
 - **Dependencies:** [US-002](US-002-navigation-and-back-behaviour.md), [US-005](US-005-start-a-game-and-deal-cards.md), [US-055](US-055-lobby-with-host-controls.md), [US-060](US-060-real-time-room-server-authoritative.md).
 - **Notes:** Closing or reloading the tab does not leave the game; the device can rejoin (US-043).

@@ -151,6 +151,8 @@ function onCreate(ctx: Ctx, p: ClientPayload<'room.create'>): void {
     dedupe: new Map(),
     botActorId: null,
     botDueAt: null,
+    nopeDeadlineAt: null,
+    nopeKey: null,
   };
   const { member, token } = addMember(room, { name: p.name, avatarId: p.avatarId, isBot: false });
   room.hostId = member.playerId;
@@ -398,6 +400,12 @@ function onGameAction(ctx: Ctx, p: ClientPayload<'game.action'>): void {
       break;
     case 'USE_TREAT':
       action = { type: 'USE_TREAT', playerId };
+      break;
+    case 'NOPE':
+      action = { type: 'NOPE', playerId };
+      break;
+    case 'PASS_NOPE':
+      action = { type: 'PASS_NOPE', playerId };
       break;
   }
 

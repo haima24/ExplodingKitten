@@ -15,7 +15,7 @@ A screen-reader user can follow the lobby and the game through headings, landmar
 
 ### 2.1 `Announcer` (single owner of live regions)
 
-- Two visually hidden regions in `AppShell`: `aria-live="polite"` (default) and `aria-live="assertive"` (Boom Cat dialogs only).
+- Two visually hidden regions in `AppShell`: `aria-live="polite"` (default) and `aria-live="assertive"` (Exploding Kitten dialogs only).
 - API: `announce(text, { priority: 'polite' | 'assertive', key? })`. Dedupe: ignore the same `key` or text within 1 s; clear then set the text on the next frame so repeated messages are re-read.
 
 ### 2.2 Event → announcement map
@@ -24,17 +24,17 @@ A screen-reader user can follow the lobby and the game through headings, landmar
 | --- | --- |
 | Room events | "{name} joined", "{name} left", "{name} was removed", "{name} is the new host", "Reconnecting…", "Back online" |
 | Turn | "It's your turn." / "It's {name}'s turn." |
-| Public events | "{name} played {card}", "{name} drew a card", "{name} peeked", "Deck shuffled", "{name} used a Treat", "{name} is taking a nap" |
+| Public events | "{name} played {card}", "{name} drew a card", "{name} peeked", "Deck shuffled", "{name} used a Defuse", "{name} is taking a nap" |
 | Result | "{name} wins the round" |
 | Copy results | "Code copied", "Link copied" |
 | Boom dialogs | assertive: dialog title plus first sentence |
 
-Private results (Peek) are read by the overlay itself in order, not by the live region.
+Private results (See the Future) are read by the overlay itself in order, not by the live region.
 
 ### 2.3 Semantics
 
 - One `h1` per screen; landmarks: `header`, `main`, `nav` where applicable; `lang="en"` on `<html>`.
-- Card accessible name: "{name}, {type}. {effect}. {Selected | Not selected}." Type words: "action card" for playable cards, "special card" for Treat and Boom Cat, "cat card" for Cozy Cat.
+- Card accessible name: "{name}, {type}. {effect}. {Selected | Not selected}." Type words: "action card" for playable cards, "special card" for Defuse and Exploding Kitten, "cat card" for Cat card.
 - Hand: `<ul aria-label="Your hand">`; piles and chips have labels ("Draw pile, 12 cards"; "Pip, 5 cards, active").
 - Room code: `aria-label="K, 7, M, 4, Q, X"` (letter by letter).
 - Menu open: own hand not in the accessibility tree (`inert` plus not rendered); other players' hands never exist in the page (US-008).
@@ -46,7 +46,7 @@ NVDA with Firefox and Chrome, VoiceOver with Safari on macOS and iOS, TalkBack w
 
 ## 3. Edge cases and errors
 
-- Burst of events: queue and merge when more than 3 arrive within 300 ms ("Pip played Peek and drew a card").
+- Burst of events: queue and merge when more than 3 arrive within 300 ms ("Pip played See the Future and drew a card").
 - Dialog open: announcements for the underlying game continue only if they affect the dialog's task.
 - Reduced chatter: do not announce the hint when it repeats the last announcement.
 

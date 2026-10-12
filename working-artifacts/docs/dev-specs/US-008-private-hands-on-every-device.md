@@ -20,8 +20,8 @@ Nobody can learn another player's cards. Hidden information never leaves the ser
 | Hand | Full cards | `handCount` only |
 | Draw pile | `drawCount` | `drawCount` |
 | Discard pile | Full (public) | Full (public) |
-| Boom Cat decision and re-insert position | `decision` flag and private events | Public events without positions |
-| Peek result | `PEEK_RESULT` private event | `PEEKED` public event |
+| Exploding Kitten decision and re-insert position | `decision` flag and private events | Public events without positions |
+| See the Future result | `PEEK_RESULT` private event | `PEEKED` public event |
 | Drawn card | `DRAWN_CARD` private event | `CARD_DRAWN` without the card |
 | Eliminated player's cards | — | Discarded face-up (proposed) and visible in the discard pile |
 
@@ -50,7 +50,7 @@ Nobody can learn another player's cards. Hidden information never leaves the ser
 | --- | --- |
 | `viewFor` contains no foreign ids across 10,000 simulated games | U |
 | Every outbound message scanned during simulated multi-client games | I |
-| Peek, Treat, re-insert, and favour events reach only the right recipients | I |
+| See the Future, Defuse, re-insert, and favour events reach only the right recipients | I |
 | Rejoin returns only own hand | I |
 | Menu open hides own hand from DOM and accessibility tree | C |
 | Looking at the page DOM in another context shows no foreign cards | E |

@@ -27,6 +27,9 @@ export function TurnBanner(): JSX.Element {
     case 'OUT':
       heading = t('turn.out');
       break;
+    case 'NOPE':
+      heading = t('turn.nopeWindow', { name: banner.name ?? '', card: banner.card ?? '' });
+      break;
     default:
       heading = t('turn.reconnecting');
   }

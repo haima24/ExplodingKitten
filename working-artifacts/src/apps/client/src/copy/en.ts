@@ -13,7 +13,7 @@ export const en = {
   'nav.log': 'Log',
 
   // Home
-  'home.tagline': 'Dodge the Boom Cats. Be the last one playing!',
+  'home.tagline': 'Dodge the Exploding Kittens. Be the last one playing!',
   'home.create': 'Create a room',
   'home.join': 'Join a room',
   'home.rules': 'How to Play',
@@ -169,8 +169,8 @@ export const en = {
 
   // Hints (at most 12 words each)
   'hint.reconnecting': 'Reconnecting… your cards are safe.',
-  'hint.treat': 'Use your Treat to calm the Boom Cat.',
-  'hint.reinsert': 'Pick where to tuck the Boom Cat in.',
+  'hint.treat': 'Use your Defuse to calm the Exploding Kitten.',
+  'hint.reinsert': 'Pick where to tuck the Exploding Kitten in.',
   'hint.favor': 'Pick a card to give.',
   'hint.waiting': 'Waiting for {name}…',
   'hint.selected': 'Tap Play to use {card}.',
@@ -224,8 +224,8 @@ export const en = {
   'log.drew': '{name} drew a card',
   'log.peeked': '{name} peeked',
   'log.shuffled': 'Deck shuffled!',
-  'log.treat': '{name} used a Treat!',
-  'log.tucked': 'Boom Cat tucked back in!',
+  'log.treat': '{name} used a Defuse!',
+  'log.tucked': 'Exploding Kitten tucked back in!',
   'log.hopOver': '{name} hopped over their draw!',
   'log.passItOn': '{name} passed it on!',
   'log.out.BOOM': '{name} is taking a nap',
@@ -235,29 +235,46 @@ export const en = {
   'log.favorAsked': '{from} asked {to} for a card',
   'log.favorGiven': '{from} gave {to} a card',
   'log.wins': '{name} wins the round!',
-  'log.boomTreat': '{name} found a Boom Cat and used a Treat!',
+  'log.boomTreat': '{name} found an Exploding Kitten and used a Defuse!',
 
-  // Boom Cat flow
-  'boom.title': 'Uh-oh, a Boom Cat!',
-  'boom.body': 'Use your Treat to calm it down!',
-  'boom.useTreat': 'Use Treat',
-  'reinsert.title': 'Hide the Boom Cat',
+  // Exploding Kitten flow
+  'boom.title': 'Uh-oh, an Exploding Kitten!',
+  'boom.body': 'Use your Defuse to calm it down!',
+  'boom.useTreat': 'Use Defuse',
+  'reinsert.title': 'Hide the Exploding Kitten',
   'reinsert.prompt': 'Pick where to tuck it in, secretly!',
   'reinsert.confirm': 'Hide it',
   'reinsert.TOP': 'Top',
-  'reinsert.TOP.desc': 'The next card drawn will be the Boom Cat.',
+  'reinsert.TOP.desc': 'The next card drawn will be the Exploding Kitten.',
   'reinsert.MIDDLE': 'Middle',
   'reinsert.MIDDLE.desc': 'Somewhere in the middle of the pile.',
   'reinsert.BOTTOM': 'Bottom',
   'reinsert.BOTTOM.desc': 'Far away at the very bottom.',
   'reinsert.RANDOM': 'Random',
   'reinsert.RANDOM.desc': 'Let the cats decide.',
-  'nap.title': 'Oh no, a Boom Cat popped!',
+  'nap.title': 'Oh no, an Exploding Kitten popped!',
   'nap.body': '{name} is out of this round and gets a nap. Cheer the others on!',
   'nap.ok': 'OK',
   'out.cheer': 'Cheer the others on!',
 
-  // Peek
+  // Nope
+  'nope.title': 'Nope it?',
+  'nope.body': '{name} played {card}.',
+  'nope.ask': 'Play your Nope to stop it?',
+  'nope.chain': 'Someone played a Nope. Play yours to flip it back?',
+  'nope.play': 'Nope!',
+  'nope.pass': 'Let it go',
+  'nope.seconds': '{n} seconds left',
+  'log.nope': '{name} played Nope!',
+  'log.stopped': "{name}'s {card} was stopped!",
+  'turn.nopeWindow': '{name} played {card}…',
+  'hint.nope': 'Anyone holding a Nope can stop it.',
+  'hint.nopeMine': 'Play your Nope, or let it go.',
+  'action.nopeWait': 'Waiting to see if anyone plays a Nope',
+  'detail.reaction': 'Played when someone else plays a card',
+  'card.reaction': 'Played in response to another card.',
+
+  // See the Future
   'peek.title': 'Your secret peek!',
   'peek.hide': 'Got it — hide',
   'peek.top': 'Top card',
@@ -266,7 +283,7 @@ export const en = {
   'peek.empty': 'The draw pile is empty.',
   'peek.reading': 'Top card: {a}. Second card: {b}. Third card: {c}.',
 
-  // Ask a Friend
+  // Favor
   'target.title': 'Ask who?',
   'target.prompt': 'Pick a player. They will give you a card.',
   'target.none': 'Nobody has a card to share.',
@@ -309,7 +326,7 @@ export const en = {
   'victory.skipped': 'Skipped: {names}',
   'victory.removed': 'Removed: {names}',
   'victory.left': 'Left the game: {names}',
-  'victory.stats': 'Turns played: {turns}. Boom Cats calmed: {treats}.',
+  'victory.stats': 'Turns played: {turns}. Exploding Kittens calmed: {treats}.',
   'victory.playAgain': 'Play again',
   'victory.waitingHost': 'Waiting for {name} to play again',
   'victory.celebrate': 'Celebration',
@@ -324,13 +341,13 @@ export const en = {
   'rules.tabTour': 'Tour',
   'rules.tabCards': 'Cards',
   'rules.step1.title': 'Goal',
-  'rules.step1.body': 'Be the last player still in the round. Dodge the Boom Cats!',
+  'rules.step1.body': 'Be the last player still in the round. Dodge the Exploding Kittens!',
   'rules.step2.title': 'Your turn',
   'rules.step2.body':
     'Play cards if you want. Then draw one card from the deck. That ends your turn.',
-  'rules.step3.title': 'Boom Cats and Treats',
+  'rules.step3.title': 'Exploding Kittens and Defuse cards',
   'rules.step3.body':
-    'A Boom Cat makes you take a nap, unless you have a Treat. A Treat calms the cat. Then you tuck it back into the deck.',
+    'An Exploding Kitten makes you take a nap, unless you have a Defuse. A Defuse calms the cat. Then you tuck it back into the deck.',
   'rules.step4.title': 'Special cards',
   'rules.step4.body': 'These cards do something when you play them:',
   'rules.step5.title': 'Winning',
@@ -355,7 +372,7 @@ export const en = {
   'settings.textSize.100': 'Normal',
   'settings.textSize.125': 'Bigger',
   'settings.textSize.150': 'Biggest',
-  'settings.textSize.sample': 'The quick cat hops over the Boom Cat.',
+  'settings.textSize.sample': 'The quick cat hops over the Exploding Kitten.',
   'settings.tips': 'Show tips again',
   'settings.tips.done': 'Tips will show in your next game.',
   'settings.device': 'These settings stay on this device only.',
@@ -365,7 +382,7 @@ export const en = {
   'tips.hand': 'These are your cards.',
   'tips.deck': 'Tap the deck to draw a card.',
   'tips.select': 'Tap Play to use it.',
-  'tips.boom': 'A Treat saves you from a Boom Cat.',
+  'tips.boom': 'A Defuse saves you from an Exploding Kitten.',
   'tips.gotIt': 'Got it',
   'tips.skip': 'Skip tips',
 
@@ -377,9 +394,9 @@ export const en = {
   'error.timeout': "That didn't work. Try again.",
   'error.notEnoughPlayers': 'You need at least 2 players.',
   'error.notHost': 'Only the host can do that.',
-  'error.cozy': 'Cozy Cats just like to cuddle. Pick another card!',
-  'error.treat': 'Treats save you automatically when a Boom Cat shows up.',
-  'error.boomCard': 'Boom Cats pop up when you draw. You cannot play them.',
+  'error.cozy': 'Cat cards just like to cuddle. Pick another card!',
+  'error.treat': 'Defuse cards save you automatically when an Exploding Kitten shows up.',
+  'error.boomCard': 'Exploding Kittens pop up when you draw. You cannot play them.',
 
   // Loading, errors, not found
   'loading.text': 'Getting the cards ready…',

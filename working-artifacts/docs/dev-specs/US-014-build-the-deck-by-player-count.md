@@ -17,14 +17,15 @@ Build the right mix of cards for 2–4 players from data, with unique opaque ids
 
 | Kind | Name | Effect text (≤ 12 words) | Playable | Notes |
 | --- | --- | --- | --- | --- |
-| `BOOM_CAT` | Boom Cat | Draw one and you're out, unless you have a Treat. | no | `notPlayableReason: boom` |
-| `TREAT` | Treat | Calms a Boom Cat so you can stay in. | no | reason: "Treats save you automatically when a Boom Cat shows up." |
-| `HOP_OVER` | Hop Over | Skip your draw and end your turn. | yes | |
-| `PEEK` | Peek | Secretly look at the top 3 cards. | yes | |
-| `SHAKE_UP` | Shake Up | Shuffle the draw pile. | yes | |
-| `COZY_CAT` | Cozy Cat | Just likes to cuddle. No effect. | no (OQ-06) | reason: "Cozy Cats just like to cuddle. Pick another card!"; 5 designs |
-| `PASS_IT_ON` | Pass It On | Skip your draw. Next player takes 2 turns. | yes | profile `mvp+should` |
-| `ASK_A_FRIEND` | Ask a Friend | Pick a player. They give you a card. | yes | profile `mvp+should` |
+| `BOOM_CAT` | Exploding Kitten | Draw one and you're out, unless you have a Defuse. | no | `notPlayableReason: boom` |
+| `TREAT` | Defuse | Calms an Exploding Kitten so you can stay in. | no | reason: "Defuse cards save you automatically when an Exploding Kitten shows up." |
+| `HOP_OVER` | Skip | Skip your draw and end your turn. | yes | |
+| `PEEK` | See the Future | Secretly look at the top 3 cards. | yes | |
+| `SHAKE_UP` | Shuffle | Shuffle the draw pile. | yes | |
+| `COZY_CAT` | Cat card | Just likes to cuddle. No effect. | no (OQ-06) | reason: "Cat cards just like to cuddle. Pick another card!"; 5 designs |
+| `PASS_IT_ON` | Attack | Skip your draw. Next player takes 2 turns. | yes | profile `mvp+should` |
+| `ASK_A_FRIEND` | Favor | Pick a player. They give you a card. | yes | profile `mvp+should` |
+| `NOPE` | Nope | Stop another player's action card. Play it any time. | no (played only in a response window, US-062) | profile `mvp+should`; `reaction: true`; 5 cards |
 
 A unit test asserts every effect text has ≤ 12 words (US-030).
 
@@ -35,24 +36,24 @@ interface DeckProfile { hopOver: 4; peek: 4; shakeUp: 4; cozyDesigns: 5; cozyPer
                         passItOn?: 4; askAFriend?: 4; extraTreats: 2; startingHandSize: 4 }
 ```
 
-Profile `mvp` omits Pass It On and Ask a Friend; `mvp+should` includes them.
+Profile `mvp` omits Attack, Favor, and Nope; `mvp+should` includes them (4 Attack, 4 Favor, 5 Nope), which adds 13 cards to the non-special pool (40 cards, so the draw pile is 13 larger than the MVP table below).
 
 ### 2.3 Algorithm
 
 1. Create the non-special cards (all kinds except `BOOM_CAT`, `TREAT`). Assign ids from the `Rng` (random 32-bit hex strings; regenerate on collision so ids are unique, I8). Shuffle.
-2. For each player (seat order) deal 1 Treat and `startingHandSize` cards from the shuffled non-special cards.
-3. Add `extraTreats` Treats and `players − 1` Boom Cats to the remaining cards; shuffle → `drawPile`.
-4. Validate before dealing: players 2–4; Boom Cats < players; the non-special pool ≥ `players × startingHandSize`; else `INVALID_CONFIG`.
+2. For each player (seat order) deal 1 Defuse and `startingHandSize` cards from the shuffled non-special cards.
+3. Add `extraTreats` Defuse cards and `players − 1` Exploding Kittens to the remaining cards; shuffle → `drawPile`.
+4. Validate before dealing: players 2–4; Exploding Kittens < players; the non-special pool ≥ `players × startingHandSize`; else `INVALID_CONFIG`.
 
 ### 2.4 Resulting counts (MVP profile)
 
-| Players | Non-special | Dealt | Treats total | Boom Cats | Draw pile size |
+| Players | Non-special | Dealt | Defuse cards total | Exploding Kittens | Draw pile size |
 | --- | --- | --- | --- | --- | --- |
 | 2 | 27 | 8 | 4 | 1 | 22 |
 | 3 | 27 | 12 | 5 | 2 | 19 |
 | 4 | 27 | 16 | 6 | 3 | 16 |
 
-Draw pile = non-special − dealt + extra Treats + Boom Cats (for 4 players: 27 − 16 + 2 + 3 = 16).
+Draw pile = non-special − dealt + extra Defuse cards + Exploding Kittens (for 4 players: 27 − 16 + 2 + 3 = 16).
 
 ## 3. Edge cases and errors
 
@@ -65,11 +66,11 @@ Draw pile = non-special − dealt + extra Treats + Boom Cats (for 4 players: 27 
 | Check | Level |
 | --- | --- |
 | Counts per player count match the table | U |
-| Boom Cats = players − 1 (1 for 2 players, 3 for 4) | U |
-| Hands hold 1 Treat + 4 others, no Boom Cat | U |
+| Exploding Kittens = players − 1 (1 for 2 players, 3 for 4) | U |
+| Hands hold 1 Defuse + 4 others, no Exploding Kitten | U |
 | Ids unique; no id reveals kind | U |
-| Effect texts ≤ 12 words; Cozy Cat text present | U |
-| Boom Cats ≥ players rejected | U |
+| Effect texts ≤ 12 words; Cat card text present | U |
+| Exploding Kittens ≥ players rejected | U |
 | Seeded deal reproducible | U |
 
 ## 5. Tasks

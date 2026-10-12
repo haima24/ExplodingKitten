@@ -48,7 +48,7 @@
   - Given the project, when lint, type-check, and unit-test commands run, then each completes without errors for both client and server (even if only a sample test exists).
   - Given `styles/tokens`, then the colour, typography, spacing, radius, and elevation tokens from [ui-ux.md §B](ui-ux.md#b-design-system) exist as CSS variables.
   - Given fonts are used, then they are self-hosted and **no third-party network request** is made on first load (DAC-27).
-  - Given the asset folder, then an `assets/LICENSES.md` records the origin and licence of each asset; no Exploding Kittens names or artwork are present (DAC-30).
+  - Given the asset folder, then an `assets/LICENSES.md` records the origin and licence of each asset; no Exploding Kittens artwork, logos, or card text are present; card names are the permitted exception (DAC-30).
   - Negative: Given an unsupported Node/tool version, then the install step fails with a clear message.
 - **Dependencies:** OQ-07 decision.
 - **Notes:** Follow `instructions/react/*` if React is chosen. Do not install or change anything until this story is scheduled.
@@ -63,9 +63,9 @@
   - Given the engine API, when `createGame(players, rng)` is called with a seeded RNG, then the same seed always produces the same deck order and deal.
   - Given a game state and an action (play card, draw, confirm Boom resolution), when `applyAction(state, action)` is called, then a new state is returned and the input state is not mutated.
   - Given an illegal action (wrong player, card not in hand, not playable), then the engine returns an explicit error result and the state is unchanged.
-  - Given any reachable state with ≥ 2 active players, then the draw pile contains at least one Boom Cat (invariant).
+  - Given any reachable state with ≥ 2 active players, then the draw pile contains at least one Exploding Kitten (invariant).
   - Given no DOM is available (Node test environment), then the engine runs.
-  - Given `viewFor(state, playerId)`, then the result contains that player's own hand, the number of cards in other hands, the draw-pile count, the discard pile, whose turn it is, and public flags, and it does **not** contain other hands, the draw-pile order, or other players' private results (Peek, re-insert position).
+  - Given `viewFor(state, playerId)`, then the result contains that player's own hand, the number of cards in other hands, the draw-pile count, the discard pile, whose turn it is, and public flags, and it does **not** contain other hands, the draw-pile order, or other players' private results (See the Future, re-insert position).
 - **Dependencies:** US-050.
 - **Notes:** Cards and counts are data, not code, so tuning needs no logic change.
 
@@ -80,7 +80,7 @@
   - Given a state change, then the server sends each connected client **its own** `viewFor` projection within 300 ms (p95) on a local test network.
   - Given a message from a player who is not the sender of record, who is not in the room, or who acts out of turn, then it is rejected with an error code and no state changes.
   - Given duplicate or out-of-order messages (retries after reconnect), then they are ignored safely (idempotent action ids).
-  - Given an automated test inspecting every outbound message for each client, then no message contains another player's cards, the draw-pile order, or another player's Peek result.
+  - Given an automated test inspecting every outbound message for each client, then no message contains another player's cards, the draw-pile order, or another player's See the Future result.
   - Given a malformed or oversized message, then the connection is not crashed; the sender gets a generic error.
   - Given the server restarts, then clients receive a "room ended" result when they reconnect (acceptable for MVP).
   - Negative: Given a client tries to set its own role to host or change another player's hand, then the server rejects it.
@@ -171,11 +171,11 @@
 - **Context:** Establishes initial state; F-03, DAC-04. Only the host can start (FR-04).
 - **Acceptance criteria:**
   - Given I am the host and 2–4 players are in the lobby, when I press **Start game**, then the room locks, the server builds and deals the deck for the players present, and every device shows its own hand.
-  - Given 3 players, then each player holds exactly 1 Treat and 4 other cards, none of which is a Boom Cat or an extra Treat.
-  - Given the deal is complete, then Boom Cats (players − 1) and 2 extra Treats are added to the draw pile and it is shuffled by the server.
+  - Given 3 players, then each player holds exactly 1 Defuse and 4 other cards, none of which is an Exploding Kitten or an extra Defuse.
+  - Given the deal is complete, then Exploding Kittens (players − 1) and 2 extra Defuse cards are added to the draw pile and it is shuffled by the server.
   - Given the game starts, then every device shows "Everyone has cards! [Name] goes first".
   - Given I press Start twice quickly, then only one game is created.
-  - Given any player count (2–4), then no player's initial hand contains a Boom Cat.
+  - Given any player count (2–4), then no player's initial hand contains an Exploding Kitten.
   - Given a player tries to join at the moment of Start, then they either are in the game or are told "This game has already started", never in a half state.
   - Negative: Given only the host is in the lobby, then **Start game** is disabled with the text "You need at least 2 players".
   - Negative: Given I am a player and not the host, then no Start control is shown, and a start request from my client is rejected by the server.
@@ -273,7 +273,7 @@
 - **Acceptance criteria:**
   - Given a game is running, then my device shows my hand, and for every other player only avatar, name, and card count.
   - Given the server sends game state to my device, then the message contains no other player's cards, no draw-pile order, and no other player's private results (an automated test inspects every outbound message, see US-060).
-  - Given another player plays Peek, tucks a Boom Cat, or gives me a card (Ask a Friend), then I learn only the public facts ("Mia peeked", "Boom Cat tucked back in").
+  - Given another player plays See the Future, tucks an Exploding Kitten, or gives me a card (Favor), then I learn only the public facts ("Mia peeked", "Exploding Kitten tucked back in").
   - Given I open the game menu, then my own hand is hidden on my screen while it is open (protects against someone looking over my shoulder or a screen share).
   - Given a screen reader, then no other player's cards exist anywhere in the page or accessibility tree.
   - Given I reconnect (US-043), then I receive only my own hand again.
@@ -309,7 +309,7 @@
   - Given the board, then the draw pile shows its card count ("Draw pile, 12 cards") and the discard pile shows the top played card.
   - Given a card is played or drawn, then both counts and the top discard update on every device within 300 ms (p95).
   - Given no card has been played, then the discard pile shows an empty outline "Played cards go here".
-  - Given the draw pile contains Boom Cats, then their positions are never revealed to players.
+  - Given the draw pile contains Exploding Kittens, then their positions are never revealed to players.
   - Negative: Given the draw pile count is 0 while ≥ 2 players remain, then the engine reports an invariant error (it must not happen; see US-046).
 - **Dependencies:** US-005.
 - **Notes:** None.
@@ -341,12 +341,12 @@
 - **Context:** F-04, DAC-08.
 - **Acceptance criteria:**
   - Given my turn, when I tap the draw pile or the **Draw** button, then the top card is added to my hand and I see "You got [Card]".
-  - Given the drawn card is not a Boom Cat, then my turn ends, the next active player's turn begins on their device, and everyone else sees "[Name] drew a card" without the card.
-  - Given the drawn card is a Boom Cat, then the Boom resolution applies (US-015, US-017).
+  - Given the drawn card is not an Exploding Kitten, then my turn ends, the next active player's turn begins on their device, and everyone else sees "[Name] drew a card" without the card.
+  - Given the drawn card is an Exploding Kitten, then the Boom resolution applies (US-015, US-017).
   - Given I double-tap Draw, then only one card is drawn.
   - Given it is not my turn, my connection is down, or a dialog is open, then Draw is disabled and inert.
   - Given the server rejects the draw (stale tap), then I see "Oops, that was too late. It's [Name]'s turn now." and no card is drawn.
-  - Negative: Given I have just played Hop Over (US-018), then my turn already ended and I cannot draw.
+  - Negative: Given I have just played Skip (US-018), then my turn already ended and I cannot draw.
 - **Dependencies:** US-011.
 - **Notes:** Drawn cards are shown only to the drawer.
 
@@ -357,11 +357,11 @@
 - **User story:** As a child player, I want to read what just happened, so that I can follow other players' turns.
 - **Context:** Hidden-hand games are hard to follow. F-24.
 - **Acceptance criteria:**
-  - Given a card is played, then a one-line entry appears ("Pip played Shake Up").
+  - Given a card is played, then a one-line entry appears ("Pip played Shuffle").
   - Given the log panel is open (side panel on desktop, sheet on mobile), then the last 10 entries are shown, newest first.
   - Given a draw, then the log records "Pip drew a card" without revealing the card.
   - Given a screen reader, then the log is a `role="log"` region and does not duplicate the live announcements.
-  - Negative: Given a Peek, then the log records "Mia peeked" but not the cards seen.
+  - Negative: Given a See the Future, then the log records "Mia peeked" but not the cards seen.
 - **Dependencies:** US-011, US-012.
 - **Notes:** None.
 
@@ -373,61 +373,61 @@
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
-- **User story:** As a player, I want the right mix of cards for the number of players, so that the game is balanced and always has a Boom Cat to find.
-- **Context:** F-03, DAC-04. Counts are proposed (brief §C4) and tunable. Cozy Cats are not playable (OQ-06).
+- **User story:** As a player, I want the right mix of cards for the number of players, so that the game is balanced and always has an Exploding Kitten to find.
+- **Context:** F-03, DAC-04. Counts are proposed (brief §C4) and tunable. Cat cards are not playable (OQ-06).
 - **Acceptance criteria:**
-  - Given the MVP set, then the complete deck is: Hop Over ×4, Peek ×4, Shake Up ×4, Cozy Cat ×15 (5 designs × 3), Treat ×(players + 2), Boom Cat ×(players − 1).
-  - Given 2 players, then there is 1 Boom Cat; given 4 players, then there are 3.
+  - Given the MVP set, then the complete deck is: Skip ×4, See the Future ×4, Shuffle ×4, Cat card ×15 (5 designs × 3), Defuse ×(players + 2), Exploding Kitten ×(players − 1).
+  - Given 2 players, then there is 1 Exploding Kitten; given 4 players, then there are 3.
   - Given the host starts the game with N players in the room, then the deck is built for exactly N players.
   - Given the deck is built, then every card has a unique id and an effect text of ≤ 12 words in the card data.
-  - Given Pass It On and Ask a Friend are not yet implemented, then they are absent from the deck (they are added by US-021 and US-022).
-  - Given the Cozy Cat, then its card text states it "just likes to cuddle" and it has no effect.
-  - Negative: Given a deck configuration with Boom Cats ≥ players, then the engine rejects it.
+  - Given Attack and Favor are not yet implemented, then they are absent from the deck (they are added by US-021 and US-022).
+  - Given the Cat card, then its card text states it "just likes to cuddle" and it has no effect.
+  - Negative: Given a deck configuration with Exploding Kittens ≥ players, then the engine rejects it.
 - **Dependencies:** US-051.
 - **Notes:** The counts are explicitly open to playtest tuning.
 
-### US-015 — Draw a Boom Cat and use a Treat
+### US-015 — Draw an Exploding Kitten and use a Defuse
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
-- **User story:** As a player, I want a Treat to calm a Boom Cat I draw, so that I stay in the game.
+- **User story:** As a player, I want a Defuse to calm an Exploding Kitten I draw, so that I stay in the game.
 - **Context:** The signature moment. F-07, DAC-10.
 - **Acceptance criteria:**
-  - Given I draw a Boom Cat and hold ≥ 1 Treat, then a dialog "Uh-oh, a Boom Cat!" shows with the primary **Use Treat**.
-  - Given I press **Use Treat**, then exactly one Treat moves to the discard pile, everyone sees "[Name] used a Treat!", and I proceed to the reinsert step (US-016).
-  - Given I hold 2 or more Treats, then only one is consumed.
+  - Given I draw an Exploding Kitten and hold ≥ 1 Defuse, then a dialog "Uh-oh, an Exploding Kitten!" shows with the primary **Use Defuse**.
+  - Given I press **Use Defuse**, then exactly one Defuse moves to the discard pile, everyone sees "[Name] used a Defuse!", and I proceed to the reinsert step (US-016).
+  - Given I hold 2 or more Defuse cards, then only one is consumed.
   - Given the dialog is open, then I cannot dismiss it with Escape or by tapping outside (forced choice).
-  - Given a screen reader, then the dialog is announced assertively and focus is on **Use Treat**.
+  - Given a screen reader, then the dialog is announced assertively and focus is on **Use Defuse**.
   - Given my connection drops while the dialog is open, then the server keeps the decision pending, other players see "Waiting for [Name]…" (US-058), and the dialog returns when I reconnect.
-  - Negative: Given I do not hold a Treat, then this dialog is never shown (see US-017).
+  - Negative: Given I do not hold a Defuse, then this dialog is never shown (see US-017).
 - **Dependencies:** US-012, US-014.
-- **Notes:** Treats cannot be played manually from the hand (see US-040).
+- **Notes:** Defuse cards cannot be played manually from the hand (see US-040).
 
-### US-016 — Tuck the Boom Cat back into the deck
+### US-016 — Tuck the Exploding Kitten back into the deck
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
-- **User story:** As a player, I want to choose where to hide the Boom Cat, so that the game stays exciting.
+- **User story:** As a player, I want to choose where to hide the Exploding Kitten, so that the game stays exciting.
 - **Context:** F-07, DAC-10.
 - **Acceptance criteria:**
-  - Given I used a Treat, then a picker offers **Top**, **Middle**, **Bottom**, and **Random** (default Random), each as a labelled radio option.
-  - Given I confirm a position, then the Boom Cat is inserted at that position in the draw pile and the draw pile count increases by 1.
-  - Given the picker, then the choice goes only to the server and is never shown to others; other players see only "Boom Cat tucked back in!".
+  - Given I used a Defuse, then a picker offers **Top**, **Middle**, **Bottom**, and **Random** (default Random), each as a labelled radio option.
+  - Given I confirm a position, then the Exploding Kitten is inserted at that position in the draw pile and the draw pile count increases by 1.
+  - Given the picker, then the choice goes only to the server and is never shown to others; other players see only "Exploding Kitten tucked back in!".
   - Given the pile is small (e.g. 1 card), then "Middle" is still valid and inserts at the nearest valid position.
   - Given I confirm, then my turn ends and the next player's turn begins on their device.
   - Negative: Given no position is chosen, then the default Random is used rather than blocking.
 - **Dependencies:** US-015.
-- **Notes:** Mixed with Peek (US-019), a tucked Top position is knowable by the next drawer; that is intended.
+- **Notes:** Mixed with See the Future (US-019), a tucked Top position is knowable by the next drawer; that is intended.
 
-### US-017 — Draw a Boom Cat without a Treat (player is out)
+### US-017 — Draw an Exploding Kitten without a Defuse (player is out)
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
-- **User story:** As a player, I want a gentle, clear message when a Boom Cat pops and I have no Treat, so that being out feels like a nap and not a failure.
+- **User story:** As a player, I want a gentle, clear message when an Exploding Kitten pops and I have no Defuse, so that being out feels like a nap and not a failure.
 - **Context:** F-07, DAC-11, OQ-05.
 - **Acceptance criteria:**
-  - Given I draw a Boom Cat and hold no Treat, then I see a dialog "Oh no, a Boom Cat popped!" with "[Name] is out of this round and gets a nap. Cheer the others on!" and a single **OK** button, and everyone else sees "[Name] is taking a nap".
-  - Given I press **OK**, then my hand and the Boom Cat move to the discard pile (face-up, proposed), my seat shows the out marker on every device, and play continues with the next active player.
+  - Given I draw an Exploding Kitten and hold no Defuse, then I see a dialog "Oh no, an Exploding Kitten popped!" with "[Name] is out of this round and gets a nap. Cheer the others on!" and a single **OK** button, and everyone else sees "[Name] is taking a nap".
+  - Given I press **OK**, then my hand and the Exploding Kitten move to the discard pile (face-up, proposed), my seat shows the out marker on every device, and play continues with the next active player.
   - Given a player is out, then they are skipped for all future turns.
   - Given only one player remains active, then the game goes to the victory screen (US-025).
   - Given a 2-player game, then the single remaining player wins immediately.
@@ -436,28 +436,28 @@
 - **Dependencies:** US-012, US-025.
 - **Notes:** Out players stay in the room and keep watching; they see the normal board with their seat marked out and no longer receive a hand view.
 
-### US-018 — Hop Over (skip) card
+### US-018 — Skip (skip) card
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
-- **User story:** As a player, I want to play Hop Over to skip my draw, so that I can avoid a risky draw.
+- **User story:** As a player, I want to play Skip to skip my draw, so that I can avoid a risky draw.
 - **Context:** F-06.
 - **Acceptance criteria:**
-  - Given I play Hop Over on my turn, then it moves to the discard pile, my turn ends without drawing, and everyone sees "[Name] hopped over their draw!".
-  - Given I have already played other action cards this turn, then Hop Over still ends the turn without a draw.
-  - Given Hop Over is played, then the next active player's turn begins on their device.
-  - Negative: Given a pending "×2" extra turn **[after US-021]**, then Hop Over ends only one of the pending turns.
+  - Given I play Skip on my turn, then it moves to the discard pile, my turn ends without drawing, and everyone sees "[Name] hopped over their draw!".
+  - Given I have already played other action cards this turn, then Skip still ends the turn without a draw.
+  - Given Skip is played, then the next active player's turn begins on their device.
+  - Negative: Given a pending "×2" extra turn **[after US-021]**, then Skip ends only one of the pending turns.
 - **Dependencies:** US-011.
-- **Notes:** Interaction with Pass It On is defined in US-021.
+- **Notes:** Interaction with Attack is defined in US-021.
 
-### US-019 — Peek (look at the top 3 cards)
+### US-019 — See the Future (look at the top 3 cards)
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
 - **User story:** As a player, I want to privately look at the top three cards of the deck, so that I can decide what to do next.
 - **Context:** F-06, DAC-13.
 - **Acceptance criteria:**
-  - Given I play Peek, then an overlay appears **on my device only**, showing the top 3 cards of the draw pile in order, titled "Your secret peek!".
+  - Given I play See the Future, then an overlay appears **on my device only**, showing the top 3 cards of the draw pile in order, titled "Your secret peek!".
   - Given the draw pile has fewer than 3 cards, then only the existing cards are shown.
   - Given I press **Got it — hide**, then the overlay closes, the cards are not kept on my device, and the draw pile order is unchanged.
   - Given I peek, then it does not end my turn.
@@ -467,50 +467,72 @@
 - **Dependencies:** US-011.
 - **Notes:** The overlay is the only place deck contents are shown.
 
-### US-020 — Shake Up (shuffle) card
+### US-020 — Shuffle (shuffle) card
 
 - **Priority:** Must
 - **Epic:** Cards and game rules
 - **User story:** As a player, I want to shuffle the draw pile, so that nobody can use what they know about the order.
 - **Context:** F-06.
 - **Acceptance criteria:**
-  - Given I play Shake Up, then the server shuffles the draw pile using its random source, the count is unchanged, and everyone sees "Deck shuffled!".
+  - Given I play Shuffle, then the server shuffles the draw pile using its random source, the count is unchanged, and everyone sees "Deck shuffled!".
   - Given the shuffle, then my turn continues (I can play another card or draw).
   - Given a seeded random source, then the resulting order is reproducible in tests.
   - Given reduced motion is enabled, then no shuffle animation plays and the toast still appears.
 - **Dependencies:** US-011.
 - **Notes:** None.
 
-### US-021 — Pass It On (extra-turn attack) card
+### US-021 — Attack (extra-turn attack) card
 
 - **Priority:** Should
 - **Epic:** Cards and game rules
 - **User story:** As a player, I want to make the next player take two turns, so that I can pass the danger along.
 - **Context:** F-21. Adds tension and turn-stacking rules (OQ-04).
 - **Acceptance criteria:**
-  - Given I play Pass It On, then my turn ends without drawing and the next active player has 2 turns to take, shown by a "2 turns" badge on every device.
-  - Given I am the target of an extra turn and I play Pass It On, then my pending turns end and the next player takes 2 turns (not 4).
-  - Given I play Hop Over during a pending extra turn, then only one of my turns is consumed.
-  - Given the deck definition, then 4 Pass It On cards are added to the deck for new games.
-  - Negative: Given only 2 players remain, then Pass It On targets the other player.
+  - Given I play Attack, then my turn ends without drawing and the next active player has 2 turns to take, shown by a "2 turns" badge on every device.
+  - Given I am the target of an extra turn and I play Attack, then my pending turns end and the next player takes 2 turns (not 4).
+  - Given I play Skip during a pending extra turn, then only one of my turns is consumed.
+  - Given the deck definition, then 4 Attack cards are added to the deck for new games.
+  - Negative: Given only 2 players remain, then Attack targets the other player.
 - **Dependencies:** US-011, US-018.
 - **Notes:** Stacking rules are a product decision.
 
-### US-022 — Ask a Friend (favour) card
+### US-022 — Favor (favour) card
 
 - **Priority:** Should
 - **Epic:** Cards and game rules
 - **User story:** As a player, I want to ask a friend to give me a card, so that I can get what I need.
 - **Context:** F-22. Needs a target choice and a prompt on another player's device.
 - **Acceptance criteria:**
-  - Given I play Ask a Friend, then I choose one active player with ≥ 1 card using large avatar buttons.
+  - Given I play Favor, then I choose one active player with ≥ 1 card using large avatar buttons.
   - Given I choose a friend, then their device shows "[Name] asks you for a card. Pick one to give" with their own hand; when they choose, the card moves to my hand and everyone sees "[Friend] gave [Name] a card" without the card name.
   - Given no other active player has any cards, then the card is blocked with "Nobody has a card to share."
   - Given the friend does not answer because they are absent, then the absent-player rule applies (US-058) and the host can skip them.
-  - Negative: Given the friend's only card is a Treat, then the friend can still choose to give it (no special protection).
+  - Negative: Given the friend's only card is a Defuse, then the friend can still choose to give it (no special protection).
   - Negative: Given an out player, then they are not selectable.
 - **Dependencies:** US-008, US-011, US-058.
 - **Notes:** Friend's choice is private; only the receiver learns the card.
+
+### US-062 — Nope card
+
+- **Priority:** Should
+- **Epic:** Cards and game rules
+- **User story:** As a player, I want to play a Nope to stop another player's action card, so that I can protect myself or spoil a plan.
+- **Context:** F-41. Adds the only out-of-turn interaction in the game, so it needs a short response window (OQ-04).
+- **Acceptance criteria:**
+  - Given another player plays Skip, See the Future, Shuffle, Attack, or Favor and I hold a Nope, then a "Nope it?" dialog appears on my device showing who played which card, with **Nope!** and **Let it go**, and a visible countdown in seconds.
+  - Given I play my Nope, then my Nope goes to the discard pile, everyone sees "[Name] played Nope!", and the stopped card has no effect (it stays in the discard pile and the turn carries on as if it had not been played).
+  - Given a Nope was played, then every other player holding a Nope (including the player whose card was stopped) gets the same prompt and can Nope it back; each extra Nope flips the result, so an odd number of Nopes stops the card and an even number lets it through.
+  - Given the window closes with no further Nope, then the card takes effect or is stopped and everyone sees the result ("[Name]'s [Card] was stopped!" when stopped).
+  - Given nobody else holds a Nope, then the card takes effect immediately and no window opens.
+  - Given a player does not answer (slow, absent, or offline), then the server closes the window after the countdown so the game is never held up.
+  - Given I do not hold a Nope, then I see "Waiting to see if anyone plays a Nope" and my controls stay inert until the window closes.
+  - Given I select a Nope in my hand on my own turn, then it is marked as played in response to another card and Play is disabled with that explanation.
+  - Negative: Given a Nope, then it cannot stop an Exploding Kitten draw, a Defuse, or the Exploding Kitten position choice (only action cards).
+  - Negative: Given the player whose card is waiting leaves the game, then the card is dropped and the window closes.
+  - Negative: Given a player who holds a Nope leaves during the window, then they are removed from the responders and the window closes if nobody is left.
+  - Negative: Given a modified client sends a Nope when there is no window or it is not a responder, then the server rejects it with no state change.
+- **Dependencies:** [US-011](US-011-select-and-play-an-action-card.md), [US-058](US-058-absent-player-during-the-game.md), [US-060](US-060-real-time-room-server-authoritative.md).
+- **Notes:** The window reveals that at least one other player holds a Nope; who holds it stays private. 5 Nope cards are added to the deck in profile `mvp+should`. Bots stop an occasional card and never chain Nopes (US-023).
 
 ### US-023 — Bot Buddies fill empty seats
 
@@ -521,8 +543,8 @@
 - **Acceptance criteria:**
   - Given I am the host in the lobby, when I press **Add Bot Buddy**, then a bot takes a seat (up to 4 total), is labelled "Bot" in text, and counts toward the 2-player minimum.
   - Given a bot's turn, then "[Bot] is thinking…" shows for 0.8–1.5 s, then the bot acts using only legal actions.
-  - Given the bot holds Hop Over and the next card is unknown, then it plays Hop Over with a fixed probability (proposed 30 %) using the injected random source.
-  - Given a Boom Cat is drawn with a Treat, then the bot uses it and tucks the Boom Cat in at a random position.
+  - Given the bot holds Skip and the next card is unknown, then it plays Skip with a fixed probability (proposed 30 %) using the injected random source.
+  - Given an Exploding Kitten is drawn with a Defuse, then the bot uses it and tucks the Exploding Kitten in at a random position.
   - Given a bot's actions, then each is announced like a human's.
   - Given a seeded random source, then a simulation of 10,000 all-bot games completes without any illegal action or invariant break.
   - Negative: Given the bot's hand contains only unplayable cards, then it simply draws.
@@ -543,7 +565,7 @@
 - **Context:** F-08, DAC-14.
 - **Acceptance criteria:**
   - Given one active player remains, then the victory screen appears on **every** device showing the winner's avatar and "[Name] wins the round!".
-  - Given the screen, then a short recap lists who took naps and a simple stat (turns played, Boom Cats defused).
+  - Given the screen, then a short recap lists who took naps and a simple stat (turns played, Exploding Kittens defused).
   - Given reduced motion, then a static starburst replaces the confetti.
   - Given a screen reader, then the headline is announced and focus lands on the heading.
   - Given I am the host, then the actions are **Play again** and **Close room**.
@@ -598,7 +620,7 @@
   - Given I am the host and choose **Remove a player** and confirm, then that player is out of the game and the room (as in US-055) and the others see "[Name] was removed".
   - Given I press Escape in the menu, then it closes and I return to the game.
   - Given only one player remains after a leave or removal, then the game ends and the last player wins (US-025).
-  - Negative: Given a Boom Cat dialog is open (forced choice), then Menu is disabled until it is resolved.
+  - Negative: Given an Exploding Kitten dialog is open (forced choice), then Menu is disabled until it is resolved.
   - Negative: Given I am a player (not host), then End game and Remove a player are not shown, and requests for them are rejected by the server.
 - **Dependencies:** US-002, US-005, US-055, US-060.
 - **Notes:** Closing or reloading the tab does not leave the game; the device can rejoin (US-043).
@@ -617,7 +639,7 @@
   - Given Home or the in-game Help or game menu, when I choose **How to Play**, then a tour of ≤ 5 steps is shown with illustrations, text ≥ 18 px, and "Step n of 5".
   - Given the tour, then I can move with **Next**/**Back** buttons and swipe; no step auto-advances.
   - Given I open the tour mid-game, then the game continues for everyone, and on close I return to the same screen; if it became my turn meanwhile I see the "It's your turn!" banner.
-  - Given the tour, then the steps are Goal, Your turn, Boom Cats and Treats, Special cards, and Winning.
+  - Given the tour, then the steps are Goal, Your turn, Exploding Kittens and Defuse cards, Special cards, and Winning.
   - Given I press **Skip** or **Done**, then I return to where I came from.
   - Negative: Given a game is mid-turn, then opening the tour does not reveal my hand to anyone.
 - **Dependencies:** US-001, US-028.
@@ -634,7 +656,7 @@
   - Given a card in my hand, when I select it, then the same effect text appears in the detail panel (US-011).
   - Given the guide, then no content depends on hover; opening and closing work with tap, click, and keyboard.
   - Given the info popover is open, when I press Escape or tap outside, then it closes.
-  - Negative: Given cards not in the MVP (Pass It On, Ask a Friend before US-021/US-022), then they are not listed.
+  - Negative: Given cards not in the MVP (Attack, Favor before US-021/US-022), then they are not listed.
 - **Dependencies:** US-014.
 - **Notes:** Card text is data driven, so one source feeds the guide, hand, and tests.
 
@@ -647,8 +669,8 @@
 - **Acceptance criteria:**
   - Given my turn start, then the hint reads "Play a card or tap the deck to draw".
   - Given I have selected a card, then the hint reads "Tap Play to use [Card]".
-  - Given I have just played Shake Up or Peek, then the hint reads "You can play another card, or draw to end your turn."
-  - Given a Boom Cat dialog, then the dialog text states the next step.
+  - Given I have just played Shuffle or See the Future, then the hint reads "You can play another card, or draw to end your turn."
+  - Given an Exploding Kitten dialog, then the dialog text states the next step.
   - Given the hints, then they are plain text ≤ 12 words and appear in the live region once per change.
   - Negative: Given a hint is displayed, then it does not repeat as an announcement if the content is unchanged.
 - **Dependencies:** US-007, US-011.
@@ -661,7 +683,7 @@
 - **User story:** As a child player, I want gentle tips during my first game, so that I learn without reading the whole rules.
 - **Context:** F-23; supports metric M3.
 - **Acceptance criteria:**
-  - Given it is my first game on this device, then up to 4 tips appear in context (your hand, the deck, selecting a card, Boom Cats).
+  - Given it is my first game on this device, then up to 4 tips appear in context (your hand, the deck, selecting a card, Exploding Kittens).
   - Given a tip is shown, then I can dismiss it with a button; tips never block the controls.
   - Given I dismiss or complete the tips, then they do not appear again on this device, and I can re-enable them in Settings.
   - Given reduced motion, then tips appear without animation.
@@ -732,7 +754,7 @@
   - Given a join, a leave, a turn change, another player's card played or drawn, a Boom event, an elimination, a connection change, or the winner, then a concise announcement is made in a polite live region (assertive only for Boom dialogs).
   - Given the game menu is open, then my own hand is not available in the accessibility tree, and other players' hands never are (US-008).
   - Given the room code in the lobby, then it is read letter by letter, and the result of Copy code or Copy link is announced.
-  - Given the Peek overlay, then the three cards are read in order.
+  - Given the See the Future overlay, then the three cards are read in order.
   - Negative: Given the same message is repeated, then it is not announced twice.
 - **Dependencies:** US-007, US-011.
 - **Notes:** Manual verification: NVDA, VoiceOver, TalkBack.
@@ -793,8 +815,8 @@
 - **User story:** As a child player, I want a friendly reason when something can't be done, so that I can fix it and carry on.
 - **Context:** F-14, DAC-12, DAC-25. See [ui-ux.md §E6](ui-ux.md#e6-invalid-actions-and-error-recovery).
 - **Acceptance criteria:**
-  - Given I select Cozy Cat and press Play, then the message "Cozy Cats just like to cuddle. Pick another card!" appears, and the game state is unchanged.
-  - Given I select a Treat in hand, then Play is disabled and the detail panel says "Treats save you automatically when a Boom Cat shows up."
+  - Given I select Cat card and press Play, then the message "Cat cards just like to cuddle. Pick another card!" appears, and the game state is unchanged.
+  - Given I select a Defuse in hand, then Play is disabled and the detail panel says "Defuse cards save you automatically when an Exploding Kitten shows up."
   - Given it is not my turn or my connection is down, then Play and Draw are inert and labelled with the reason ("Wait for [Name]" or "Reconnecting…").
   - Given the server rejects an action (for example a stale tap just after the turn changed), then the state is unchanged and I see "Oops, that was too late. It's [Name]'s turn now."
   - Given any invalid action, then the message appears next to the control, is available to screen readers, and clears after 5 s or on the next interaction.
@@ -907,10 +929,10 @@
 - **Acceptance criteria:**
   - Given a player loses connection, then their chip shows "reconnecting" on every device.
   - Given it is not their turn and no decision of theirs is pending, then the game continues normally.
-  - Given it is their turn, or a decision of theirs is pending (Boom Cat dialog, Ask a Friend), then everyone sees "Waiting for [Name] to come back…" with a 60 s countdown shown as text, and the game waits.
+  - Given it is their turn, or a decision of theirs is pending (Exploding Kitten dialog, Favor), then everyone sees "Waiting for [Name] to come back…" with a 60 s countdown shown as text, and the game waits.
   - Given they reconnect within 60 s, then play resumes exactly where it stopped.
   - Given 60 s pass, then the host sees **Keep waiting** and **Skip [Name]**; other players see "Waiting for the host to decide".
-  - Given the host chooses **Skip [Name]**, then that player is out (their cards go to the discard pile, and a pending Boom Cat counts as a pop), everyone sees "[Name] was skipped", and play continues; if one player remains, they win (US-025).
+  - Given the host chooses **Skip [Name]**, then that player is out (their cards go to the discard pile, and a pending Exploding Kitten counts as a pop), everyone sees "[Name] was skipped", and play continues; if one player remains, they win (US-025).
   - Given the host chooses **Keep waiting**, then the countdown restarts for 60 s and the host is asked again.
   - Given the absent player is the host, then US-059 applies.
   - Negative: Given a player who is not the host, then no skip control is shown and a skip request from their client is rejected by the server.
@@ -964,9 +986,9 @@
 - **User story:** As a tester, I want automated tests for every rule, so that rule changes cannot silently break the game.
 - **Context:** F-16, M8.
 - **Acceptance criteria:**
-  - Given the engine, then each MVP card behaviour, the deal, the draw, Boom with Treat, Boom without a Treat, elimination, and victory have at least one passing unit test.
-  - Given a seeded random source, then 10,000 simulated games (2–4 players, random legal actions) finish with no illegal state, and the invariant "draw pile has ≥ 1 Boom Cat while ≥ 2 players remain" holds after every action.
-  - Given illegal actions (wrong player, missing card, playing Cozy Cat, drawing when out), then each returns an error and leaves the state unchanged.
+  - Given the engine, then each MVP card behaviour, the deal, the draw, Boom with Defuse, Boom without a Defuse, elimination, and victory have at least one passing unit test.
+  - Given a seeded random source, then 10,000 simulated games (2–4 players, random legal actions) finish with no illegal state, and the invariant "draw pile has ≥ 1 Exploding Kitten while ≥ 2 players remain" holds after every action.
+  - Given illegal actions (wrong player, missing card, playing Cat card, drawing when out), then each returns an error and leaves the state unchanged.
   - Given the server, then automated tests cover the room lifecycle, join limits, host-only actions, host transfer, reconnect, absent-player skip, and expiry (US-055, US-056, US-058, US-059).
   - Given every outbound message for every client in simulated games, then no message contains another player's cards, the draw-pile order, or another player's private results (US-008, US-060).
   - Given the CI run, then engine branch coverage is ≥ 90 %.
@@ -982,7 +1004,7 @@
 - **Context:** F-16, M4, M11, M12. The repository's testing instructions specify Playwright with the Page Object Model (`instructions/testing/copilot-instructions.md`); Playwright supports several browser contexts in one test.
 - **Acceptance criteria:**
   - Given a test with a host and 2 players in three separate browser contexts and a seeded random source, then the scripted journey runs: host creates a room, copies the link, players open the link and join, host starts, the game is played to a winner, and the host starts a rematch.
-  - Given the run, then it covers Peek, Hop Over, Shake Up, a Boom Cat defused, a Boom Cat elimination, the game menu, Leave game, and Play again.
+  - Given the run, then it covers See the Future, Skip, Shuffle, an Exploding Kitten defused, an Exploding Kitten elimination, the game menu, Leave game, and Play again.
   - Given the host runs at 1280 × 800 and the players at 390 × 844 and 768 × 1024 (and a landscape 844 × 390 variant), then every step passes.
   - Given a simulated offline period of 20 s for one player, then that player rejoins the same seat with the same hand; given 70 s on that player's turn, then the host's **Skip** option appears (US-058).
   - Given the join error cases (wrong code, full room, started game, closed room), then each shows its expected message.
@@ -1067,8 +1089,8 @@ Every **Must** feature has at least one story.
 | F-03 Deck and dealing | Must | US-005, US-014 | Yes |
 | F-04 Turn management and private hands per device | Must | US-007, US-008, US-011, US-012 | Yes |
 | F-05 Hand, deck, discard display | Must | US-009, US-010 | Yes |
-| F-06 Core cards | Must | US-014 (Cozy Cat), US-018, US-019, US-020, US-040 | Yes |
-| F-07 Boom Cat / Treat / elimination | Must | US-015, US-016, US-017 | Yes |
+| F-06 Core cards | Must | US-014 (Cat card), US-018, US-019, US-020, US-040 | Yes |
+| F-07 Exploding Kitten / Defuse / elimination | Must | US-015, US-016, US-017 | Yes |
 | F-08 Victory and host-led rematch | Must | US-025, US-026, US-027 | Yes |
 | F-09 Rules and contextual help | Must | US-029, US-030, US-031 | Yes |
 | F-10 Game menu: leave game, host ends game | Must | US-028 | Yes |
@@ -1082,8 +1104,9 @@ Every **Must** feature has at least one story.
 | F-18 Rooms: create, share code and link, lobby, expiry | Must | US-003, US-054, US-055, US-056 | Yes |
 | F-19 Join a room via link or code | Must | US-006 | Yes |
 | F-40 Connection resilience: rejoin, absent player, host leaves | Must | US-043, US-058, US-059 | Yes |
-| F-21 Pass It On | Should | US-021 | Yes |
-| F-22 Ask a Friend | Should | US-022 | Yes |
+| F-21 Attack | Should | US-021 | Yes |
+| F-22 Favor | Should | US-022 | Yes |
+| F-41 Nope | Should | US-062 | Yes |
 | F-23 Guided first game | Should | US-032 | Yes |
 | F-24 Action log | Should | US-013 | Yes |
 | F-26 Text size | Should | US-039 | Yes |
@@ -1130,7 +1153,7 @@ A story is **Done** when all applicable items are met:
 - [ ] Acceptance criteria are met, including negative and edge cases.
 - [ ] Code follows the project's conventions (for React: `instructions/react/*`) and passes lint and type checks.
 - [ ] Game rules live in the engine module, not the UI components.
-- [ ] No Exploding Kittens names, artwork, or text; asset licences recorded.
+- [ ] No Exploding Kittens artwork, logos, or card text; asset licences recorded. Card names are the permitted exception.
 - [ ] Reviewed by another developer (see the `code-review` skill).
 
 **Testing**

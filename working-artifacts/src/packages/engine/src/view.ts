@@ -9,7 +9,7 @@ import type {
 
 /**
  * Per-player projection. It never includes other hands, the draw pile contents
- * or order, a pending Boom Cat, re-insert positions, or Peek results.
+ * or order, a pending Exploding Kitten, re-insert positions, or See the Future results.
  */
 export function viewFor(state: GameState, playerId: string): PlayerView {
   const me = state.players.find((p) => p.id === playerId);
@@ -44,7 +44,18 @@ export function viewFor(state: GameState, playerId: string): PlayerView {
   };
 
   const pending = state.pending;
-  if (pending) {
+  if (pending && pending.kind === 'NOPE_WINDOW') {
+    // Everyone sees that a card is waiting; only players who may respond get a decision.
+    view.nopeWindow = { actorId: pending.playerId, cardKind: pending.card.kind, nopes: pending.nopes };
+    if (pending.responders.includes(playerId)) {
+      view.decision = {
+        kind: 'NOPE_WINDOW',
+        actorId: pending.playerId,
+        cardKind: pending.card.kind,
+        nopes: pending.nopes,
+      };
+    }
+  } else if (pending) {
     view.waitingFor = pending.playerId;
     if (pending.playerId === playerId) {
       const decision: DecisionView =

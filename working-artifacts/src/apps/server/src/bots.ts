@@ -10,6 +10,9 @@ export function chooseAction(view: PlayerView, rng: Rng): PlayerAction | null {
 
   if (view.decision) {
     switch (view.decision.kind) {
+      case 'NOPE_WINDOW':
+        // Gentle: stop the odd card, never chain Nopes.
+        return view.decision.nopes === 0 && rng.nextInt(100) < 25 ? { type: 'NOPE' } : { type: 'PASS_NOPE' };
       case 'TREAT_DECISION':
         return { type: 'USE_TREAT' };
       case 'REINSERT':

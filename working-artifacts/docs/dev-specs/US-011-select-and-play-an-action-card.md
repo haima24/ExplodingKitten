@@ -33,7 +33,7 @@ Client: no second send while `pendingActionId` is set. Server: action id dedupe 
 
 ### 2.4 Targeted cards
 
-`PLAY_CARD` for Ask a Friend opens `TargetPicker` first (US-022) and then sends `targetId`.
+`PLAY_CARD` for Favor opens `TargetPicker` first (US-022) and then sends `targetId`.
 
 ## 3. Edge cases and errors
 

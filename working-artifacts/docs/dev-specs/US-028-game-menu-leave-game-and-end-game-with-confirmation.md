@@ -18,7 +18,7 @@ A per-player menu to get help or leave, plus host controls to end the game for e
 - `<dialog>` opened by the header **Menu** button, Escape, or browser Back (US-002).
 - Items: **Back to game** (primary), **How to Play**, **Settings**, **Leave game** (danger). Host only: **End game for everyone**, **Remove a player** (opens a list).
 - While open: `ui.menuOpen = true`; the player's own hand is hidden (not rendered, `inert`, US-008); the game keeps running; if it becomes my turn a banner "It's your turn!" shows above the dialog.
-- Disabled while a forced-choice dialog is open (Boom Cat decision, re-insert, favour pick).
+- Disabled while a forced-choice dialog is open (Exploding Kitten decision, re-insert, favour pick).
 
 ### 2.2 Confirmations (`ConfirmDialog`, safe action default-focused)
 
@@ -32,7 +32,7 @@ A per-player menu to get help or leave, plus host controls to end the game for e
 
 | Request | Behaviour |
 | --- | --- |
-| `room.leave` during `PLAYING` | Engine `LEAVE` for the sender (hand and any pending Boom Cat to discard, US-017 path); remove the member and revoke the token; if one active player remains the game finishes (US-025); public notice "{name} left the game" |
+| `room.leave` during `PLAYING` | Engine `LEAVE` for the sender (hand and any pending Exploding Kitten to discard, US-017 path); remove the member and revoke the token; if one active player remains the game finishes (US-025); public notice "{name} left the game" |
 | `game.end` (host) | Discard the game without a winner; reset to the lobby (shared helper with US-026) |
 | `room.kick` (host) during `PLAYING` | Engine `REMOVE` for the target, then remove the member (US-055); public notice "{name} was removed" |
 
@@ -58,7 +58,7 @@ Closing the tab does **not** leave the game; the device can rejoin (US-043). No 
 | Game continues for others; "Your turn" banner appears | E |
 | Confirmations default to the safe action | C |
 | Leave, end, and remove effects and permissions | I |
-| Menu disabled during a Boom Cat decision | C |
+| Menu disabled during an Exploding Kitten decision | C |
 
 ## 5. Tasks
 

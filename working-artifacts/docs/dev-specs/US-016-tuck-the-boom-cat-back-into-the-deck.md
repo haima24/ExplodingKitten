@@ -1,4 +1,4 @@
-# Dev spec — US-016 Tuck the Boom Cat back into the deck
+# Dev spec — US-016 Tuck the Exploding Kitten back into the deck
 
 | Item | Value |
 | --- | --- |
@@ -9,7 +9,7 @@
 
 ## 1. Goal
 
-After using a Treat the player chooses where the Boom Cat goes. The choice is secret: it goes to the server only and is never broadcast.
+After using a Defuse the player chooses where the Exploding Kitten goes. The choice is secret: it goes to the server only and is never broadcast.
 
 ## 2. Technical design
 
@@ -34,13 +34,13 @@ After using a Treat the player chooses where the Boom Cat goes. The choice is se
 - Prompt: "Pick where to tuck it in, secretly!".
 - Not dismissible without choosing (same forced-choice dialog behaviour as US-015); no choice made is impossible because Random is preselected.
 - Sends `game.action { REINSERT_BOOM, position }`.
-- Others see only "Boom Cat tucked back in!" (public event).
+- Others see only "Exploding Kitten tucked back in!" (public event).
 
 ## 3. Edge cases and errors
 
-- Peek after a Top tuck lets the next player see it; this is intended (story note).
+- See the Future after a Top tuck lets the next player see it; this is intended (story note).
 - Pile of 1 card: all positions valid and handled by the index table.
-- Skip or leave while `REINSERT` is pending: the Boom Cat goes to the discard pile (US-017 path) so I1 stays true.
+- Skip or leave while `REINSERT` is pending: the Exploding Kitten goes to the discard pile (US-017 path) so I1 stays true.
 - Reconnect: the picker reappears from `view.decision`.
 
 ## 4. Verification

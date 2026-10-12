@@ -1,4 +1,4 @@
-# Dev spec — US-017 Draw a Boom Cat without a Treat (player is out)
+# Dev spec — US-017 Draw an Exploding Kitten without a Defuse (player is out)
 
 | Item | Value |
 | --- | --- |
@@ -9,7 +9,7 @@
 
 ## 1. Goal
 
-A Boom Cat with no Treat removes the player from the round gently ("nap time"). The same elimination path serves Leave, Remove, and Skip.
+An Exploding Kitten with no Defuse removes the player from the round gently ("nap time"). The same elimination path serves Leave, Remove, and Skip.
 
 ## 2. Technical design
 
@@ -18,17 +18,18 @@ A Boom Cat with no Treat removes the player from the round gently ("nap time"). 
 1. `status = 'out'`, `outReason = reason` (`BOOM` here). Hand → `discardPile` (face-up, proposed); public `PLAYER_OUT { playerId, reason }`.
 2. Pending cleanup (for skip/leave during a decision):
    - `TREAT_DECISION` or `REINSERT` owned by the player: `boomCard` → `discardPile` (keeps I1).
+   - `NOPE_WINDOW`: if the player owns the waiting card, the card is dropped and the window closes; if they are a responder they are removed, and the window resolves when no responder is left (US-062).
    - `FAVOR_PICK` where the player is the target or requester: cancel; no card moves; the requester's turn continues (target case) or the favour is dropped (requester case).
 3. If the player was `currentPlayerId`: next active player, `pendingTurns = 1` (extra turns are lost), `TURN_STARTED`.
 4. If exactly one player is active: `phase = 'finished'`, `winnerId`, public `GAME_FINISHED { winnerId, stats }`. Else `phase = 'turn'` when no pending remains.
 
-### 2.2 Engine: `DRAW` with a Boom Cat and no Treat
+### 2.2 Engine: `DRAW` with an Exploding Kitten and no Defuse
 
 Private `BOOM_DRAWN { hasTreat: false }` to the drawer, then `eliminate(…, 'BOOM')` in the same action. The elimination is applied **immediately** (a design choice that keeps the state machine small); the "OK" button only dismisses the client dialog, so the observable behaviour matches the story.
 
 ### 2.3 Client
 
-- `NapDialog` (not forced; has **OK**): title "Oh no, a Boom Cat popped!", body "{name} is out of this round and gets a nap. Cheer the others on!", sleeping-cat art. Wording must not use "lose", "dead", "die" (copy lint test).
+- `NapDialog` (not forced; has **OK**): title "Oh no, an Exploding Kitten popped!", body "{name} is out of this round and gets a nap. Cheer the others on!", sleeping-cat art. Wording must not use "lose", "dead", "die" (copy lint test).
 - Others see the banner "{name} is taking a nap" (public `PLAYER_OUT`).
 - Seat state: chip shows the out marker and text; `view.you.status = 'out'` removes the hand, Play and Draw, and shows `out.cheer` ("Cheer the others on!").
 - Out players keep receiving public updates until they leave.
@@ -44,7 +45,7 @@ Private `BOOM_DRAWN { hasTreat: false }` to the drawer, then `eliminate(…, 'BO
 
 | Check | Level |
 | --- | --- |
-| No-Treat draw eliminates, discards hand and Boom Cat, advances the turn | U |
+| No-Defuse draw eliminates, discards hand and Exploding Kitten, advances the turn | U |
 | Victory when one remains; 2-player case | U |
 | Elimination during each pending kind keeps I1 and I3 | U |
 | Out player actions rejected; out player not targetable | U |
@@ -53,7 +54,7 @@ Private `BOOM_DRAWN { hasTreat: false }` to the drawer, then `eliminate(…, 'BO
 
 ## 5. Tasks
 
-1. Implement `eliminate` and the no-Treat branch.
+1. Implement `eliminate` and the no-Defuse branch.
 2. Build `NapDialog`, out-state UI, copy and the forbidden-words lint.
 3. Add tests (engine, component, E2E).
 

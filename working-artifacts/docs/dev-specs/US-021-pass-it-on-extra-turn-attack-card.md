@@ -1,4 +1,4 @@
-# Dev spec — US-021 Pass It On (extra-turn attack) card
+# Dev spec — US-021 Attack (extra-turn attack) card
 
 | Item | Value |
 | --- | --- |
@@ -19,18 +19,18 @@ The player skips their draw and the next active player takes two turns.
 
 1. Card → `discardPile`; public `CARD_PLAYED`.
 2. End **all** of the actor's pending turn units (not just one).
-3. Next active player becomes current with `pendingTurns = 2` (never added to existing counts: if the actor was the target of an earlier Pass It On, the next player still gets 2, not 4).
+3. Next active player becomes current with `pendingTurns = 2` (never added to existing counts: if the actor was the target of an earlier Attack, the next player still gets 2, not 4).
 4. Emit `TURN_STARTED { playerId, pendingTurns: 2 }`. No draw.
 5. With only 2 active players the "next" player is the other player.
 
 ### 2.2 Turn accounting with `pendingTurns > 1`
 
-- Each normal draw or Hop Over consumes one unit (`endTurnUnit`).
+- Each normal draw or Skip consumes one unit (`endTurnUnit`).
 - A player eliminated while holding units loses them; the next active player gets 1 (US-017).
 
 ### 2.3 Deck profile
 
-`mvp+should` adds 4 Pass It On cards. With the MVP profile they are absent and the card does not appear in the guide (US-030). Server config `DECK_PROFILE` selects the profile.
+`mvp+should` adds 4 Attack cards. With the MVP profile they are absent and the card does not appear in the guide (US-030). Server config `DECK_PROFILE` selects the profile.
 
 ### 2.4 Client
 
@@ -39,8 +39,9 @@ The player skips their draw and the next active player takes two turns.
 
 ## 3. Edge cases and errors
 
-- Hop Over while holding 2 units: consumes 1 (US-018).
-- Pass It On in reply to Pass It On: next player still gets 2.
+- Timing: with profile `mvp+should`, the effect described above resolves after the Nope window (US-062). A stopped card stays in the discard pile and has no effect. Public `EFFECT_APPLIED` marks the moment it takes effect.
+- Skip while holding 2 units: consumes 1 (US-018).
+- Attack in reply to Attack: next player still gets 2.
 - Cannot be played when it is not your turn or during a decision.
 
 ## 4. Verification
@@ -49,7 +50,7 @@ The player skips their draw and the next active player takes two turns.
 | --- | --- |
 | Actor's turn ends without drawing; next gets `pendingTurns = 2` | U |
 | Chain gives 2, not 4 | U |
-| Hop Over consumption with 2 units | U |
+| Skip consumption with 2 units | U |
 | Two-player case | U |
 | Badge visible to all, with text | C, E |
 | Card only present in the `mvp+should` deck | U |

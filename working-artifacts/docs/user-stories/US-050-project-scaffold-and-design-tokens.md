@@ -11,7 +11,7 @@
   - Given the project, when lint, type-check, and unit-test commands run, then each completes without errors for both client and server (even if only a sample test exists).
   - Given `styles/tokens`, then the colour, typography, spacing, radius, and elevation tokens from [ui-ux.md §B](../../ui-ux.md#b-design-system) exist as CSS variables.
   - Given fonts are used, then they are self-hosted and **no third-party network request** is made on first load (DAC-27).
-  - Given the asset folder, then an `assets/LICENSES.md` records the origin and licence of each asset; no Exploding Kittens names or artwork are present (DAC-30).
+  - Given the asset folder, then an `assets/LICENSES.md` records the origin and licence of each asset; no Exploding Kittens artwork, logos, or card text are present; card names are the permitted exception (DAC-30).
   - Negative: Given an unsupported Node/tool version, then the install step fails with a clear message.
 - **Dependencies:** OQ-07 decision.
 - **Notes:** Follow `instructions/react/*` if React is chosen. Do not install or change anything until this story is scheduled.

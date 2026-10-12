@@ -8,7 +8,8 @@ export type CardKind =
   | 'SHAKE_UP'
   | 'COZY_CAT'
   | 'PASS_IT_ON'
-  | 'ASK_A_FRIEND';
+  | 'ASK_A_FRIEND'
+  | 'NOPE';
 
 /** Ids are opaque random strings and never encode kind or position. */
 export interface Card {
@@ -34,7 +35,21 @@ export interface PlayerState {
 export type Pending =
   | { kind: 'TREAT_DECISION'; playerId: string; boomCard: Card }
   | { kind: 'REINSERT'; playerId: string; boomCard: Card }
-  | { kind: 'FAVOR_PICK'; playerId: string; requesterId: string };
+  | { kind: 'FAVOR_PICK'; playerId: string; requesterId: string }
+  /**
+   * Response window after an action card was played and at least one other
+   * player holds a Nope. `playerId` is the player who played `card`; `nopes`
+   * counts Nopes played so far (odd = the card is stopped); `responders` are the
+   * active players who may still play a Nope or pass.
+   */
+  | {
+      kind: 'NOPE_WINDOW';
+      playerId: string;
+      card: Card;
+      targetId?: string;
+      nopes: number;
+      responders: string[];
+    };
 
 export interface GameStats {
   turnsPlayed: number;
@@ -70,10 +85,17 @@ export type PlayerAction =
   | { type: 'DRAW' }
   | { type: 'USE_TREAT' }
   | { type: 'REINSERT_BOOM'; position: InsertPosition }
-  | { type: 'PICK_FAVOR_CARD'; cardId: string };
+  | { type: 'PICK_FAVOR_CARD'; cardId: string }
+  | { type: 'NOPE' }
+  | { type: 'PASS_NOPE' };
 
 /** Actions only the server may issue. */
-export type ServerAction = { type: 'LEAVE' } | { type: 'REMOVE' } | { type: 'SKIP_ABSENT' };
+export type ServerAction =
+  | { type: 'LEAVE' }
+  | { type: 'REMOVE' }
+  | { type: 'SKIP_ABSENT' }
+  /** The response window timed out: every remaining responder passes. */
+  | { type: 'EXPIRE_NOPE' };
 
 export type Action = (PlayerAction | ServerAction) & { playerId: string };
 
@@ -120,6 +142,9 @@ export type EventType =
   | 'FAVOR_GIVEN'
   | 'TURN_STARTED'
   | 'GAME_FINISHED'
+  | 'NOPE_PLAYED'
+  | 'EFFECT_APPLIED'
+  | 'NOPE_RESOLVED'
   // private
   | 'DRAWN_CARD'
   | 'PEEK_RESULT'
@@ -154,7 +179,8 @@ export interface YouView {
 export type DecisionView =
   | { kind: 'TREAT_DECISION' }
   | { kind: 'REINSERT' }
-  | { kind: 'FAVOR_PICK'; requesterId: string };
+  | { kind: 'FAVOR_PICK'; requesterId: string }
+  | { kind: 'NOPE_WINDOW'; actorId: string; cardKind: CardKind; nopes: number };
 
 /** The only game data ever sent to a device. */
 export interface PlayerView {
@@ -170,6 +196,10 @@ export interface PlayerView {
   decision?: DecisionView;
   /** Public id of the player everyone is waiting for during a decision. */
   waitingFor?: string;
+  /** Public: an action card is waiting to see whether anyone plays a Nope. */
+  nopeWindow?: { actorId: string; cardKind: CardKind; nopes: number };
+  /** Added by the server (the engine has no clock): when the window times out. */
+  nopeDeadlineAt?: number;
   winnerId?: string;
   stats?: GameStats;
 }
