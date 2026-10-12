@@ -77,6 +77,9 @@ export class GameClient {
   // --------------------------------------------------------------- connection
 
   private url(): string {
+    // Split deployments (static client on Vercel, server elsewhere) set VITE_WS_URL at build time.
+    const configured = import.meta.env.VITE_WS_URL as string | undefined;
+    if (configured) return configured;
     const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
     return `${scheme}//${location.host}/ws`;
   }
