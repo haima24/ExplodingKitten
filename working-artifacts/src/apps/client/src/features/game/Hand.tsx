@@ -7,13 +7,14 @@ import g from './game.module.css';
 
 /** The player's own cards only: a list of buttons with a roving tabindex. */
 export function Hand(): JSX.Element | null {
-  const { state, dispatch } = useStore();
+  const { state, dispatch, client } = useStore();
   const view = state.game.view;
   const reduced = useReducedMotion();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const [focusIndex, setFocusIndex] = useState(0);
   const hand = view?.you.hand ?? [];
   const selectedId = state.ui.selectedCardId;
+  const pairId = state.ui.pairCardId;
 
   const focusCard = (index: number): void => {
     const next = Math.min(Math.max(index, 0), hand.length - 1);
@@ -64,6 +65,16 @@ export function Hand(): JSX.Element | null {
 
   const select = (id: string, index: number): void => {
     setFocusIndex(index);
+    // Two Cat cards of the same design make a pair (US-065).
+    const first = hand.find((c) => c.id === selectedId);
+    const tapped = hand[index];
+    if (first && tapped && first.kind === 'COZY_CAT' && tapped.kind === 'COZY_CAT' && tapped.id !== first.id) {
+      if (tapped.variant !== first.variant) client.inline(t('pair.sameDesign'));
+      else if (pairId === tapped.id) dispatch({ type: 'ui/pair', cardId: null });
+      else if (pairId !== null) client.inline(t('pair.max'));
+      else dispatch({ type: 'ui/pair', cardId: tapped.id });
+      return;
+    }
     const deselect = selectedId === id;
     dispatch({ type: 'ui/select', cardId: deselect ? null : id });
     if (!deselect) {
@@ -96,7 +107,8 @@ export function Hand(): JSX.Element | null {
             <li key={card.id} className={g['handItem']}>
               <Card
                 kind={card.kind}
-                selected={selectedId === card.id}
+                variant={card.variant}
+                selected={selectedId === card.id || pairId === card.id}
                 tabIndex={index === Math.min(focusIndex, hand.length - 1) ? 0 : -1}
                 buttonRef={(el) => {
                   refs.current[index] = el;

@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Draft v0.1 — **proposed**, for engineering review |
 | Last updated | 2026-10-12 |
-| Scope | One developer spec per user story (62 specs) plus this shared baseline |
+| Scope | One developer spec per user story (63 specs) plus this shared baseline |
 | Inputs | [User stories](../user-stories/README.md) · [UI/UX specification](../../ui-ux.md) · [Product brief](../../product-brief.md) |
 | Repository baseline | **No application code exists.** Every module, path, message, and command below is a *proposal*. Nothing here describes existing code. |
 
@@ -40,10 +40,10 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 - API: `createGame(config, players, rng)`, `applyAction(state, action, rng)`, `viewFor(state, playerId)`, `visibleEvents(events, playerId)`, `checkInvariants(state)`.
 - `Rng` is injected (`nextInt(maxExclusive)`); the engine never calls `Math.random` or `Date`.
 - Card kinds: `BOOM_CAT`, `TREAT`, `HOP_OVER`, `PEEK`, `SHAKE_UP`, `COZY_CAT`, `PASS_IT_ON`, `ASK_A_FRIEND`, `NOPE`.
-- Actions (the client **never sends `playerId`**; the server injects it from the connection): `PLAY_CARD {cardId, targetId?}`, `DRAW`, `USE_TREAT`, `REINSERT_BOOM {position: TOP|MIDDLE|BOTTOM|RANDOM}`, `PICK_FAVOR_CARD {cardId}`, `NOPE`, `PASS_NOPE`, plus server-issued `LEAVE`, `REMOVE`, `SKIP_ABSENT`, `EXPIRE_NOPE` (US-062), `TIMEOUT` (US-063).
+- Actions (the client **never sends `playerId`**; the server injects it from the connection): `PLAY_CARD {cardId, targetId?}`, `DRAW`, `USE_TREAT`, `REINSERT_BOOM {position: TOP|MIDDLE|BOTTOM|RANDOM}`, `PICK_FAVOR_CARD {cardId}`, `NOPE`, `PASS_NOPE`, `PLAY_PAIR {cardIds: [id, id], targetId}` (US-065), plus server-issued `LEAVE`, `REMOVE`, `SKIP_ABSENT`, `EXPIRE_NOPE` (US-062), `TIMEOUT` (US-063).
 - Phases: `turn`, `decision` (with `pending` = `TREAT_DECISION` | `REINSERT` | `FAVOR_PICK` | `NOPE_WINDOW`), `finished`.
 - Engine error codes: `GAME_FINISHED`, `NOT_IN_GAME`, `PLAYER_OUT`, `NOT_YOUR_TURN`, `WRONG_PHASE`, `CARD_NOT_IN_HAND`, `NOT_PLAYABLE`, `INVALID_TARGET`, `INVALID_POSITION`, `INVALID_CONFIG`.
-- Events: public `CARD_PLAYED`, `CARD_DRAWN`, `PEEKED`, `DECK_SHUFFLED`, `TREAT_USED`, `BOOM_TUCKED`, `PLAYER_OUT`, `FAVOR_REQUESTED`, `FAVOR_GIVEN`, `TURN_STARTED`, `GAME_FINISHED`, `NOPE_PLAYED`, `EFFECT_APPLIED` (a played card takes effect), `NOPE_RESOLVED`, `TURN_TIMEOUT` (US-063); private `DRAWN_CARD`, `PEEK_RESULT`, `BOOM_DRAWN {hasTreat}`, `FAVOR_RECEIVED`.
+- Events: public `CARD_PLAYED`, `CARD_DRAWN`, `PEEKED`, `DECK_SHUFFLED`, `TREAT_USED`, `BOOM_TUCKED`, `PLAYER_OUT`, `FAVOR_REQUESTED`, `FAVOR_GIVEN`, `TURN_STARTED`, `GAME_FINISHED`, `NOPE_PLAYED`, `EFFECT_APPLIED` (a played card takes effect), `NOPE_RESOLVED`, `TURN_TIMEOUT` (US-063), `CARD_STOLEN` (US-065); private `DRAWN_CARD`, `PEEK_RESULT`, `BOOM_DRAWN {hasTreat}`, `FAVOR_RECEIVED`, `STOLEN_CARD` (US-065).
 - Invariants I1–I8 (US-051): boom count = active players − 1; draw pile never empty of Exploding Kittens while ≥ 2 players are active; card conservation; current player is active; `pendingTurns ≥ 1`; out players hold no cards; `phase = decision` iff `pending`; unique card ids.
 
 ### 2.3 Protocol contract (`packages/protocol`, spec in US-060)
@@ -120,6 +120,7 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 | US-062 | [Nope card](US-062-nope-card.md) | engine, server, client |
 | US-063 | [Turn timer and card sound effects](US-063-turn-timer-and-card-sounds.md) *(Release 1.0.2)* | engine, protocol, server, client |
 | US-064 | [Vietnamese localization (text and voice)](US-064-vietnamese-localization.md) *(Release 1.0.2)* | client |
+| US-065 | [Cat card pairs](US-065-cat-card-pairs.md) *(Release 1.0.2)* | engine, protocol, server, client |
 | US-023 | [Bot Buddies](US-023-bot-buddies-fill-empty-seats.md) | server |
 | US-025 | [Victory screen](US-025-victory-screen.md) | client, server |
 | US-026 | [Host starts a rematch](US-026-host-starts-a-rematch.md) | server, client |
@@ -169,4 +170,4 @@ Foundation first, then the playable core, then hardening (see [brief §J](../../
 3. **Stage 2:** US-028 – US-031, US-033 – US-043, US-056, US-058, US-059, US-061, US-040 – US-042, US-047.
 4. **Stage 3 (Should):** US-013, US-021, US-022, US-062, US-032, US-039, US-044, US-048, US-049.
 5. **Could:** US-023, US-045, US-052, US-053.
-6. **Release 1.0.2:** US-063 (timer, then sounds), then US-064 (text, then voice).
+6. **Release 1.0.2:** US-063 (timer, then sounds), then US-064 (text, then voice), then US-065 (deck and names, then pairs).

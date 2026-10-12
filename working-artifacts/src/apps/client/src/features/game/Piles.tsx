@@ -44,8 +44,8 @@ export function Piles({ shuffling }: { shuffling: boolean }): JSX.Element | null
 
       <div className={g['pile']}>
         {top ? (
-          <div role="group" aria-label={t('piles.discard', { name: cardName(top.kind) })}>
-            <Card kind={top.kind} />
+          <div role="group" aria-label={t('piles.discard', { name: cardName(top.kind, top.variant) })}>
+            <Card kind={top.kind} variant={top.variant} />
           </div>
         ) : (
           <div className={g['emptyDiscard']} role="img" aria-label={t('piles.discardEmptyLabel')}>

@@ -209,7 +209,7 @@ flowchart TD
 | **Skip** | skip | End your turn without drawing | 4 | Must |
 | **See the Future** | see the future | Privately look at the top 3 cards | 4 | Must |
 | **Shuffle** | shuffle | Shuffle the draw pile | 4 | Must |
-| **Cat card** (5 designs) | cat cards | No effect; not playable in MVP (filler, future combos) | 15 | Must |
+| **Cat card** (5 designs) | cat cards | Played as a pair of the same design: take a random card from another player (US-065); a single Cat card is not playable | 20 | Must |
 | **Attack** | attack | Next player takes 2 turns | 4 | Should |
 | **Favor** | favor | Ask another player for a card | 4 | Should |
 | **Nope** | nope | Stop another player's action card. Played out of turn; a Nope can itself be Noped | 5 | Should |

@@ -443,6 +443,26 @@ export const en = {
   'settings.voice.using': 'Voice used: {name}',
   'settings.voice.unavailable': "This device has no voice for the chosen language, so you may hear nothing. The text still shows.",
 
+  // Cat card pairs (US-065)
+  'cat.1': 'Tacocat',
+  'cat.2': 'Potato Cat',
+  'cat.3': 'Beard Cat',
+  'cat.4': 'Rainbow Cat',
+  'cat.5': 'Cattermelon',
+  'pair.play': 'Play pair',
+  'pair.sameDesign': 'A pair needs two Cat cards of the same design.',
+  'pair.max': 'A pair is two cards. Tap one of them to take it out.',
+  'pair.target.title': 'Take a card from who?',
+  'pair.target.prompt': 'Pick a player. You take one random card from their hand.',
+  'hint.pairNext': 'Tap another {card} to make a pair.',
+  'hint.catAlone': 'A Cat card needs a matching Cat card to play.',
+  'hint.pairReady': 'Tap Play pair, then pick who to take a card from.',
+  'detail.pair': 'Played as a pair',
+  'card.pairNote': 'Played with a matching Cat card.',
+  'log.pair': '{name} played a pair of Cat cards on {target}',
+  'log.steal': '{to} took a card from {from}',
+  'steal.got': 'You took {card}!',
+
   // Spoken lines (no names, no cards in hands)
   'voice.V01': "It's your turn to draw.",
   'voice.V03': 'You drew a card.',
@@ -463,6 +483,8 @@ export const en = {
   'voice.V16': 'A player is out.',
   'voice.V17': 'You won!',
   'voice.V18': 'Game over. Congratulations to the winner!',
+  'voice.V19': 'You took a card.',
+  'voice.V20': 'A card was taken from you.',
 
   // Privacy
   'privacy.title': 'Privacy',

@@ -14,6 +14,8 @@ export interface CardInfo {
   type: CardType;
   /** Played in response to another player's card (not on your own turn). */
   reaction?: boolean;
+  /** Played only as a pair of the same design (US-065). */
+  pair?: boolean;
   /** Lowest deck profile that contains this card. */
   profile: DeckProfileName;
 }
@@ -76,10 +78,11 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
   COZY_CAT: {
     kind: 'COZY_CAT',
     name: 'Cat card',
-    effect: 'Just likes to cuddle. No effect.',
-    // Open question OQ-06: flip this one flag to make Cat cards playable.
+    effect: 'Play two matching Cat cards to take a random card.',
+    // Never played alone (OQ-06 resolved by US-065): two of the same design make a pair.
     playable: false,
-    notPlayableReason: 'Cat cards just like to cuddle. Pick another card!',
+    pair: true,
+    notPlayableReason: 'Cat cards are played in pairs. Tap a second matching Cat card!',
     type: 'cat',
     profile: 'mvp',
   },

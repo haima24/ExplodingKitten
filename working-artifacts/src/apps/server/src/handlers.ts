@@ -413,6 +413,9 @@ function onGameAction(ctx: Ctx, p: ClientPayload<'game.action'>): void {
     case 'USE_TREAT':
       action = { type: 'USE_TREAT', playerId };
       break;
+    case 'PLAY_PAIR':
+      action = { type: 'PLAY_PAIR', playerId, cardIds: a.cardIds, targetId: a.targetId };
+      break;
     case 'NOPE':
       action = { type: 'NOPE', playerId };
       break;

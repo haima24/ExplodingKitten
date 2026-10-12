@@ -136,6 +136,13 @@ export function selectHint(s: State): Hint | null {
   const myTurn = view.currentPlayerId === view.you.id;
   if (myTurn) {
     const selected = view.you.hand.find((c) => c.id === s.ui.selectedCardId);
+    if (selected?.kind === 'COZY_CAT') {
+      if (s.ui.pairCardId !== null) return { key: 'hint.pairReady' };
+      const twin = view.you.hand.some((c) => c.kind === 'COZY_CAT' && c.id !== selected.id && c.variant === selected.variant);
+      return twin
+        ? { key: 'hint.pairNext', params: { card: cardName(selected.kind, selected.variant) } }
+        : { key: 'hint.catAlone' };
+    }
     if (selected && CARD_CATALOG[selected.kind].playable) {
       return { key: 'hint.selected', params: { card: cardName(selected.kind) } };
     }

@@ -17,7 +17,7 @@ Friendly, specific messages for everything that can't be done, without changing 
 
 | Source code | Message |
 | --- | --- |
-| Catalog `notPlayableReason` Cat card / `NOT_PLAYABLE` | "Cat cards just like to cuddle. Pick another card!" |
+| Catalog `notPlayableReason` Cat card / `NOT_PLAYABLE` | "Cat cards are played in pairs. Tap a second matching Cat card!" |
 | Catalog reason Defuse | "Defuse cards save you automatically when an Exploding Kitten shows up." |
 | `NOT_YOUR_TURN` (stale tap) | "Oops, that was too late. It's {name}'s turn now." |
 | Not my turn (pre-check) | "Wait for {name}." |

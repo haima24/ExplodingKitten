@@ -445,6 +445,26 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'settings.voice.unavailable':
     'Thiết bị này chưa có giọng đọc cho ngôn ngữ đã chọn nên có thể bạn không nghe thấy gì. Chữ vẫn hiện bình thường.',
 
+  // Cat card pairs (US-065)
+  'cat.1': 'Mèo Taco',
+  'cat.2': 'Mèo Khoai',
+  'cat.3': 'Mèo Râu',
+  'cat.4': 'Mèo Cầu Vồng',
+  'cat.5': 'Mèo Dưa Hấu',
+  'pair.play': 'Chơi cặp',
+  'pair.sameDesign': 'Một cặp cần hai lá mèo cùng kiểu.',
+  'pair.max': 'Một cặp gồm hai lá. Chạm vào một lá để bỏ chọn.',
+  'pair.target.title': 'Lấy bài của ai?',
+  'pair.target.prompt': 'Chọn một người chơi. Bạn lấy ngẫu nhiên một lá từ tay họ.',
+  'hint.pairNext': 'Chạm thêm một lá {card} để thành cặp.',
+  'hint.catAlone': 'Lá mèo cần thêm một lá mèo giống để chơi.',
+  'hint.pairReady': 'Chạm Chơi cặp, rồi chọn người để lấy bài.',
+  'detail.pair': 'Chơi theo cặp',
+  'card.pairNote': 'Chơi cùng một lá mèo giống.',
+  'log.pair': '{name} đã chơi một cặp lá mèo vào {target}',
+  'log.steal': '{to} đã lấy một lá bài của {from}',
+  'steal.got': 'Bạn lấy được {card}!',
+
   // Spoken lines
   'voice.V01': 'Đến lượt bạn rút.',
   'voice.V03': 'Bạn đã rút một lá bài.',
@@ -465,6 +485,8 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'voice.V16': 'Có một người chơi bị loại.',
   'voice.V17': 'Bạn thắng rồi!',
   'voice.V18': 'Trò chơi kết thúc. Chúc mừng người thắng cuộc!',
+  'voice.V19': 'Bạn đã lấy một lá bài.',
+  'voice.V20': 'Một lá bài của bạn đã bị lấy.',
 
   // Privacy (translation awaiting legal review, see privacy.draftNotice)
   'privacy.title': 'Quyền riêng tư',
@@ -502,8 +524,8 @@ export const viCards: Record<CardKind, { name: string; effect: string; reason?: 
   SHAKE_UP: { name: 'Xáo Bài', effect: 'Xáo chồng bài rút.' },
   COZY_CAT: {
     name: 'Thẻ Mèo',
-    effect: 'Chỉ thích âu yếm. Không có tác dụng.',
-    reason: 'Lá mèo chỉ thích âu yếm thôi. Hãy chọn lá khác!',
+    effect: 'Chơi hai lá mèo giống nhau để lấy ngẫu nhiên một lá bài.',
+    reason: 'Lá mèo được chơi theo cặp. Chạm thêm một lá mèo giống!',
   },
   PASS_IT_ON: { name: 'Vả', effect: 'Bỏ lượt rút. Người tiếp theo phải đi 2 lượt.' },
   ASK_A_FRIEND: { name: 'Nhờ Vả', effect: 'Chọn một người chơi. Bạn ấy đưa bạn một lá bài.' },

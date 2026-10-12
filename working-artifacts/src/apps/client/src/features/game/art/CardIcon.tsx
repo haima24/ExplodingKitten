@@ -41,7 +41,56 @@ function Paw({ x, y, scale = 1, fill }: { x: number; y: number; scale?: number; 
   );
 }
 
-function art(kind: CardKind): ReactNode {
+/** A small symbol for each of the 5 Cat designs, so they never rely on colour alone (US-065). */
+function DesignSymbol({ variant }: { variant: number | undefined }): JSX.Element | null {
+  switch (variant) {
+    case 1: // Tacocat: a taco shell with lettuce
+      return (
+        <g {...stroke} strokeWidth={2}>
+          <path d="M2 17a12 12 0 0 1 24 0Z" fill={ORANGE} />
+          <path d="M5 15q3-4 5 0t5 0 5 0" fill="none" stroke={SUCCESS} strokeWidth={2.2} />
+        </g>
+      );
+    case 2: // Potato Cat: a lumpy potato
+      return (
+        <g {...stroke} strokeWidth={2}>
+          <ellipse cx="14" cy="14" rx="12" ry="8.5" fill="#B9794A" />
+          <circle cx="9" cy="12" r="1.2" fill={INK} />
+          <circle cx="16" cy="16" r="1.2" fill={INK} />
+          <circle cx="19" cy="11" r="1.2" fill={INK} />
+        </g>
+      );
+    case 3: // Beard Cat: a bushy beard
+      return (
+        <g {...stroke} strokeWidth={2}>
+          <path d="M2 6a12 12 0 0 0 24 0Z" fill="#6b4a32" />
+          <path d="M8 6v6M14 6v9M20 6v6" fill="none" stroke="#fff" strokeWidth={1.4} />
+        </g>
+      );
+    case 4: // Rainbow Cat: a rainbow
+      return (
+        <g fill="none" strokeLinecap="round" strokeWidth={3}>
+          <path d="M3 22a11 11 0 0 1 22 0" stroke={BOOM} />
+          <path d="M7 22a7 7 0 0 1 14 0" stroke={ACCENT} />
+          <path d="M11 22a3 3 0 0 1 6 0" stroke={INFO} />
+        </g>
+      );
+    case 5: // Cattermelon: a melon slice
+      return (
+        <g {...stroke} strokeWidth={2}>
+          <path d="M2 6a12 12 0 0 0 24 0Z" fill="#E4577A" />
+          <path d="M2 6h24" stroke={SUCCESS} strokeWidth={3} />
+          <circle cx="9" cy="12" r="1.1" fill={INK} />
+          <circle cx="14" cy="15" r="1.1" fill={INK} />
+          <circle cx="19" cy="12" r="1.1" fill={INK} />
+        </g>
+      );
+    default:
+      return null;
+  }
+}
+
+function art(kind: CardKind, variant?: number): ReactNode {
   switch (kind) {
     case 'BOOM_CAT': // Exploding Kitten: a startled cat in front of a burst
       return (
@@ -96,9 +145,10 @@ function art(kind: CardKind): ReactNode {
           <polygon points="12,54 10,36 26,42" fill={ORANGE} {...stroke} strokeWidth={2.5} />
         </>
       );
-    case 'COZY_CAT': // Cat card: a cat asleep on a cushion
+    case 'COZY_CAT': // Cat card: a cat asleep on a cushion, with a symbol for its design
       return (
         <>
+          <DesignSymbol variant={variant} />
           <ellipse cx="32" cy="52" rx="26" ry="7" fill="#d9d0fa" {...stroke} />
           <ellipse cx="34" cy="40" rx="22" ry="12" fill="#F6C890" {...stroke} />
           <path d="M54 34c6-4 6-14 0-14" fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />
@@ -153,7 +203,7 @@ function art(kind: CardKind): ReactNode {
   }
 }
 
-export function CardIcon({ kind, size = 48 }: { kind: CardKind; size?: number }): JSX.Element {
+export function CardIcon({ kind, size = 48, variant }: { kind: CardKind; size?: number; variant?: number | undefined }): JSX.Element {
   return (
     <svg
       width={size}
@@ -163,7 +213,7 @@ export function CardIcon({ kind, size = 48 }: { kind: CardKind; size?: number })
       focusable="false"
       style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
     >
-      {art(kind)}
+      {art(kind, variant)}
     </svg>
   );
 }

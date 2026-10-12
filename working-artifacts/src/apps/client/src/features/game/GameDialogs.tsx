@@ -97,7 +97,7 @@ export function FavorPickDialog(): JSX.Element | null {
       <ul className={g['favorHand']}>
         {view.you.hand.map((card) => (
           <li key={card.id}>
-            <Card kind={card.kind} onSelect={() => void pickFavor(card.id)} />
+            <Card kind={card.kind} variant={card.variant} onSelect={() => void pickFavor(card.id)} />
           </li>
         ))}
       </ul>
@@ -186,7 +186,7 @@ export function PeekOverlay({ cards }: { cards: CardData[] }): JSX.Element {
   const { dispatch } = useStore();
   const close = (): void => dispatch({ type: 'ui/peek', cards: null });
   const labels = [t('peek.top'), t('peek.second'), t('peek.third')];
-  const reading = cards.map((card, i) => `${labels[i] ?? ''}: ${cardName(card.kind)}`).join('. ');
+  const reading = cards.map((card, i) => `${labels[i] ?? ''}: ${cardName(card.kind, card.variant)}`).join('. ');
   return (
     <Modal title={t('peek.title')} onClose={close} announce={`${t('peek.title')} ${reading}`}>
       {cards.length === 0 ? (
@@ -196,7 +196,7 @@ export function PeekOverlay({ cards }: { cards: CardData[] }): JSX.Element {
           {cards.map((card, index) => (
             <li key={card.id} className={g['peekItem']}>
               <span>{labels[index]}</span>
-              <Card kind={card.kind} />
+              <Card kind={card.kind} variant={card.variant} />
             </li>
           ))}
         </ol>

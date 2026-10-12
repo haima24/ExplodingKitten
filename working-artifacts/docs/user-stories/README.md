@@ -66,5 +66,6 @@ One file per story. Source of truth for coverage matrix, design cross-reference,
 | [US-053](release-1.0.1/US-053-qr-code-for-joining-a-room.md) | QR code for joining a room | 1.0.1 | Could | Rooms and lobby |
 | [US-063](release-1.0.2/US-063-turn-timer-and-card-sounds.md) | Turn timer and card sound effects | 1.0.2 | Should / Could (proposed) | Gameplay and turn management |
 | [US-064](release-1.0.2/US-064-vietnamese-localization.md) | Vietnamese localization (text and voice) | 1.0.2 | Should / Could (proposed) | Localization |
+| [US-065](release-1.0.2/US-065-cat-card-pairs.md) | Cat card pairs | 1.0.2 | Should (proposed) | Cards and game rules |
 
-Releases: **1.0.1** = the original scope (US-001 to US-062). **1.0.2** = US-063 and US-064.
+Releases: **1.0.1** = the original scope (US-001 to US-062). **1.0.2** = US-063, US-064 and US-065.

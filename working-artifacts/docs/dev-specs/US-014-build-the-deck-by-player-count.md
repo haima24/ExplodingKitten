@@ -22,7 +22,7 @@ Build the right mix of cards for 2–4 players from data, with unique opaque ids
 | `HOP_OVER` | Skip | Skip your draw and end your turn. | yes | |
 | `PEEK` | See the Future | Secretly look at the top 3 cards. | yes | |
 | `SHAKE_UP` | Shuffle | Shuffle the draw pile. | yes | |
-| `COZY_CAT` | Cat card | Just likes to cuddle. No effect. | no (OQ-06) | reason: "Cat cards just like to cuddle. Pick another card!"; 5 designs |
+| `COZY_CAT` | Cat card | Play two matching Cat cards to take a random card. | only as a pair (US-065) | reason: "Cat cards are played in pairs. Tap a second matching Cat card!"; 5 designs × 4 |
 | `PASS_IT_ON` | Attack | Skip your draw. Next player takes 2 turns. | yes | profile `mvp+should` |
 | `ASK_A_FRIEND` | Favor | Pick a player. They give you a card. | yes | profile `mvp+should` |
 | `NOPE` | Nope | Stop another player's action card. Play it any time. | no (played only in a response window, US-062) | profile `mvp+should`; `reaction: true`; 5 cards |
@@ -32,7 +32,7 @@ A unit test asserts every effect text has ≤ 12 words (US-030).
 ### 2.2 Deck configuration (data)
 
 ```ts
-interface DeckProfile { hopOver: 4; peek: 4; shakeUp: 4; cozyDesigns: 5; cozyPerDesign: 3
+interface DeckProfile { hopOver: 4; peek: 4; shakeUp: 4; cozyDesigns: 5; cozyPerDesign: 4
                         passItOn?: 4; askAFriend?: 4; extraTreats: 2; startingHandSize: 4 }
 ```
 

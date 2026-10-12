@@ -87,7 +87,9 @@ export type PlayerAction =
   | { type: 'REINSERT_BOOM'; position: InsertPosition }
   | { type: 'PICK_FAVOR_CARD'; cardId: string }
   | { type: 'NOPE' }
-  | { type: 'PASS_NOPE' };
+  | { type: 'PASS_NOPE' }
+  /** Two Cat cards of the same design: take a random card from `targetId` (US-065). */
+  | { type: 'PLAY_PAIR'; cardIds: [string, string]; targetId: string };
 
 /** Actions only the server may issue. */
 export type ServerAction =
@@ -148,11 +150,13 @@ export type EventType =
   | 'EFFECT_APPLIED'
   | 'NOPE_RESOLVED'
   | 'TURN_TIMEOUT'
+  | 'CARD_STOLEN'
   // private
   | 'DRAWN_CARD'
   | 'PEEK_RESULT'
   | 'BOOM_DRAWN'
-  | 'FAVOR_RECEIVED';
+  | 'FAVOR_RECEIVED'
+  | 'STOLEN_CARD';
 
 export type EventVisibility = 'PUBLIC' | { to: string };
 

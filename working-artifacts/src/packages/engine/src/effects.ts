@@ -38,6 +38,18 @@ export function applyEffect(
       s.phase = 'decision';
       break;
     }
+    case 'COZY_CAT': {
+      // A pair of Cat cards: take one random card from the target (US-065).
+      const target = targetId === undefined ? undefined : s.players.find((p) => p.id === targetId);
+      const actor = getPlayer(s, actorId);
+      if (!target || target.status !== 'active' || target.hand.length < 1 || actor.status !== 'active') break;
+      const [stolen] = target.hand.splice(rng.nextInt(target.hand.length), 1);
+      if (!stolen) break;
+      actor.hand.push(stolen);
+      emit(s, ev, 'CARD_STOLEN', { fromId: target.id, toId: actorId });
+      emit(s, ev, 'STOLEN_CARD', { card: stolen }, actorId);
+      break;
+    }
     default:
       break;
   }

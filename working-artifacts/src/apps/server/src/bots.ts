@@ -27,6 +27,16 @@ export function chooseAction(view: PlayerView, rng: Rng): PlayerAction | null {
 
   if (view.phase !== 'turn' || view.currentPlayerId !== view.you.id) return null;
 
+  // Gentle: now and then play a pair of matching Cat cards at someone who holds a card.
+  const targets = view.others.filter((o) => o.status === 'active' && o.handCount >= 1);
+  const cats = view.you.hand.filter((c) => c.kind === 'COZY_CAT');
+  const twin = cats.find((c) => cats.some((o) => o.id !== c.id && o.variant === c.variant));
+  const other = twin ? cats.find((o) => o.id !== twin.id && o.variant === twin.variant) : undefined;
+  if (twin && other && targets.length > 0 && rng.nextInt(100) < 25) {
+    const target = targets[rng.nextInt(targets.length)];
+    if (target) return { type: 'PLAY_PAIR', cardIds: [twin.id, other.id], targetId: target.id };
+  }
+
   const hop = view.you.hand.find((c) => c.kind === 'HOP_OVER');
   if (hop && rng.nextInt(100) < 30) return { type: 'PLAY_CARD', cardId: hop.id };
   const shake = view.you.hand.find((c) => c.kind === 'SHAKE_UP');

@@ -374,14 +374,14 @@
 - **Priority:** Must
 - **Epic:** Cards and game rules
 - **User story:** As a player, I want the right mix of cards for the number of players, so that the game is balanced and always has an Exploding Kitten to find.
-- **Context:** F-03, DAC-04. Counts are proposed (brief §C4) and tunable. Cat cards are not playable (OQ-06).
+- **Context:** F-03, DAC-04. Counts are proposed (brief §C4) and tunable. Cat cards are played only as a pair (OQ-06 resolved by US-065).
 - **Acceptance criteria:**
-  - Given the MVP set, then the complete deck is: Skip ×4, See the Future ×4, Shuffle ×4, Cat card ×15 (5 designs × 3), Defuse ×(players + 2), Exploding Kitten ×(players − 1).
+  - Given the MVP set, then the complete deck is: Skip ×4, See the Future ×4, Shuffle ×4, Cat card ×20 (5 designs × 4, US-065), Defuse ×(players + 2), Exploding Kitten ×(players − 1).
   - Given 2 players, then there is 1 Exploding Kitten; given 4 players, then there are 3.
   - Given the host starts the game with N players in the room, then the deck is built for exactly N players.
   - Given the deck is built, then every card has a unique id and an effect text of ≤ 12 words in the card data.
   - Given Attack and Favor are not yet implemented, then they are absent from the deck (they are added by US-021 and US-022).
-  - Given the Cat card, then its card text states it "just likes to cuddle" and it has no effect.
+  - Given the Cat card, then its card text says it is played as a pair of the same design to take a random card (US-065); a single Cat card is still not playable.
   - Negative: Given a deck configuration with Exploding Kittens ≥ players, then the engine rejects it.
 - **Dependencies:** US-051.
 - **Notes:** The counts are explicitly open to playtest tuning.
@@ -815,7 +815,7 @@
 - **User story:** As a child player, I want a friendly reason when something can't be done, so that I can fix it and carry on.
 - **Context:** F-14, DAC-12, DAC-25. See [ui-ux.md §E6](ui-ux.md#e6-invalid-actions-and-error-recovery).
 - **Acceptance criteria:**
-  - Given I select Cat card and press Play, then the message "Cat cards just like to cuddle. Pick another card!" appears, and the game state is unchanged.
+  - Given I select Cat card and press Play, then the message "Cat cards are played in pairs. Tap a second matching Cat card!" appears, and the game state is unchanged.
   - Given I select a Defuse in hand, then Play is disabled and the detail panel says "Defuse cards save you automatically when an Exploding Kitten shows up."
   - Given it is not my turn or my connection is down, then Play and Draw are inert and labelled with the reason ("Wait for [Name]" or "Reconnecting…").
   - Given the server rejects an action (for example a stale tap just after the turn changed), then the state is unchanged and I see "Oops, that was too late. It's [Name]'s turn now."

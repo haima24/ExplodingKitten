@@ -56,7 +56,7 @@ export function voiceLabelFor(lang: string): string | null {
 /** Every line that has a file, so they can be fetched ahead of time. */
 const LINE_IDS = [
   'sample', 'V01', 'V03', 'V04', 'V05', 'V05b', 'V06', 'V06a', 'V07', 'V08',
-  'V09', 'V10', 'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'V17', 'V18',
+  'V09', 'V10', 'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'V17', 'V18', 'V19', 'V20',
 ];
 
 export function configureVoice(next: { lang: string; volume: number }): void {

@@ -42,6 +42,8 @@ export interface State {
   absent: AbsentInfo | null;
   ui: {
     selectedCardId: string | null;
+    /** Second Cat card of a pair (US-065). */
+    pairCardId: string | null;
     pendingActionId: string | null;
     pendingSince: number;
     inlineMessage: Message | null;
@@ -69,6 +71,7 @@ export function initialState(): State {
     absent: null,
     ui: {
       selectedCardId: null,
+      pairCardId: null,
       pendingActionId: null,
       pendingSince: 0,
       inlineMessage: null,
@@ -95,6 +98,7 @@ export type Action =
   | { type: 'game/clear' }
   | { type: 'absent/set'; absent: AbsentInfo | null }
   | { type: 'ui/select'; cardId: string | null }
+  | { type: 'ui/pair'; cardId: string | null }
   | { type: 'ui/pending'; id: string | null }
   | { type: 'ui/inline'; message: Message | null }
   | { type: 'ui/toast'; message: Message | null }
@@ -144,6 +148,8 @@ export function reducer(state: State, action: Action): State {
     case 'game/update': {
       const keep = state.ui.selectedCardId;
       const stillHeld = keep !== null && action.view.you.hand.some((c) => c.id === keep);
+      const pairKeep = state.ui.pairCardId;
+      const pairHeld = stillHeld && pairKeep !== null && action.view.you.hand.some((c) => c.id === pairKeep);
       return {
         ...state,
         game: { view: action.view, log: action.log, playedThisTurn: action.playedThisTurn },
@@ -152,6 +158,7 @@ export function reducer(state: State, action: Action): State {
           ...state.ui,
           pendingActionId: null,
           selectedCardId: stillHeld ? keep : null,
+          pairCardId: pairHeld ? pairKeep : null,
         },
       };
     }
@@ -165,7 +172,9 @@ export function reducer(state: State, action: Action): State {
     case 'absent/set':
       return { ...state, absent: action.absent };
     case 'ui/select':
-      return { ...state, ui: { ...state.ui, selectedCardId: action.cardId } };
+      return { ...state, ui: { ...state.ui, selectedCardId: action.cardId, pairCardId: null } };
+    case 'ui/pair':
+      return { ...state, ui: { ...state.ui, pairCardId: action.cardId } };
     case 'ui/pending':
       return {
         ...state,

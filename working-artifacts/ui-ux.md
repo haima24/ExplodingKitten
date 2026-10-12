@@ -167,7 +167,7 @@ Single SVG icon set, 2 px stroke, rounded caps, 24/32/48 px sizes, `currentColor
 | **Toast / action message** | Bottom-centre (above hand), 4 s minimum, dismissible, does not steal focus. Replaced by the **action log** in the game menu / log panel **[S]**. |
 | **Connection banner** | Top of the screen, below the header, `role="status"`. States: "Connecting…", "Reconnecting… your cards are safe", "Back online" (auto-dismisses after 3 s). Never blocks the board. A text label is always shown with the icon. |
 | **Absent-player banner** | Shown to everyone when the player whose turn it is has lost connection: "Waiting for Pip to come back…" with a 60 s countdown shown as text. After 60 s the **host** also sees **Keep waiting** and **Skip Pip**. |
-| **Inline error** (invalid action) | Appears next to the attempted control, friendly wording, icon + text, `role="status"`. Example: "Cat cards just like to cuddle. Pick another card!" Never red-only. |
+| **Inline error** (invalid action) | Appears next to the attempted control, friendly wording, icon + text, `role="status"`. Example: "Cat cards are played in pairs. Tap a second matching Cat card!" Never red-only. |
 | **Info popover** (card help) | Opens on tap/Enter (not hover). Closes with Escape, outside tap, or close button. |
 | **Modal dialog** | `role="dialog"` with `aria-modal`, labelled title, focus trapped and returned to the invoking control on close, Escape closes (except forced-choice dialogs), scrim `--scrim`. Max width 560 px; becomes a bottom sheet on phones. |
 | **Confirmation dialog** | Title states the consequence; the safe action is the primary, auto-focused button; destructive action is a separate danger button on the other side. |
@@ -457,7 +457,7 @@ See D6. Principles: **surprise, not scare**; **always a clear next step**; **nam
 | Situation | Behaviour | Message (friendly) |
 | --- | --- | --- |
 | Tap Play while no card selected | Play disabled; hint reads "Pick a card first" | "Pick a card to play, or draw." |
-| Select Cat card and press Play | Not allowed | "Cat cards just like to cuddle. Pick another card!" |
+| Select Cat card and press Play | Not allowed | "Cat cards are played in pairs. Tap a second matching Cat card!" |
 | Tap Draw / Play when it is another player's turn | Controls inert | "Wait for Pip's turn." |
 | Server rejects an action (for example a stale tap just after the turn changed) | State unchanged; the card stays in the hand | "Oops, that was too late. It's Pip's turn now." |
 | Connection is down when tapping Draw / Play | Controls inert until reconnected | "Reconnecting… try again in a moment." |

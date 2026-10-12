@@ -88,11 +88,11 @@ export function CardGuide(): JSX.Element {
                 <h3>{cardName(kind)}</h3>
                 <span>{cardEffect(kind)}</span>
                 <span className="sr-only">
-                  {info.playable
+                  {info.playable || info.pair
                     ? t('detail.playable')
                     : t('detail.notPlayable', { reason: cardNotPlayableReason(kind) ?? '' })}
                 </span>
-                {!info.playable ? (
+                {!info.playable && !info.pair ? (
                   <InfoPopover label={t('help.infoOpen', { name: cardName(kind) })}>
                     <span>{cardNotPlayableReason(kind)}</span>
                   </InfoPopover>
@@ -145,7 +145,7 @@ function Tour({ onExit }: { onExit: () => void }): JSX.Element {
       {index === 3 ? (
         <ul className={s['miniList']}>
           {kindsForProfile(profile)
-            .filter((k) => CARD_CATALOG[k].playable || CARD_CATALOG[k].reaction)
+            .filter((k) => CARD_CATALOG[k].playable || CARD_CATALOG[k].reaction || CARD_CATALOG[k].pair)
             .map((k) => (
               <li key={k} className={s['miniItem']}>
                 <span style={{ fontSize: '1.75rem' }}>

@@ -105,6 +105,8 @@ function dispatch(s: GameState, a: Action, rng: Rng, ev: GameEvent[]): EngineErr
       return playNope(s, a.playerId, rng, ev);
     case 'PASS_NOPE':
       return passNope(s, a.playerId, rng, ev);
+    case 'PLAY_PAIR':
+      return playPair(s, a.playerId, a.cardIds, a.targetId, rng, ev);
     case 'EXPIRE_NOPE':
       return expireNope(s, rng, ev);
     case 'TIMEOUT':
@@ -153,6 +155,49 @@ function playCard(
 
   // Other players holding a Nope get a chance to stop the card before it takes effect.
   openWindowOrResolve(s, card, playerId, targetId, rng, ev);
+  return null;
+}
+
+/**
+ * Two Cat cards of the same design, played together at a target who holds a card.
+ * Like any action card it can be Noped and it does not end the turn.
+ */
+function playPair(
+  s: GameState,
+  playerId: string,
+  cardIds: readonly [string, string],
+  targetId: string,
+  rng: Rng,
+  ev: GameEvent[],
+): EngineError | null {
+  if (s.currentPlayerId !== playerId) return engineError('NOT_YOUR_TURN');
+  if (s.phase !== 'turn') return engineError('WRONG_PHASE');
+  const [idA, idB] = cardIds;
+  if (idA === idB) return engineError('NOT_PLAYABLE', 'A pair is two different cards');
+  const me = getPlayer(s, playerId);
+  const first = me.hand.find((c) => c.id === idA);
+  const second = me.hand.find((c) => c.id === idB);
+  if (!first || !second) return engineError('CARD_NOT_IN_HAND');
+  if (first.kind !== 'COZY_CAT' || second.kind !== 'COZY_CAT' || first.variant !== second.variant) {
+    return engineError('NOT_PLAYABLE', 'A pair needs two Cat cards of the same design');
+  }
+  const target = s.players.find((p) => p.id === targetId);
+  if (!target || target.id === playerId || target.status !== 'active' || target.hand.length < 1) {
+    return engineError('INVALID_TARGET');
+  }
+
+  me.hand = me.hand.filter((c) => c.id !== idA && c.id !== idB);
+  s.discardPile.unshift(second);
+  s.discardPile.unshift(first);
+  emit(s, ev, 'CARD_PLAYED', {
+    playerId,
+    kind: first.kind,
+    cardId: first.id,
+    pair: true,
+    targetId,
+    ...(first.variant !== undefined ? { variant: first.variant } : {}),
+  });
+  openWindowOrResolve(s, first, playerId, targetId, rng, ev);
   return null;
 }
 

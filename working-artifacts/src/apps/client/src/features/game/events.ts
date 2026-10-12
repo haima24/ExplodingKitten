@@ -34,7 +34,9 @@ export type VoiceId =
   | 'V15'
   | 'V16'
   | 'V17'
-  | 'V18';
+  | 'V18'
+  | 'V19'
+  | 'V20';
 
 export interface Processed {
   log: LogEntry[];
@@ -129,7 +131,10 @@ export function processGameUpdate(input: {
       }
       case 'CARD_PLAYED': {
         const kind = d['kind'] as CardKind;
-        const text = log(e.seq, 'log.played', { name: name(d['playerId']) }, { card: kind });
+        const text =
+          d['pair'] === true
+            ? log(e.seq, 'log.pair', { name: name(d['playerId']), target: name(d['targetId']) })
+            : log(e.seq, 'log.played', { name: name(d['playerId']) }, { card: kind });
         out.sounds.push(CARD_SOUND[kind]);
         if (d['playerId'] === me && (kind === 'PEEK' || kind === 'SHAKE_UP')) {
           out.playedThisTurn = true;
@@ -222,6 +227,13 @@ export function processGameUpdate(input: {
         log(e.seq, 'log.favorAsked', { from: name(d['requesterId']), to: name(d['targetId']) });
         if (d['targetId'] === me) say('V10', 1);
         break;
+      case 'CARD_STOLEN': {
+        const text = log(e.seq, 'log.steal', { from: name(d['fromId']), to: name(d['toId']) });
+        out.announcements.push(text);
+        if (d['fromId'] === me) say('V20', 1);
+        else if (d['toId'] === me) say('V19');
+        break;
+      }
       case 'FAVOR_GIVEN': {
         const text = log(e.seq, 'log.favorGiven', { from: name(d['fromId']), to: name(d['toId']) });
         out.announcements.push(text);
@@ -236,8 +248,8 @@ export function processGameUpdate(input: {
       }
       // ---- private events: never logged
       case 'DRAWN_CARD': {
-        const kind = (d['card'] as Card).kind;
-        out.toast = t('draw.got', { card: cardName(kind) });
+        const drawn = d['card'] as Card;
+        out.toast = t('draw.got', { card: cardName(drawn.kind, drawn.variant) });
         out.sounds.push('draw');
         say('V03');
         break;
@@ -254,7 +266,10 @@ export function processGameUpdate(input: {
         }
         break;
       case 'FAVOR_RECEIVED':
-        out.toast = t('favor.got', { card: cardName((d['card'] as Card).kind) });
+        out.toast = t('favor.got', { card: cardName((d['card'] as Card).kind, (d['card'] as Card).variant) });
+        break;
+      case 'STOLEN_CARD':
+        out.toast = t('steal.got', { card: cardName((d['card'] as Card).kind, (d['card'] as Card).variant) });
         break;
     }
   }
