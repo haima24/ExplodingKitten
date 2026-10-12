@@ -23,4 +23,4 @@ This repository is a library of reusable agents, instructions, prompts, hooks, a
 
 - Prefer linking to existing instruction files instead of duplicating content.
 - If you add new skills, keep them narrow and task-focused, with clear triggers.
-- No build/test/lint commands are documented in this repo; add them here if you decide to standardize.
+- Game app (Whisker Boom): a pnpm workspace in `working-artifacts/src/` (`packages/`, `apps/`; run pnpm from that folder). Use `pnpm install`, `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm typecheck`, `pnpm test`. Details are in the root README. Dependency rules (engine imports nothing; the client never imports `applyAction`) are enforced by `pnpm lint`.

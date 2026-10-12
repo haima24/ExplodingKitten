@@ -1,0 +1,559 @@
+/* Board layout (UI/UX C1). Mobile-first; areas rearrange per device class. */
+.board {
+  --card-w: 4.75rem;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto 1fr auto auto;
+  grid-template-areas:
+    'players'
+    'alerts'
+    'banner'
+    'piles'
+    'hand'
+    'actions';
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: var(--space-3) calc(var(--page-pad) + var(--safe-right)) 0
+    calc(var(--page-pad) + var(--safe-left));
+  min-height: 0;
+}
+.players {
+  grid-area: players;
+  min-width: 0;
+}
+.alerts {
+  grid-area: alerts;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.bannerArea {
+  grid-area: banner;
+  min-width: 0;
+}
+.pilesArea {
+  grid-area: piles;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.handArea {
+  grid-area: hand;
+  min-width: 0;
+  padding-top: var(--space-5); /* room for the raised selected card */
+}
+.actionsArea {
+  grid-area: actions;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0 calc(var(--space-3) + var(--safe-bottom));
+  background: linear-gradient(to top, var(--color-bg) 88%, transparent);
+}
+.logArea {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .board {
+    --card-w: 6.25rem;
+  }
+}
+
+/* Phone landscape: status and piles on the left, hand and actions on the right. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .board {
+    --card-w: 4.75rem;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas:
+      'players hand'
+      'alerts hand'
+      'banner actions'
+      'piles actions';
+    column-gap: var(--space-4);
+  }
+  .actionsArea {
+    position: static;
+    background: none;
+    padding-bottom: var(--space-3);
+  }
+}
+
+/* Desktop: table in the middle, log in a side panel. */
+@media (min-width: 1024px) {
+  .board {
+    --card-w: 7.5rem;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    grid-template-rows: auto auto auto 1fr auto auto;
+    grid-template-areas:
+      'players log'
+      'alerts log'
+      'banner log'
+      'piles log'
+      'hand log'
+      'actions log';
+  }
+  .logArea {
+    grid-area: log;
+    display: block;
+    align-self: start;
+  }
+  .actionsArea {
+    position: static;
+    background: none;
+  }
+}
+
+/* ---------- Player chips ---------- */
+.chipRow {
+  list-style: none;
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: var(--space-2) var(--space-1);
+  scroll-snap-type: x proximity;
+}
+.chip {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 8.5rem;
+  padding: var(--space-1) var(--space-3);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  scroll-snap-align: center;
+}
+.chipActive {
+  border: 4px solid var(--color-primary);
+  background: var(--color-surface-alt);
+  box-shadow: 0 0 0 3px var(--color-accent);
+}
+.chipOut {
+  background: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  border-style: dashed;
+}
+.chipText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+.chipName {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-small);
+  overflow-wrap: anywhere;
+}
+.chipActive .chipName {
+  font-weight: 800;
+}
+.chipMeta {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.paw {
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-ink);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  font-size: 0.9rem;
+}
+.turnsBadge {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-ink);
+  background: var(--color-accent);
+  color: var(--color-ink);
+  font-weight: 800;
+}
+
+/* ---------- Banner ---------- */
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.banner h2 {
+  font-size: 1.3rem;
+}
+@media (min-width: 600px) {
+  .banner h2 {
+    font-size: var(--text-h2);
+  }
+}
+.bannerTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.hint {
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+.absent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 3px solid var(--color-info);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-weight: 700;
+}
+.absentActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.absentActions > * {
+  flex: 1 1 9rem;
+}
+
+/* ---------- Piles ---------- */
+.pile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 800;
+}
+.pileButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  border-radius: var(--radius-md);
+}
+.pileButton:active {
+  transform: translateY(2px);
+}
+.pileDimmed {
+  opacity: 0.75;
+}
+.pileLabel {
+  font-size: var(--text-small);
+}
+.emptyDiscard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--card-w);
+  aspect-ratio: 5 / 7;
+  min-height: 100px;
+  padding: var(--space-2);
+  border: 3px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-ink-soft);
+  font-size: 0.8rem;
+  text-align: center;
+}
+.shuffle {
+  animation: shake var(--dur-move) var(--ease-standard);
+}
+@keyframes shake {
+  25% {
+    transform: translateX(-4px) rotate(-2deg);
+  }
+  75% {
+    transform: translateX(4px) rotate(2deg);
+  }
+}
+
+/* ---------- Hand ---------- */
+.handHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-small);
+  font-weight: 800;
+}
+.hand {
+  list-style: none;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  overflow-x: auto;
+  padding: var(--space-5) var(--space-2) var(--space-2);
+  margin-top: calc(-1 * var(--space-5));
+  scroll-snap-type: x proximity;
+  scroll-padding: 0 var(--space-4);
+}
+.handItem {
+  flex: none;
+  scroll-snap-align: center;
+}
+.handItem + .handItem {
+  /* Phone: overlap up to 25% so each card keeps >= 56px visible. */
+  margin-inline-start: calc(var(--card-w) * -0.2);
+}
+@media (min-width: 600px) {
+  .handItem + .handItem {
+    margin-inline-start: calc(var(--card-w) * -0.12);
+  }
+}
+@media (min-width: 1024px) {
+  .handItem + .handItem {
+    margin-inline-start: var(--space-2);
+  }
+  .handCrowded .handItem + .handItem {
+    margin-inline-start: calc(var(--card-w) * -0.12);
+  }
+  .hand {
+    flex-wrap: nowrap;
+  }
+}
+.handHidden {
+  padding: var(--space-4);
+  border: 3px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---------- Action bar ---------- */
+.detail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.detailArt {
+  font-size: 2rem;
+  line-height: 1;
+}
+.detailText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+.detailHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-2);
+}
+.detailName {
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  font-weight: 700;
+}
+.detailEffect {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--text-small);
+}
+.detailStatus {
+  font-weight: 800;
+  font-size: var(--text-small);
+}
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+@media (min-width: 400px) {
+  .buttons {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+.reason {
+  font-size: var(--text-small);
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+.tip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 3px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-weight: 700;
+}
+.tip > span {
+  flex: 1 1 10rem;
+}
+
+/* ---------- Log ---------- */
+.log {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.logItem {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 2px solid var(--color-surface-alt);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+.logPanel {
+  padding: var(--space-4);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ---------- Dialog bits ---------- */
+.dialogArt {
+  font-size: 4rem;
+  line-height: 1;
+  text-align: center;
+}
+.peekRow {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.peekItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 800;
+  --card-w: 6rem;
+}
+.targets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-3);
+}
+.target {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-primary);
+  padding: var(--space-3);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--elev-1);
+  cursor: pointer;
+  touch-action: manipulation;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+.favorHand {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+  --card-w: 5.5rem;
+}
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.yourTurn {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  text-align: center;
+}
+
+/* ---------- Victory ---------- */
+.victory {
+  flex: 1;
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: var(--space-6) calc(var(--page-pad) + var(--safe-right)) var(--space-6)
+    calc(var(--page-pad) + var(--safe-left));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  position: relative;
+}
+.victory h1 {
+  font-size: var(--text-display);
+  font-weight: 800;
+  outline: none;
+}
+.victoryActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 28rem;
+}
+.recap {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-weight: 600;
+}
+.celebration {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.confetti {
+  position: absolute;
+  top: -2rem;
+  font-size: 1.75rem;
+  opacity: 0;
+  animation: fall var(--dur-celebrate) var(--ease-standard) forwards;
+}
+@keyframes fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(18rem) rotate(240deg);
+  }
+}
+.starburst {
+  font-size: 4rem;
+  line-height: 1;
+}

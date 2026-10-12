@@ -1,0 +1,107 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Every rem-based size scales with the text-size setting (US-039). */
+  font-size: calc(16px * var(--text-scale));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  margin: 0;
+  color: var(--color-ink);
+}
+h1 {
+  font-size: var(--text-h1);
+  line-height: 1.15;
+  font-weight: 700;
+}
+h2 {
+  font-size: var(--text-h2);
+  line-height: 1.2;
+  font-weight: 700;
+}
+h3 {
+  font-size: var(--text-h3);
+  line-height: 1.3;
+  font-weight: 700;
+}
+p {
+  margin: 0;
+  max-width: 60ch;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Visible focus everywhere (US-035): 3px ink ring with a white halo. */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* Keep focused elements clear of sticky bars (WCAG 2.4.11). */
+html {
+  scroll-padding: 80px 0 140px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reduced motion: remove movement, keep state changes (US-038). */
+[data-motion='reduced'] *,
+[data-motion='reduced'] *::before,
+[data-motion='reduced'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+dialog {
+  color: var(--color-ink);
+}
+dialog::backdrop {
+  background: var(--scrim);
+}

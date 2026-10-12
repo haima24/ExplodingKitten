@@ -127,3 +127,33 @@ Another good reference source is https://github.com/github/awesome-copilot, whic
 
 - [OWASP AI Testing Guide](https://github.com/OWASP/www-project-ai-testing-guide)
 - [Payloads for AI Red Teaming and beyond](https://github.com/joey-melo/payloads/tree/main/OWASP%20AITG-APP)
+
+## Whisker Boom (game app)
+
+A kid-friendly multi-device card game built from the specs in [working-artifacts/docs/dev-specs/](working-artifacts/docs/dev-specs/README.md). It is a pnpm workspace in [working-artifacts/src/](working-artifacts/src/); run every pnpm command from that folder:
+
+| Path | What it is |
+| --- | --- |
+| `working-artifacts/src/packages/engine` | Pure, deterministic rules engine (no DOM, no Node, no I/O) |
+| `working-artifacts/src/packages/protocol` | WebSocket message schemas, error codes, name and avatar lists |
+| `working-artifacts/src/apps/server` | Authoritative Node.js room server (`ws`), in memory, single instance |
+| `working-artifacts/src/apps/client` | React + Vite single-page app |
+
+**Install and run** (Node 22+, pnpm 10+):
+
+```bash
+cd working-artifacts/src
+pnpm install
+pnpm dev          # server on :3001, client on http://localhost:5173 (proxies /ws)
+```
+
+**Run it as one process** (the server also serves the built client, with the privacy headers from US-042):
+
+```bash
+pnpm build
+STATIC_DIR=apps/client/dist pnpm start      # http://localhost:3001
+```
+
+Other scripts: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm format`.
+
+Server settings come from environment variables (defaults in `apps/server/src/config.ts`): `PORT`, `DECK_PROFILE` (`mvp` or `mvp+should`), `ALLOWED_ORIGINS`, `TRUSTED_PROXIES`, `STATIC_DIR`, and the timers and limits listed in the dev-spec baseline. `TEST_MODE=1` shortens timers and seeds each room; the server refuses to start with it when `NODE_ENV=production`.

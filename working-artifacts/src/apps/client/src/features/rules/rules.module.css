@@ -1,0 +1,99 @@
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+}
+.tabs > * {
+  flex: 1;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  touch-action: pan-y;
+}
+.stepGlyph {
+  font-size: 3rem;
+  line-height: 1;
+}
+.stepText {
+  font-size: var(--text-body);
+}
+.progress {
+  font-weight: 800;
+  color: var(--color-ink-soft);
+}
+.dots {
+  display: flex;
+  gap: var(--space-2);
+}
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-ink);
+  background: #fff;
+}
+.dotOn {
+  background: var(--color-ink);
+}
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+.nav > * {
+  flex: 1 1 8rem;
+}
+.cardList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+.cardRow {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  padding: var(--space-3);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.cardRowText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.miniList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.miniItem {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+.popoverWrap {
+  position: relative;
+  display: inline-block;
+}
+.popover {
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--elev-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+}

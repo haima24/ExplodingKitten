@@ -1,0 +1,126 @@
+.home {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: var(--space-5);
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--space-5) calc(var(--page-pad) + var(--safe-right)) var(--space-6)
+    calc(var(--page-pad) + var(--safe-left));
+}
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+.hero h1 {
+  font-size: var(--text-display);
+  font-weight: 800;
+}
+.tagline {
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+.cats {
+  font-size: 2.5rem;
+  letter-spacing: 0.25em;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  color: var(--color-ink-soft);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding: 0 var(--space-3);
+  color: var(--color-primary);
+  font-weight: 800;
+}
+.rejoin {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-alt);
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.rejoinActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.rejoinActions > * {
+  flex: 1 1 8rem;
+}
+.problem {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 3px solid var(--color-boom);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-weight: 700;
+}
+
+/* Phone landscape: illustration left, buttons right. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .home {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-top: var(--space-3);
+    gap: var(--space-4);
+  }
+  .footer,
+  .rejoin {
+    grid-column: 1 / -1;
+  }
+  .hero {
+    gap: var(--space-1);
+  }
+  .cats {
+    font-size: 1.75rem;
+  }
+}
+
+/* Short phones (e.g. 320 x 568): keep all four buttons above the fold. */
+@media (max-height: 700px) {
+  .home {
+    padding-top: var(--space-3);
+    gap: var(--space-3);
+  }
+  .hero {
+    gap: var(--space-1);
+  }
+  .hero svg {
+    width: 56px;
+  }
+  .cats {
+    display: none;
+  }
+  .actions {
+    gap: var(--space-2);
+  }
+}

@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+  - apps/*
+
+# esbuild ships its binary through optional platform packages, so its install
+# script is not needed.
+allowBuilds:
+  esbuild: false
