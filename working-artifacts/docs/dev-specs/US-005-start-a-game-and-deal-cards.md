@@ -48,8 +48,8 @@ Only the host can start. The server locks the room, builds and deals the deck fo
 
 | Check | Level |
 | --- | --- |
-| 2, 3, 4 players: each hand = 1 Defuse + 4 others, no Exploding Kitten | U (engine), I |
-| Draw pile has Exploding Kittens = players − 1 and 2 extra Defuse cards | U |
+| 2 to 5 players: each hand = 1 Defuse + 4 others, no Exploding Kitten | U (engine), I |
+| Draw pile has Exploding Kittens = players − 1 and `6 − players` Defuse cards (US-068) | U |
 | Double Start creates one game | I |
 | Join during Start: never half-seated | I |
 | Player cannot start | I |

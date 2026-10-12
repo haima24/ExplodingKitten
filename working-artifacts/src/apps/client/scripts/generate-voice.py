@@ -2,6 +2,7 @@
 
     pip install edge-tts
     python apps/client/scripts/generate-voice.py
+    python apps/client/scripts/generate-voice.py --only vi:V06,V06a,V07   (redo just these lines)
 
 Reads `voice.V..` and `voice.sample` from src/copy/en.ts and src/copy/vi.ts and
 writes public/voice/<lang>/<id>.mp3. Files are committed, so the game needs no
@@ -39,12 +40,26 @@ def lines(file: str) -> dict[str, str]:
     return found
 
 
+def only_filter() -> dict[str, set[str]] | None:
+    """Parses `--only vi:V06,V07 en:V01` into {lang: {ids}}; None means everything."""
+    if "--only" not in sys.argv:
+        return None
+    wanted: dict[str, set[str]] = {}
+    for item in sys.argv[sys.argv.index("--only") + 1 :]:
+        lang, _, ids = item.partition(":")
+        wanted.setdefault(lang, set()).update(i for i in ids.split(",") if i)
+    return wanted
+
+
 async def main() -> int:
     total = 0
+    wanted = only_filter()
     for lang, voice in VOICES.items():
         folder = OUT / lang
         folder.mkdir(parents=True, exist_ok=True)
         for line_id, text in lines(f"{lang}.ts").items():
+            if wanted is not None and line_id not in wanted.get(lang, set()):
+                continue
             target = folder / f"{line_id}.mp3"
             for attempt in range(5):  # the service sometimes returns no audio; try again
                 try:

@@ -31,6 +31,7 @@ export function selectCanAct(s: State): boolean {
     view.phase === 'turn' &&
     view.currentPlayerId === me &&
     s.ui.pendingActionId === null &&
+    s.ui.holdUntil <= Date.now() &&
     !s.ui.menuOpen &&
     s.ui.overlays === 0
   );

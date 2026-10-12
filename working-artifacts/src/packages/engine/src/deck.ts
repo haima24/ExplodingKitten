@@ -3,7 +3,7 @@ import { engineError } from './events';
 import { shuffle, type Rng } from './rng';
 
 export const MIN_PLAYERS = 2;
-export const MAX_PLAYERS = 4;
+export const MAX_PLAYERS = 5;
 
 export interface DeckProfile {
   hopOver: number;
@@ -14,34 +14,24 @@ export interface DeckProfile {
   passItOn: number;
   askAFriend: number;
   nope: number;
-  extraTreats: number;
+  /** Total Defuse in the game (at least one per player). */
+  treats: number;
   startingHandSize: number;
 }
 
 /** Tuning data: counts live here, not in the rules. */
 export const DECK_PROFILES: Record<DeckProfileName, DeckProfile> = {
-  mvp: {
-    hopOver: 4,
-    peek: 4,
-    shakeUp: 4,
-    cozyDesigns: 5,
-    cozyPerDesign: 4,
-    passItOn: 0,
-    askAFriend: 0,
-    nope: 0,
-    extraTreats: 2,
-    startingHandSize: 4,
-  },
   'mvp+should': {
     hopOver: 4,
-    peek: 4,
+    peek: 5,
     shakeUp: 4,
     cozyDesigns: 5,
     cozyPerDesign: 4,
     passItOn: 4,
     askAFriend: 4,
     nope: 5,
-    extraTreats: 2,
+    // Six Defuse in every game: one is dealt to each player, the rest go in the draw pile (US-068).
+    treats: 6,
     startingHandSize: 4,
   },
 };
@@ -97,7 +87,7 @@ export function buildDeal(
     }
   }
 
-  if (playerCount - 1 >= playerCount || plain.length < playerCount * profile.startingHandSize) {
+  if (profile.treats < playerCount || plain.length < playerCount * profile.startingHandSize) {
     return { ok: false, error: engineError('INVALID_CONFIG', 'Deck cannot cover the deal') };
   }
 
@@ -107,7 +97,7 @@ export function buildDeal(
     hands.push([make('TREAT'), ...shuffled.splice(0, profile.startingHandSize)]);
   }
   const rest: Card[] = shuffled;
-  for (let i = 0; i < profile.extraTreats; i++) rest.push(make('TREAT'));
+  for (let i = 0; i < profile.treats - playerCount; i++) rest.push(make('TREAT'));
   for (let i = 0; i < playerCount - 1; i++) rest.push(make('BOOM_CAT'));
   const drawPile = shuffle(rest, rng);
   const totalCards = drawPile.length + hands.reduce((n, h) => n + h.length, 0);

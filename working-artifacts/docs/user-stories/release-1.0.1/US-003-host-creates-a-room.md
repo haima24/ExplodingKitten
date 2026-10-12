@@ -6,7 +6,7 @@
 - **Release:** 1.0.1
 - **Epic:** Rooms and lobby
 - **User story:** As a host, I want to create a private room, so that my family can join me and play together.
-- **Context:** The starting point of the host journey (J1). F-18, FR-03, DAC-03. A room holds at most 4 players (OQ-13).
+- **Context:** The starting point of the host journey (J1). F-18, FR-03, DAC-03. A room holds at most 5 players (OQ-13).
 - **Acceptance criteria:**
   - Given Home, when I press **Create a room** and complete the identity step (US-004), then a room is created and I am in its lobby as the **host** and as a player.
   - Given the room is created, then it has a unique room code (proposed: 6 characters, no look-alike symbols) and a share link (see US-054).

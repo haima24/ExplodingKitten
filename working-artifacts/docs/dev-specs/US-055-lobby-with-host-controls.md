@@ -18,7 +18,7 @@ Everyone sees who is in the room with live status; the host can remove players, 
 ```ts
 interface RoomView {
   code: string; phase: 'LOBBY'|'PLAYING'|'FINISHED'|'CLOSED'
-  hostId: string; capacity: 4
+  hostId: string; capacity: 5
   members: { playerId; name: DisplayName; avatarId; isHost: boolean; connected: boolean
              status: 'LOBBY'|'ACTIVE'|'OUT'|'LEFT' }[]
   idleWarning?: { expiresAt: number }     // US-056

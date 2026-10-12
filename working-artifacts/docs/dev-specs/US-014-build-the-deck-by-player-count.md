@@ -9,7 +9,7 @@
 
 ## 1. Goal
 
-Build the right mix of cards for 2–4 players from data, with unique opaque ids, and deal hands. Counts are tunable without changing logic.
+Build the right mix of cards for 2–5 players from data, with unique opaque ids, and deal hands. Counts are tunable without changing logic.
 
 ## 2. Technical design
 
@@ -32,28 +32,31 @@ A unit test asserts every effect text has ≤ 12 words (US-030).
 ### 2.2 Deck configuration (data)
 
 ```ts
-interface DeckProfile { hopOver: 4; peek: 4; shakeUp: 4; cozyDesigns: 5; cozyPerDesign: 4
-                        passItOn?: 4; askAFriend?: 4; extraTreats: 2; startingHandSize: 4 }
+interface DeckProfile { hopOver: 4; peek: 5; shakeUp: 4; cozyDesigns: 5; cozyPerDesign: 4
+                        passItOn: 4; askAFriend: 4; nope: 5; treats: 6; startingHandSize: 4 }
 ```
 
-Profile `mvp` omits Attack, Favor, and Nope; `mvp+should` includes them (4 Attack, 4 Favor, 5 Nope), which adds 13 cards to the non-special pool (40 cards, so the draw pile is 13 larger than the MVP table below).
+Since [US-068](US-068-card-counts-names-and-deal.md) there is **one** card set (`mvp+should`, the smaller `mvp` profile is retired) for 2 to 5 players. `treats` is the **total** number of Defuse cards in the game (6): one is dealt to each player and the other `6 − players` go in the draw pile. `peek` (See the Future) is 5.
 
 ### 2.3 Algorithm
 
-1. Create the non-special cards (all kinds except `BOOM_CAT`, `TREAT`). Assign ids from the `Rng` (random 32-bit hex strings; regenerate on collision so ids are unique, I8). Shuffle.
+1. Create the non-special cards (all kinds except `BOOM_CAT`, `TREAT`): 46 cards. Assign ids from the `Rng` (random 32-bit hex strings; regenerate on collision so ids are unique, I8). Shuffle.
 2. For each player (seat order) deal 1 Defuse and `startingHandSize` cards from the shuffled non-special cards.
-3. Add `extraTreats` Defuse cards and `players − 1` Exploding Kittens to the remaining cards; shuffle → `drawPile`.
-4. Validate before dealing: players 2–4; Exploding Kittens < players; the non-special pool ≥ `players × startingHandSize`; else `INVALID_CONFIG`.
+3. Add `treats − players` Defuse cards and `players − 1` Exploding Kittens to the remaining cards; shuffle → `drawPile`.
+4. Validate before dealing: players 2–5; `treats ≥ players`; the non-special pool ≥ `players × startingHandSize`; else `INVALID_CONFIG`.
 
-### 2.4 Resulting counts (MVP profile)
+The Exploding Kitten rule (`players − 1`, surplus retired when a player is out) is **unchanged**.
 
-| Players | Non-special | Dealt | Defuse cards total | Exploding Kittens | Draw pile size |
+### 2.4 Resulting counts
+
+| Players | Cards in the game | Dealt | Draw pile | Exploding Kittens in it | Defuse in it |
 | --- | --- | --- | --- | --- | --- |
-| 2 | 27 | 8 | 4 | 1 | 22 |
-| 3 | 27 | 12 | 5 | 2 | 19 |
-| 4 | 27 | 16 | 6 | 3 | 16 |
+| 2 | 53 | 10 | 43 | 1 | 4 |
+| 3 | 54 | 15 | 39 | 2 | 3 |
+| 4 | 55 | 20 | 35 | 3 | 2 |
+| 5 | 56 | 25 | 31 | 4 | 1 |
 
-Draw pile = non-special − dealt + extra Defuse cards + Exploding Kittens (for 4 players: 27 − 16 + 2 + 3 = 16).
+Draw pile = 46 − 4 × players + (6 − players) + (players − 1) = 51 − 4 × players (for 5 players: 51 − 20 = 31).
 
 ## 3. Edge cases and errors
 

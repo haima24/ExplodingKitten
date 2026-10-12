@@ -441,6 +441,11 @@ export const en = {
   'settings.voice.on': 'Voice on',
   'settings.voice.off': 'Voice off',
   'settings.voiceVolume': 'Voice volume',
+  'settings.toasts': 'Pop-up messages',
+  'settings.toasts.on': 'Show',
+  'settings.toasts.off': 'Hide',
+  'settings.toasts.note': 'Short messages that appear over the game for a few seconds. Everything is still in the recent-moves log.',
+  'card.new': 'New',
   'settings.voice.note': 'Short spoken lines in the language you picked. Everything is also shown as text.',
   'settings.voice.using': 'Voice used: {name}',
   'settings.voice.unavailable': "This device has no voice for the chosen language, so you may hear nothing. The text still shows.",
@@ -473,6 +478,13 @@ export const en = {
   'log.pair': '{name} played a pair of Cat cards on {target}',
   'log.steal': '{to} took a card from {from}',
   'steal.got': 'You took {card}!',
+
+  // Explosion and trophy animations (US-069)
+  'anim.exploded': '{name} blew up!',
+  'anim.skip': 'Tap to skip',
+  'anim.wait': 'One moment…',
+  'anim.youWon': 'You won!',
+  'error.wait': 'One moment, the animation is still playing.',
 
   // Spoken lines (no names, no cards in hands)
   'voice.V01': "It's your turn to draw.",
@@ -508,7 +520,7 @@ export const en = {
   'privacy.item.token':
     'A rejoin token: stored in this browser tab so you can come back after a refresh. The server keeps only a scrambled copy.',
   'privacy.item.settings':
-    'Your settings (language, motion, sound, voice, text size): stored on this device only and never sent anywhere.',
+    'Your settings (language, motion, sound, voice, pop-up messages, text size): stored on this device only and never sent anywhere.',
   'privacy.item.ip':
     'Your IP address: seen by the hosting service like any website, kept in its logs for up to 7 days, and never joined with your nickname.',
   'privacy.draftNotice': 'Translations are for convenience. The English text is the official version.',

@@ -40,7 +40,7 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
     playable: false,
     notPlayableReason: 'Exploding Kittens pop up when you draw. You cannot play them.',
     type: 'special',
-    profile: 'mvp',
+    profile: 'mvp+should',
   },
   TREAT: {
     kind: 'TREAT',
@@ -49,7 +49,7 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
     playable: false,
     notPlayableReason: 'Defuse cards save you automatically when an Exploding Kitten shows up.',
     type: 'special',
-    profile: 'mvp',
+    profile: 'mvp+should',
   },
   HOP_OVER: {
     kind: 'HOP_OVER',
@@ -57,7 +57,7 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
     effect: 'Skip your draw and end your turn.',
     playable: true,
     type: 'action',
-    profile: 'mvp',
+    profile: 'mvp+should',
   },
   PEEK: {
     kind: 'PEEK',
@@ -65,7 +65,7 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
     effect: 'Secretly look at the top 3 cards.',
     playable: true,
     type: 'action',
-    profile: 'mvp',
+    profile: 'mvp+should',
   },
   SHAKE_UP: {
     kind: 'SHAKE_UP',
@@ -73,7 +73,7 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
     effect: 'Shuffle the draw pile.',
     playable: true,
     type: 'action',
-    profile: 'mvp',
+    profile: 'mvp+should',
   },
   COZY_CAT: {
     kind: 'COZY_CAT',
@@ -84,7 +84,7 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
     pair: true,
     notPlayableReason: 'Cat cards are played in pairs. Tap a second matching Cat card!',
     type: 'cat',
-    profile: 'mvp',
+    profile: 'mvp+should',
   },
   PASS_IT_ON: {
     kind: 'PASS_IT_ON',
@@ -116,5 +116,5 @@ export const CARD_CATALOG: Record<CardKind, CardInfo> = {
 
 /** Kinds listed in the guide for a deck profile. */
 export function kindsForProfile(profile: DeckProfileName): CardKind[] {
-  return CARD_KINDS.filter((k) => profile === 'mvp+should' || CARD_CATALOG[k].profile === 'mvp');
+  return CARD_KINDS.filter((k) => profile === 'mvp+should' || CARD_CATALOG[k].profile === profile);
 }

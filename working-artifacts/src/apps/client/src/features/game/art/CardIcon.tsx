@@ -92,10 +92,11 @@ function DesignSymbol({ variant }: { variant: number | undefined }): JSX.Element
 
 function art(kind: CardKind, variant?: number): ReactNode {
   switch (kind) {
-    case 'BOOM_CAT': // Exploding Kitten: a startled cat in front of a burst
+    case 'BOOM_CAT': // Mèo nổ: a startled cat in front of a big burst, with a lit fuse spark
       return (
         <>
-          <polygon points={star(32, 33, 11, 30, 19)} fill={BOOM} {...stroke} />
+          <polygon points={star(32, 34, 13, 30.5, 21)} fill={ORANGE} {...stroke} />
+          <polygon points={star(32, 34, 11, 27, 18)} fill={BOOM} {...stroke} />
           <g transform="translate(13 15) scale(.62)">
             <path d={CAT_HEAD} fill={ACCENT} {...stroke} strokeWidth={4.5} />
             <circle cx="24" cy="36" r="7" fill="#fff" {...stroke} strokeWidth={3.5} />
@@ -104,6 +105,8 @@ function art(kind: CardKind, variant?: number): ReactNode {
             <circle cx="40" cy="36" r="2.6" fill={INK} />
             <ellipse cx="32" cy="50" rx="5" ry="6" fill={INK} />
           </g>
+          <path d="M47 15Q50 9 55 8" fill="none" stroke="#8a5a2b" strokeWidth={3} strokeLinecap="round" />
+          <polygon points={star(56, 7, 4, 6.5, 2.4)} fill={ACCENT} {...stroke} strokeWidth={1.8} />
         </>
       );
     case 'TREAT': // Defuse: a bomb whose fuse has been cut, marked safe
@@ -117,12 +120,15 @@ function art(kind: CardKind, variant?: number): ReactNode {
           <path d="M45 48l4 4 7-8" fill="none" stroke="#fff" strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" />
         </>
       );
-    case 'HOP_OVER': // Skip: a paw hopping over with a forward arrow
+    case 'HOP_OVER': // Qua lượt: a paw jumping over a "next turn" marker
       return (
         <>
-          <Paw x={22} y={44} scale={1.2} fill={ACCENT} />
-          <path d="M8 30C18 6 46 6 54 26" fill="none" stroke={INFO} strokeWidth={5} strokeLinecap="round" />
-          <polygon points="60,30 46,32 54,18" fill={INFO} {...stroke} strokeWidth={2.5} />
+          <path d="M5 55H59" fill="none" stroke={INK} strokeWidth={3} strokeLinecap="round" />
+          <rect x="24" y="38" width="16" height="17" rx="3.5" fill={ACCENT} {...stroke} strokeWidth={2.5} />
+          <polygon points="29,42.5 36,46.5 29,50.5" fill={INK} />
+          <path d="M7 50C12 12 52 12 58 48" fill="none" stroke={INFO} strokeWidth={4.5} strokeLinecap="round" />
+          <polygon points="60,52 49,47 57,39" fill={INFO} {...stroke} strokeWidth={2.2} />
+          <Paw x={32} y={21} scale={0.85} fill={ACCENT} />
         </>
       );
     case 'PEEK': // See the Future: an eye with sparkles
@@ -160,26 +166,30 @@ function art(kind: CardKind, variant?: number): ReactNode {
           </text>
         </>
       );
-    case 'PASS_IT_ON': // Attack: an arrow handing the next player a double turn
+    case 'PASS_IT_ON': // Tấn công: a claw strike with an impact star; "2" is the double turn
       return (
         <>
-          <path d="M5 26H34V12L59 32 34 52V38H5Z" fill={ORANGE} {...stroke} />
-          <Paw x={20} y={32} scale={0.55} fill="#fff" />
-          <circle cx="50" cy="12" r="9" fill={ACCENT} {...stroke} />
-          <text x="46" y="17" fontFamily="Baloo 2, sans-serif" fontSize="14" fontWeight="800" fill={INK}>
+          <polygon points={star(30, 36, 10, 27, 15)} fill={ORANGE} {...stroke} />
+          <path d="M12 16 44 52M21 11 53 47M4 22 36 56" fill="none" stroke={INK} strokeWidth={8} strokeLinecap="round" />
+          <path d="M12 16 44 52M21 11 53 47M4 22 36 56" fill="none" stroke="#fff" strokeWidth={4} strokeLinecap="round" />
+          <circle cx="51" cy="13" r="10" fill={ACCENT} {...stroke} />
+          <text x="46.5" y="18" fontFamily="Baloo 2, sans-serif" fontSize="14" fontWeight="800" fill={INK}>
             2
           </text>
         </>
       );
-    case 'ASK_A_FRIEND': // Favor: a speech bubble with a paw
+    case 'ASK_A_FRIEND': // Thiện ý: a paw offering a heart (kindness)
       return (
         <>
           <path
-            d="M8 10H56a4 4 0 0 1 4 4V38a4 4 0 0 1-4 4H36L22 54V42H8a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4Z"
-            fill="#fff"
+            d="M32 35C13 23 17 7 28 9.5 31 10.2 32 14 32 14S33 10.2 36 9.5C47 7 51 23 32 35Z"
+            fill="#E4577A"
             {...stroke}
           />
-          <Paw x={32} y={26} scale={0.9} fill={TEAL} />
+          <path d="M23 15q-3 1-3 5" fill="none" stroke="#fff" strokeWidth={2.5} strokeLinecap="round" />
+          <Paw x={32} y={49} scale={1.15} fill={TEAL} />
+          <polygon points={star(10, 20, 4, 6, 2.2)} fill={ACCENT} {...stroke} strokeWidth={1.8} />
+          <polygon points={star(54, 24, 4, 5, 2)} fill={ACCENT} {...stroke} strokeWidth={1.8} />
         </>
       );
     case 'NOPE': // Nope: a stop sign with a paw crossed out

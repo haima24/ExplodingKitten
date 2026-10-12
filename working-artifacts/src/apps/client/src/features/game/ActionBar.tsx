@@ -120,6 +120,7 @@ export function ActionBar(): JSX.Element | null {
   if (out) reason = t('action.out');
   else if (state.connection.status !== 'online') reason = t('action.reconnecting');
   else if (pending) reason = t('action.sending');
+  else if (state.ui.holdUntil > Date.now()) reason = t('anim.wait');
   else if (view.nopeWindow) reason = t('action.nopeWait');
   else if (view.currentPlayerId !== view.you.id || view.phase !== 'turn') {
     reason = t('action.wait', { name: view.waitingFor ? nameOf(state.room.view, view.waitingFor) : currentName });

@@ -2,6 +2,7 @@ import { applyAction, checkInvariants, createGame, viewFor, visibleEvents } from
 import type { Action, EngineError, GameEvent, GameState } from '@wb/engine/types';
 import { chooseAction } from './bots';
 import type { Hub } from './hub';
+import { ANIMATION_MS } from '@wb/protocol';
 import { botToAct, findMember, present, type Member, type Room } from './room';
 import { codeHash } from './util';
 
@@ -67,6 +68,7 @@ function afterStateChange(hub: Hub, room: Room, events: GameEvent[]): boolean {
   }
 
   trackNopeWindow(hub, room);
+  holdForAnimation(hub, room, events);
   const clockChanged = syncTurnClock(hub, room, false);
 
   if (game.phase === 'finished' && room.phase !== 'FINISHED') {
@@ -81,6 +83,17 @@ function afterStateChange(hub: Hub, room: Room, events: GameEvent[]): boolean {
   hub.recomputeAbsent(room);
   scheduleBot(hub, room);
   return true;
+}
+
+/** An Exploding Kitten that eliminates a player plays an explosion animation: hold the game for its length (US-069). */
+function holdForAnimation(hub: Hub, room: Room, events: GameEvent[]): void {
+  if (!events.some((e) => e.type === 'PLAYER_OUT' && e.data['reason'] === 'BOOM')) return;
+  room.holdUntil = Math.max(room.holdUntil ?? 0, hub.clock.now()) + ANIMATION_MS.explosion;
+}
+
+/** Milliseconds of animation hold still to come. */
+function holdLeft(hub: Hub, room: Room): number {
+  return room.holdUntil === null ? 0 : Math.max(0, room.holdUntil - hub.clock.now());
 }
 
 /**
@@ -165,9 +178,9 @@ export function syncTurnClock(hub: Hub, room: Room, broadcast = true): boolean {
     } else if (cur && cur.deadlineAt !== null) {
       room.turn = cur;
     } else if (cur && cur.remainingMs !== null) {
-      room.turn = { ...cur, deadlineAt: now + cur.remainingMs, remainingMs: null };
+      room.turn = { ...cur, deadlineAt: now + cur.remainingMs + holdLeft(hub, room), remainingMs: null };
     } else {
-      room.turn = { key: subject.key, playerId: subject.playerId, deadlineAt: now + limitMs, remainingMs: null };
+      room.turn = { key: subject.key, playerId: subject.playerId, deadlineAt: now + limitMs + holdLeft(hub, room), remainingMs: null };
     }
   }
   const changed = JSON.stringify(room.turn) !== before;
@@ -222,6 +235,7 @@ export function startGame(hub: Hub, room: Room): boolean {
   room.absent = null;
   room.nopeDeadlineAt = null;
   room.nopeKey = null;
+  room.holdUntil = null;
   room.turn = null;
   hub.touch(room);
   syncTurnClock(hub, room, false);
@@ -245,6 +259,7 @@ export function resetToLobby(hub: Hub, room: Room): void {
   room.botDueAt = null;
   room.nopeDeadlineAt = null;
   room.nopeKey = null;
+  room.holdUntil = null;
   room.turn = null;
   room.dedupe.clear();
   hub.touch(room);
@@ -271,7 +286,7 @@ export function scheduleBot(hub: Hub, room: Room): void {
   const { botMinDelayMs, botMaxDelayMs } = hub.config;
   const delay = botMinDelayMs + room.rng.nextInt(Math.max(1, botMaxDelayMs - botMinDelayMs + 1));
   room.botActorId = actor.playerId;
-  room.botDueAt = hub.clock.now() + delay;
+  room.botDueAt = hub.clock.now() + delay + holdLeft(hub, room);
   hub.broadcastRoom(room);
 }
 

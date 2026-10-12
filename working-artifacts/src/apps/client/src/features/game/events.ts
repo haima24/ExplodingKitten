@@ -56,6 +56,10 @@ export interface Processed {
   flash: string | null;
   /** The card just taken from a fan, flipped face up (taker only). */
   reveal: Card | null;
+  /** Animations to queue for this update (US-069). */
+  anims: { kind: 'explosion' | 'trophy'; playerId: string }[];
+  /** A card just received by this player (draw, Favor, pair): marked "new" if pop-ups are hidden. */
+  newCardId: string | null;
 }
 
 /** Each card has its own sound (US-063). Cat cards are not playable today. */
@@ -105,6 +109,8 @@ export function processGameUpdate(input: {
     voice: [],
     flash: null,
     reveal: null,
+    newCardId: null,
+    anims: [],
   };
   const log = (
     seq: number,
@@ -226,9 +232,15 @@ export function processGameUpdate(input: {
       case 'PLAYER_OUT': {
         const reason = (d['reason'] as OutReason | undefined) ?? 'BOOM';
         const text = log(e.seq, `log.out.${reason}` as const, { name: name(d['playerId']) });
-        out.announcements.push(text);
-        if (reason === 'BOOM' && d['playerId'] !== me) out.sounds.push('boom');
-        out.sounds.push('nap');
+        if (reason === 'BOOM') {
+          // The explosion animation plays for everyone: a fuse sizzle, then the blast (US-069).
+          out.announcements.push(t('anim.exploded', { name: name(d['playerId']) }));
+          out.sounds.push('fuse', 'boom');
+          out.anims.push({ kind: 'explosion', playerId: String(d['playerId']) });
+        } else {
+          out.announcements.push(text);
+          out.sounds.push('nap');
+        }
         say(d['playerId'] === me ? 'V15' : 'V16', d['playerId'] === me ? 2 : 0);
         break;
       }
@@ -257,6 +269,7 @@ export function processGameUpdate(input: {
         const text = log(e.seq, 'log.wins', { name: name(d['winnerId']) });
         out.announcements.push(text);
         out.sounds.push('win');
+        if (typeof d['winnerId'] === 'string') out.anims.push({ kind: 'trophy', playerId: d['winnerId'] });
         say(d['winnerId'] === me ? 'V17' : 'V18', 2);
         break;
       }
@@ -264,6 +277,8 @@ export function processGameUpdate(input: {
       case 'DRAWN_CARD': {
         const drawn = d['card'] as Card;
         out.toast = t('draw.got', { card: cardName(drawn.kind, drawn.variant) });
+        out.announcements.push(out.toast); // spoken whether or not the pop-up is shown (US-070)
+        out.newCardId = drawn.id;
         out.sounds.push('draw');
         say('V03');
         break;
@@ -272,7 +287,7 @@ export function processGameUpdate(input: {
         out.peek = (d['cards'] as Card[]).map((c) => ({ ...c }));
         break;
       case 'BOOM_DRAWN':
-        out.sounds.push('boom');
+        if (d['hasTreat'] !== false) out.sounds.push('boom'); // without a Defuse the explosion animation plays the blast
         if (d['hasTreat'] === false) out.nap = true;
         else {
           out.tips.push(3);
@@ -281,11 +296,15 @@ export function processGameUpdate(input: {
         break;
       case 'FAVOR_RECEIVED':
         out.toast = t('favor.got', { card: cardName((d['card'] as Card).kind, (d['card'] as Card).variant) });
+        out.announcements.push(out.toast);
+        out.newCardId = (d['card'] as Card).id;
         break;
       case 'STOLEN_CARD':
         out.reveal = { ...(d['card'] as Card) };
         out.sounds.push('flip');
         out.toast = t('steal.got', { card: cardName((d['card'] as Card).kind, (d['card'] as Card).variant) });
+        out.announcements.push(out.toast);
+        out.newCardId = (d['card'] as Card).id;
         break;
     }
   }

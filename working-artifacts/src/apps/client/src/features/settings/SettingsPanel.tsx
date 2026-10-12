@@ -186,6 +186,19 @@ export function SettingsPanel(): JSX.Element {
       </fieldset>
 
       <fieldset className={f['fieldset']}>
+        <legend className={f['legend']}>{t('settings.toasts')}</legend>
+        <div className={f['stackChoices']}>
+          <Choice name="toasts" value="on" checked={settings.toasts} onChange={() => set({ toasts: true })}>
+            {t('settings.toasts.on')}
+          </Choice>
+          <Choice name="toasts" value="off" checked={!settings.toasts} onChange={() => set({ toasts: false })}>
+            {t('settings.toasts.off')}
+          </Choice>
+        </div>
+        <p className={f['help']}>{t('settings.toasts.note')}</p>
+      </fieldset>
+
+      <fieldset className={f['fieldset']}>
         <legend className={f['legend']}>{t('settings.textSize')}</legend>
         <div className={f['stackChoices']}>
           {SCALES.map((scale) => (

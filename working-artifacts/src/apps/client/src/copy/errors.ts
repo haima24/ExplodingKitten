@@ -16,6 +16,8 @@ export function messageForError(
       return context.currentName
         ? t('error.notYourTurnLate', { name: context.currentName })
         : t('error.generic');
+    case 'PLEASE_WAIT':
+      return t('error.wait');
     case 'OFFLINE':
       return t('error.offline');
     case 'TIMEOUT':

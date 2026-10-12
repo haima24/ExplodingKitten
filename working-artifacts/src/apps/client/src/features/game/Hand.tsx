@@ -239,6 +239,7 @@ export function Hand(): JSX.Element | null {
                   kind={card.kind}
                   variant={card.variant}
                   selected={selectedId === card.id || pairId === card.id}
+                isNew={state.ui.newCardId === card.id}
                   tabIndex={index === Math.min(focusIndex, hand.length - 1) ? 0 : -1}
                   buttonRef={(el) => {
                     refs.current[index] = el;

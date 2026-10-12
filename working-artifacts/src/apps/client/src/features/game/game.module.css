@@ -792,3 +792,175 @@
 :root[data-motion='reduced'] .revealCard {
   animation: none;
 }
+
+/* ---------- Explosion and trophy animations (US-069) ---------- */
+.animLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(31, 26, 61, 0.78);
+  cursor: pointer;
+  overflow: hidden;
+}
+.animLayer[data-phase='boom'] {
+  background: rgba(60, 20, 10, 0.82);
+}
+.animLayer[data-phase='trophy'] {
+  background: rgba(31, 26, 61, 0.82);
+}
+.animCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: min(20rem, 88vw);
+  max-width: 92vw;
+  padding: var(--space-4);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  text-align: center;
+  animation: animPop 0.35s ease-out both;
+}
+.animCardBoom {
+  animation: boomShake 0.45s linear 1;
+}
+.animName {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.animLine {
+  font-weight: 800;
+}
+.animArt {
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  justify-content: center;
+}
+.animArt :global(.bombSpark) {
+  transform-origin: 42px 7px;
+  animation: sparkFlicker 0.22s ease-in-out infinite alternate;
+}
+.animArt :global(svg) {
+  animation: bombPulse 0.5s ease-in-out infinite alternate;
+}
+.animFlash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  pointer-events: none;
+  animation: animFlash 0.45s ease-out both;
+}
+.animSkip {
+  color: #fff;
+  font-weight: 700;
+}
+.trophyRise {
+  animation: trophyRise 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.trophyPlate {
+  min-width: 12rem;
+  padding: var(--space-1) var(--space-4);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.confettiField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.confettiBit {
+  position: absolute;
+  top: -5vh;
+  width: 0.6rem;
+  height: 1rem;
+  border-radius: 2px;
+  animation: confettiFall 3.4s linear 1 both;
+}
+@keyframes animPop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+}
+@keyframes boomShake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-6px, 3px) rotate(-1deg);
+  }
+  45% {
+    transform: translate(6px, -3px) rotate(1deg);
+  }
+  70% {
+    transform: translate(-3px, 2px);
+  }
+}
+@keyframes sparkFlicker {
+  from {
+    transform: scale(0.8) rotate(-10deg);
+  }
+  to {
+    transform: scale(1.15) rotate(12deg);
+  }
+}
+@keyframes bombPulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+@keyframes animFlash {
+  from {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes trophyRise {
+  from {
+    transform: translateY(40px) scale(0.5);
+    opacity: 0;
+  }
+}
+@keyframes confettiFall {
+  from {
+    transform: translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateY(110vh) rotate(540deg);
+  }
+}
+.animLayer[data-still] .animCard,
+.animLayer[data-still] .animCardBoom,
+.animLayer[data-still] .animArt :global(svg),
+.animLayer[data-still] .animArt :global(.bombSpark),
+.animLayer[data-still] .animFlash,
+.animLayer[data-still] .trophyRise,
+.animLayer[data-still] .confettiBit {
+  animation: none;
+}
+.animLayer[data-still] .confettiBit {
+  display: none;
+}

@@ -7,6 +7,7 @@ import c from '../../components/common/common.module.css';
 import { LoadingScreen } from '../../components/common/Screens';
 import { useStore } from '../../net/context';
 import { GameBoard } from '../game/GameBoard';
+import { AnimationLayer } from '../game/AnimationLayer';
 import { VictoryScreen } from '../game/VictoryScreen';
 import { EndedScreen } from './EndedScreen';
 import { LobbyPage } from './LobbyPage';
@@ -84,13 +85,17 @@ export function RoomPage(): JSX.Element {
   let body: JSX.Element;
   if (room.phase === 'LOBBY') body = <LobbyPage />;
   else if (!state.game.view) body = <LoadingScreen text={t('room.resuming')} />;
-  else if (state.game.view.phase === 'finished' || room.phase === 'FINISHED') body = <VictoryScreen />;
+  else if (state.game.view.phase === 'finished' || room.phase === 'FINISHED') {
+    // The explosion and the trophy play first; the victory screen follows (US-069).
+    body = state.ui.anim.length > 0 ? <GameBoard /> : <VictoryScreen />;
+  }
   else body = <GameBoard />;
 
   return (
     <>
       <IdleWarning />
       {body}
+      <AnimationLayer />
     </>
   );
 }

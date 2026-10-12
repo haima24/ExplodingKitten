@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Draft v0.1 — **proposed**, for engineering review |
 | Last updated | 2026-10-12 |
-| Scope | One developer spec per user story (65 specs) plus this shared baseline |
+| Scope | One developer spec per user story (68 specs) plus this shared baseline |
 | Inputs | [User stories](../user-stories/README.md) · [UI/UX specification](../../ui-ux.md) · [Product brief](../../product-brief.md) |
 | Repository baseline | **No application code exists.** Every module, path, message, and command below is a *proposal*. Nothing here describes existing code. |
 
@@ -61,7 +61,7 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 
 | Setting | Default | Setting | Default |
 | --- | --- | --- | --- |
-| `ROOM_CAPACITY` / `MIN_PLAYERS` | 4 / 2 | `HEARTBEAT_MS` / `DEAD_AFTER_MS` | 15 000 / 35 000 |
+| `ROOM_CAPACITY` / `MIN_PLAYERS` | 5 / 2 | `HEARTBEAT_MS` / `DEAD_AFTER_MS` | 15 000 / 35 000 |
 | `RECONNECT_WINDOW_MS` | 60 000 | `HOST_AWAY_MS` | 60 000 |
 | `IDLE_LOBBY_MS` / `IDLE_GAME_MS` | 1 800 000 | `FINISHED_TTL_MS` | 900 000 |
 | `MAX_LIFETIME_MS` | 10 800 000 | `IDLE_WARN_MS` | 120 000 |
@@ -123,6 +123,9 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 | US-065 | [Cat card pairs](US-065-cat-card-pairs.md) *(Release 1.0.2)* | engine, protocol, server, client |
 | US-066 | [Pick a card from a fanned-out hand](US-066-pick-a-card-from-a-fanned-hand.md) *(Release 1.0.2)* | engine, protocol, server, client |
 | US-067 | [Vietnamese player names](US-067-vietnamese-player-names.md) *(Release 1.0.2)* | client, protocol (one optional field) |
+| US-068 | [Card counts, names and deal](US-068-card-counts-names-and-deal.md) *(Release 1.0.2)* | engine, protocol, server, client |
+| US-069 | [Explosion and winner animations](US-069-explosion-and-winner-animations.md) *(Release 1.0.2)* | protocol (`ANIMATION_MS`, `PLEASE_WAIT`), server, client |
+| US-070 | [Hide pop-up messages](US-070-hide-pop-up-messages.md) *(Release 1.0.2)* | client (setting `toasts`) |
 | US-023 | [Bot Buddies](US-023-bot-buddies-fill-empty-seats.md) | server |
 | US-025 | [Victory screen](US-025-victory-screen.md) | client, server |
 | US-026 | [Host starts a rematch](US-026-host-starts-a-rematch.md) | server, client |
@@ -172,4 +175,4 @@ Foundation first, then the playable core, then hardening (see [brief §J](../../
 3. **Stage 2:** US-028 – US-031, US-033 – US-043, US-056, US-058, US-059, US-061, US-040 – US-042, US-047.
 4. **Stage 3 (Should):** US-013, US-021, US-022, US-062, US-032, US-039, US-044, US-048, US-049.
 5. **Could:** US-023, US-045, US-052, US-053.
-6. **Release 1.0.2:** US-063 (timer, then sounds), then US-064 (text, then voice), then US-065 (deck and names, then pairs), US-066 (pick step, then the fan), US-067 (names).
+6. **Release 1.0.2:** US-063 (timer, then sounds), then US-064 (text, then voice), then US-065 (deck and names, then pairs), US-066 (pick step, then the fan), US-067 (names), US-068 (counts, names, sounds), US-069 (animations, server hold), US-070 (toast setting).

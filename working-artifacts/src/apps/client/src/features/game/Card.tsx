@@ -33,6 +33,8 @@ interface CardProps {
   /** The design of a Cat card (1 to 5). */
   variant?: number | undefined;
   selected?: boolean;
+  /** Just received while pop-ups are hidden (US-070). */
+  isNew?: boolean;
   /** Interactive cards are real buttons. */
   onSelect?: () => void;
   tabIndex?: number;
@@ -46,6 +48,7 @@ export function Card({
   kind,
   variant,
   selected,
+  isNew,
   onSelect,
   tabIndex,
   large,
@@ -65,6 +68,10 @@ export function Card({
       {selected ? (
         <span className={s['badge']} aria-hidden="true">
           ✓
+        </span>
+      ) : isNew ? (
+        <span className={s['badge']} data-new="">
+          {t('card.new')}
         </span>
       ) : !info.playable && !info.pair ? (
         <span className={s['badge']} aria-hidden="true">

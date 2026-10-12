@@ -19,6 +19,7 @@ export const ROOM_ERROR_CODES = [
   'TOO_MANY_ROOMS',
   'NOT_ENOUGH_PLAYERS',
   'WRONG_ROOM_PHASE',
+  'PLEASE_WAIT',
   'SERVER_ERROR',
 ] as const;
 

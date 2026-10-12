@@ -12,6 +12,7 @@ const HUES: Record<string, number> = {
   'bot-1': 210,
   'bot-2': 120,
   'bot-3': 0,
+  'bot-4': 48,
 };
 
 interface AvatarProps {

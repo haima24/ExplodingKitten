@@ -29,7 +29,7 @@ export function InlineMessage(): JSX.Element | null {
 /** Visual copy of public messages; speech is handled by the Announcer. */
 export function Toast(): JSX.Element | null {
   const { state, dispatch } = useStore();
-  const toast = state.ui.toast;
+  const toast = state.settings.toasts ? state.ui.toast : null;
 
   useEffect(() => {
     if (!toast) return;

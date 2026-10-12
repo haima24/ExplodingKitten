@@ -74,8 +74,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     throw new Error('Refusing to start: TEST_MODE must not be set when NODE_ENV=production');
   }
   const profile = env['DECK_PROFILE'] ?? 'mvp+should';
-  if (profile !== 'mvp' && profile !== 'mvp+should') {
-    throw new Error('DECK_PROFILE must be "mvp" or "mvp+should"');
+  if (profile !== 'mvp+should') {
+    throw new Error('DECK_PROFILE must be "mvp+should" (the only card set since US-068)');
   }
 
   const t = testMode;
@@ -90,7 +90,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     staticDir: env['STATIC_DIR'] ? resolve(env['INIT_CWD'] ?? process.cwd(), env['STATIC_DIR']) : null,
     deckProfile: profile,
 
-    roomCapacity: num(env, 'ROOM_CAPACITY', 4),
+    roomCapacity: num(env, 'ROOM_CAPACITY', 5),
     minPlayers: num(env, 'MIN_PLAYERS', 2),
     heartbeatMs: num(env, 'HEARTBEAT_MS', 15_000),
     deadAfterMs: num(env, 'DEAD_AFTER_MS', 35_000),

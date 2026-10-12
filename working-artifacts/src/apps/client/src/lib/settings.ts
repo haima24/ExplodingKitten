@@ -14,6 +14,8 @@ export interface Settings {
   /** Spoken lines (US-064). Off by default, separate from sound effects. */
   voice: boolean;
   voiceVolume: number;
+  /** Show the short pop-up messages over the game (US-070). On by default. */
+  toasts: boolean;
   language: Language;
   textScale: TextScale;
   tipsSeen: boolean;
@@ -25,6 +27,7 @@ export const defaultSettings: Settings = {
   volume: 40,
   voice: true,
   voiceVolume: 100,
+  toasts: true,
   language: 'vi',
   textScale: 100,
   tipsSeen: false,
@@ -43,6 +46,7 @@ function validate(raw: unknown): Settings {
     sound: r['sound'] === true,
     volume: percent(r['volume'], defaultSettings.volume),
     voice: r['voice'] === true,
+    toasts: r['toasts'] !== false,
     voiceVolume: percent(r['voiceVolume'], defaultSettings.voiceVolume),
     // Saved choice first, then the browser language.
     language: isLanguage(r['language']) ? r['language'] : detectLanguage(),

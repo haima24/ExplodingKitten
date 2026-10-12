@@ -153,6 +153,7 @@ function onCreate(ctx: Ctx, p: ClientPayload<'room.create'>): void {
     botDueAt: null,
     nopeDeadlineAt: null,
     nopeKey: null,
+    holdUntil: null,
     turnTimerSec: hub.config.turnTimerDefaultSec,
     turn: null,
   };
@@ -389,6 +390,9 @@ function onGameAction(ctx: Ctx, p: ClientPayload<'game.action'>): void {
     else hub.error(ctx.conn, ctx.id, earlier as ErrorCode);
     return;
   }
+
+  // An explosion animation is playing: the next turn starts after it (US-069).
+  if (room.holdUntil !== null && hub.clock.now() < room.holdUntil) return fail(ctx, 'PLEASE_WAIT');
 
   const a = p.action;
   const playerId = member.playerId;

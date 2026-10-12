@@ -8,7 +8,7 @@
 - **User story:** As a host, I want to add computer-controlled Bot Buddies to the lobby, so that a small family can still have a full game.
 - **Context:** Outside the host/player model, so moved from Should to Could in v0.2. F-20, OQ-12 (one gentle difficulty).
 - **Acceptance criteria:**
-  - Given I am the host in the lobby, when I press **Add Bot Buddy**, then a bot takes a seat (up to 4 total), is labelled "Bot" in text, and counts toward the 2-player minimum.
+  - Given I am the host in the lobby, when I press **Add Bot Buddy**, then a bot takes a seat (up to 5 total), is labelled "Bot" in text, and counts toward the 2-player minimum.
   - Given a bot's turn, then "[Bot] is thinking…" shows for 0.8–1.5 s, then the bot acts using only legal actions.
   - Given the bot holds Skip and the next card is unknown, then it plays Skip with a fixed probability (proposed 30 %) using the injected random source.
   - Given an Exploding Kitten is drawn with a Defuse, then the bot uses it and tucks the Exploding Kitten in at a random position.

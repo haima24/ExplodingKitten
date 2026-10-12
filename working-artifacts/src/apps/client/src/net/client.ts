@@ -11,6 +11,7 @@ import {
 import { t } from '../copy';
 import { speechTag } from '../copy/locale';
 import { displayName } from '../copy/names';
+import { ANIMATION_MS } from '@wb/protocol/shared';
 import { processGameUpdate, type Processed } from '../features/game/events';
 import { announcer } from '../lib/announcer';
 import { clearSession, saveSession } from '../lib/session';
@@ -317,8 +318,26 @@ export class GameClient {
     for (const text of result.announcements) announcer.announce(text);
     if (result.toast) this.toast(result.toast);
     if (result.peek) this.dispatch({ type: 'ui/peek', cards: result.peek });
-    if (result.nap) this.dispatch({ type: 'ui/nap', on: true });
+    if (result.anims.length > 0 && !document.hidden) {
+      const items = result.anims.map((a) => ({ id: ++this.toastId, ...a }));
+      this.dispatch({ type: 'anim/push', items });
+      const explosions = items.filter((a) => a.kind === 'explosion').length;
+      // The next turn waits for the explosion, as the server does (US-069 AC25).
+      if (explosions > 0) this.hold(explosions * ANIMATION_MS.explosion + 250);
+      // My own nap message comes after my explosion has played.
+      if (result.nap) this.dispatch({ type: 'ui/napPending', on: true });
+    } else if (result.nap) {
+      this.dispatch({ type: 'ui/nap', on: true });
+    }
     if (result.reveal) this.dispatch({ type: 'ui/reveal', card: result.reveal });
+    if (result.newCardId && !state.settings.toasts) {
+      // Pop-ups are hidden, so the new card gets a short "new" mark in the hand instead.
+      const cardId = result.newCardId;
+      this.dispatch({ type: 'ui/new', cardId });
+      window.setTimeout(() => {
+        if (this.getState().ui.newCardId === cardId) this.dispatch({ type: 'ui/new', cardId: null });
+      }, 3500);
+    }
     for (const tip of result.tips) this.dispatch({ type: 'tips/trigger', tip });
     if (result.flash) this.dispatch({ type: 'ui/flash', flash: { playerId: result.flash, id: ++this.toastId } });
     this.feedback(result.sounds, result.voice);
@@ -355,7 +374,17 @@ export class GameClient {
 
   // ------------------------------------------------------------------ helpers
 
+  /** Holds the controls of the next turn for an animation (and lets go again afterwards). */
+  hold(ms: number): void {
+    const until = Math.max(this.getState().ui.holdUntil, Date.now()) + ms;
+    this.dispatch({ type: 'anim/hold', until });
+    window.setTimeout(() => {
+      if (this.getState().ui.holdUntil <= Date.now()) this.dispatch({ type: 'anim/hold', until: 0 });
+    }, until - Date.now() + 30);
+  }
+
   toast(text: string): void {
+    if (!this.getState().settings.toasts) return; // pop-ups are hidden (US-070)
     this.dispatch({ type: 'ui/toast', message: { id: ++this.toastId, text } });
   }
 

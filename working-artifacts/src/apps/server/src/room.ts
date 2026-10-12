@@ -44,6 +44,8 @@ export interface Room {
   /** When the open Nope window times out, and which window it belongs to. */
   nopeDeadlineAt: number | null;
   nopeKey: string | null;
+  /** Until when the game is held for an animation (US-069); actions wait, clocks and bots start after. */
+  holdUntil: number | null;
   /** Host setting: seconds per turn, 0 = Off (US-063). */
   turnTimerSec: TurnTimerSec;
   turn: TurnClock | null;

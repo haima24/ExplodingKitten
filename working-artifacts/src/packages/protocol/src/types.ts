@@ -9,6 +9,12 @@ export const PROTOCOL_VERSION = 1;
 export const TURN_TIMER_OPTIONS = [0, 15, 30, 60] as const;
 export type TurnTimerSec = (typeof TURN_TIMER_OPTIONS)[number];
 
+/**
+ * How long each animation shows (US-069). The server holds the game for the
+ * explosion so the next turn, its clock and bot moves start after it.
+ */
+export const ANIMATION_MS = { explosion: 3000, trophy: 4000 } as const;
+
 export type RoomPhase = 'LOBBY' | 'PLAYING' | 'FINISHED' | 'CLOSED';
 export type MemberStatus = 'LOBBY' | 'ACTIVE' | 'OUT' | 'LEFT';
 

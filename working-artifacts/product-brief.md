@@ -53,7 +53,7 @@ Every participant is anonymous and is either a **Host** or a **Player**. A host 
 | Choose a curated nickname and avatar | Yes | Yes |
 | See who is in the lobby | Yes | Yes |
 | Remove a player from the lobby or game | Yes | No |
-| Start the game (2–4 players present) | Yes | No |
+| Start the game (2–5 players present) | Yes | No |
 | Play cards, draw, see own hand | Yes | Yes |
 | Wait for or skip an absent player | Yes | No (sees status only) |
 | End the game for everyone / start a rematch / close the room | Yes | No |
@@ -81,7 +81,7 @@ Every participant is anonymous and is either a **Host** or a **Player**. A host 
 
 | ID | Goal | Linked metric |
 | --- | --- | --- |
-| G1 | A host can create a room, share a code or link, and 2–4 players on separate devices complete a full game | M1, M2, M11 |
+| G1 | A host can create a room, share a code or link, and 2–5 players on separate devices complete a full game | M1, M2, M11 |
 | G2 | First-time players understand the turn and can act without an adult reading rules | M3 |
 | G3 | The same game is comfortable on phone (portrait and landscape), tablet, and desktop | M4, M5 |
 | G4 | Meets WCAG 2.2 AA for core flows | M6 |
@@ -125,7 +125,7 @@ Bot Buddies to fill empty seats, single-device pass-and-play, QR-code joining, p
 
 | Mode | Description | MVP? |
 | --- | --- | --- |
-| **Private room (host + players)** | The host creates a room and shares a code or link; 2–4 players join from their own devices and play in real time. Each device shows only that player's own hand. | **Must** |
+| **Private room (host + players)** | The host creates a room and shares a code or link; 2–5 players join from their own devices and play in real time. Each device shows only that player's own hand. | **Must** |
 | Bot Buddies | The host fills empty seats with computer players so a small family can still play | Could |
 | Single-device pass-and-play | Everyone shares one device with a "pass to…" privacy screen (the v0.1 concept) | Future |
 | Public matchmaking / random opponents | Play with strangers | Out of scope (child safety) |
@@ -140,7 +140,7 @@ Bot Buddies to fill empty seats, single-device pass-and-play, QR-code joining, p
 2. Pick a **nickname** and **avatar** (see below).
 3. The room opens with a **room code** (proposed: 6 characters from an unambiguous alphabet, for example `K7M4QX`) and a **share link** (for example `https://<domain>/join/K7M4QX`). Buttons: **Copy code**, **Copy link**, **Share** (the device's native share sheet where available).
 4. The lobby lists who has joined. The host can remove a player.
-5. When 2–4 players are in the lobby, the host presses **Start**. The room locks, the server builds and deals the deck, and everyone sees their own hand.
+5. When 2–5 players are in the lobby, the host presses **Start**. The room locks, the server builds and deals the deck, and everyone sees their own hand.
 
 **Player path**
 
@@ -313,7 +313,7 @@ Status key: **Existing** (verified in repo), **Proposed**. Nothing below current
 | FR-01 | Landing page offers Create a room, Join a room, How to Play, Settings | Proposed | Must | US-001 |
 | FR-02 | Navigation never removes a player from a room or game without confirmation; a share link opens Join with the code prefilled | Proposed | Must | US-002, US-006, US-028 |
 | FR-03 | The host creates a room and receives a room code and a share link; the host is also a player | Proposed | Must | US-003, US-054 |
-| FR-04 | The host starts the game when 2–4 players are in the lobby; the server shuffles and deals a hand per player | Proposed | Must | US-005, US-014, US-055 |
+| FR-04 | The host starts the game when 2–5 players are in the lobby; the server shuffles and deals a hand per player | Proposed | Must | US-005, US-014, US-055 |
 | FR-05 | Active player and every player's status are always visible | Proposed | Must | US-007 |
 | FR-06 | Each device receives only its own player's hand and public information; the server never sends hidden cards to other players | Proposed | Must | US-008, US-060 |
 | FR-07 | Player can inspect their hand, select a card, read its effect, and confirm | Proposed | Must | US-009, US-011 |
@@ -473,7 +473,7 @@ If the team prefers another stack, the engine/server/client split and every requ
 | OQ-10 | Child-privacy and legal requirements now that nicknames, avatars, and IP addresses reach a server (consent, privacy notice, log retention, jurisdictions) | No analytics; minimum data; legal review is a launch gate | NFR, US-042 |
 | OQ-11 | Do players need a way to talk? | No in-app chat; players use voice or video outside the app | Scope, safety |
 | OQ-12 | Bot Buddies difficulty and whether bots belong in a host/player room | Could; one gentle difficulty if built | US-023 |
-| OQ-13 | Maximum players per room | 4 (UI and deck balance); revisit for 5+ | US-055 |
+| OQ-13 | Maximum players per room | **5** (raised from 4 by US-068); revisit for 6+ | US-055 |
 | OQ-14 | Nickname input: curated name builder vs free text with filtering | Curated name builder (no free text) in MVP | US-004 |
 | OQ-15 | Timeouts and retention: reconnect window, expiry times, absolute room lifetime | 60 s reconnect; lobby idle 30 min; game idle 30 min; finished 15 min; max 3 h | US-056, US-058 |
 | OQ-16 | When the host leaves: transfer or close? | Transfer to the longest-present player after the 60 s window; close if none | US-059 |
@@ -489,7 +489,7 @@ If the team prefers another stack, the engine/server/client split and every requ
 | Stage | Outcome | Contents | Exit criteria |
 | --- | --- | --- | --- |
 | **0. Foundations** | Buildable, testable skeleton with a running room server | US-050, US-051 (engine incl. seeded RNG and view projection), US-060 (server skeleton), design tokens, US-046 (engine tests, started) | CI runs lint and unit tests; two test clients can create and join a room and play a simulated game |
-| **1. Playable core** | A host and players can finish a game from separate devices | US-001–US-008, US-054, US-055, US-009–US-012, US-014–US-020, US-025–US-027 | Host creates a room, shares the link, 2–4 players play to a winner on desktop and phone, with placeholder art |
+| **1. Playable core** | A host and players can finish a game from separate devices | US-001–US-008, US-054, US-055, US-009–US-012, US-014–US-020, US-025–US-027 | Host creates a room, shares the link, 2–5 players play to a winner on desktop and phone, with placeholder art |
 | **2. Safe, resilient, kid-friendly** | Shippable to families | US-028–US-031, US-033–US-038, US-040–US-043, US-056, US-058, US-059, US-061, US-047 | WCAG 2.2 AA manual pass, multi-client E2E on 4 viewport classes, reconnect tests, usability playtest #1 |
 | **3. Enhancements (Should)** | Easier to start, richer play | US-013, US-021, US-022, US-032, US-039, US-044, US-048, US-049 | More cards and onboarding; a11y and perf checks in CI |
 | **4. Release readiness** | Confident public launch | Art polish, playtest #2, legal/privacy review, hosting and monitoring ready, Could items if capacity allows (US-023, US-052, US-053) | M1–M12 reviewed; OQ-01, OQ-08, OQ-10, OQ-20 closed |

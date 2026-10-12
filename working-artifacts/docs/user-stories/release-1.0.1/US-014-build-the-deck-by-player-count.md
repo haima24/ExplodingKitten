@@ -15,5 +15,6 @@
   - Given Attack and Favor are not yet implemented, then they are absent from the deck (they are added by US-021 and US-022).
   - Given the Cat card, then its card text says it is played as a pair of the same design to take a random card (US-065); a single Cat card is still not playable.
   - Negative: Given a deck configuration with Exploding Kittens ≥ players, then the engine rejects it.
+- **Update (US-068):** Defuse in the game is 6 for every player count (1 dealt to each player, 6 − players in the draw pile); See the Future is 5; the smaller deck is retired; up to 5 players. The Exploding Kitten rule (players − 1) is unchanged. See [US-068](../release-1.0.2/US-068-card-counts-names-and-deal.md).
 - **Dependencies:** [US-051](US-051-pure-game-engine-module.md).
 - **Notes:** The counts are explicitly open to playtest tuning.

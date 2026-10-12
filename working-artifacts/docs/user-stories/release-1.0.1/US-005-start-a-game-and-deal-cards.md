@@ -8,12 +8,12 @@
 - **User story:** As a host, I want to start the game when everyone has joined, so that the server shuffles and deals cards fairly and we can all play.
 - **Context:** Establishes initial state; F-03, DAC-04. Only the host can start (FR-04).
 - **Acceptance criteria:**
-  - Given I am the host and 2–4 players are in the lobby, when I press **Start game**, then the room locks, the server builds and deals the deck for the players present, and every device shows its own hand.
+  - Given I am the host and 2–5 players are in the lobby, when I press **Start game**, then the room locks, the server builds and deals the deck for the players present, and every device shows its own hand.
   - Given 3 players, then each player holds exactly 1 Defuse and 4 other cards, none of which is an Exploding Kitten or an extra Defuse.
   - Given the deal is complete, then Exploding Kittens (players − 1) and 2 extra Defuse cards are added to the draw pile and it is shuffled by the server.
   - Given the game starts, then every device shows "Everyone has cards! [Name] goes first".
   - Given I press Start twice quickly, then only one game is created.
-  - Given any player count (2–4), then no player's initial hand contains an Exploding Kitten.
+  - Given any player count (2–5), then no player's initial hand contains an Exploding Kitten.
   - Given a player tries to join at the moment of Start, then they either are in the game or are told "This game has already started", never in a half state.
   - Negative: Given only the host is in the lobby, then **Start game** is disabled with the text "You need at least 2 players".
   - Negative: Given I am a player and not the host, then no Start control is shown, and a start request from my client is rejected by the server.

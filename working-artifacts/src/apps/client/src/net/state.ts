@@ -23,6 +23,13 @@ export interface Message {
   text: string;
 }
 
+/** A queued animation (US-069): a bomb that explodes, or the winner with a trophy. */
+export interface AnimItem {
+  id: number;
+  kind: 'explosion' | 'trophy';
+  playerId: string;
+}
+
 export interface TipsState {
   /** Tip currently on screen, or null. */
   visible: number | null;
@@ -55,6 +62,14 @@ export interface State {
     nap: boolean;
     /** The card just taken, flipped face up for a moment (taker only). */
     reveal: Card | null;
+    /** A card just received, marked "new" in the hand while pop-ups are hidden (US-070). */
+    newCardId: string | null;
+    /** Animations waiting to play, first one on screen (US-069). */
+    anim: AnimItem[];
+    /** The out player's nap message waits until their explosion has played. */
+    napPending: boolean;
+    /** Until this time (ms) the next turn is held for an animation, as the server holds it. */
+    holdUntil: number;
     /** Player whose chip is briefly highlighted (Attack). */
     flash: { playerId: string; id: number } | null;
     menuOpen: boolean;
@@ -84,6 +99,10 @@ export function initialState(): State {
       peek: null,
       nap: false,
       reveal: null,
+      newCardId: null,
+      anim: [],
+      napPending: false,
+      holdUntil: 0,
       flash: null,
       menuOpen: false,
       overlays: 0,
@@ -112,6 +131,11 @@ export type Action =
   | { type: 'ui/nap'; on: boolean }
   | { type: 'game/hover'; hover: { playerId: string; position: number | null } | null }
   | { type: 'ui/reveal'; card: Card | null }
+  | { type: 'ui/new'; cardId: string | null }
+  | { type: 'anim/push'; items: AnimItem[] }
+  | { type: 'anim/shift' }
+  | { type: 'anim/hold'; until: number }
+  | { type: 'ui/napPending'; on: boolean }
   | { type: 'ui/flash'; flash: { playerId: string; id: number } | null }
   | { type: 'ui/menu'; open: boolean }
   | { type: 'ui/overlay'; delta: 1 | -1 }
@@ -122,6 +146,11 @@ export type Action =
   | { type: 'settings/set'; settings: Settings }
   /** Merges into the latest settings, so a slow toggle cannot undo a newer change. */
   | { type: 'settings/patch'; patch: Partial<Settings> };
+
+/** Turning pop-ups off removes the one on screen at once (US-070 AC03). */
+function withToastRule(state: State): State {
+  return state.settings.toasts || state.ui.toast === null ? state : { ...state, ui: { ...state.ui, toast: null } };
+}
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -144,7 +173,7 @@ export function reducer(state: State, action: Action): State {
         room: { view: null, ended: action.reason },
         game: { view: null, log: [], playedThisTurn: false },
         absent: null,
-        ui: { ...state.ui, selectedCardId: null, pendingActionId: null, peek: null, nap: false, menuOpen: false },
+        ui: { ...state.ui, selectedCardId: null, pendingActionId: null, peek: null, nap: false, menuOpen: false, anim: [], napPending: false, holdUntil: 0 },
       };
     case 'room/reset':
       return {
@@ -176,7 +205,7 @@ export function reducer(state: State, action: Action): State {
         ...state,
         game: { view: null, log: [], playedThisTurn: false },
         absent: null,
-        ui: { ...state.ui, selectedCardId: null, pendingActionId: null, peek: null, nap: false },
+        ui: { ...state.ui, selectedCardId: null, pendingActionId: null, peek: null, nap: false, anim: [], napPending: false, holdUntil: 0 },
       };
     case 'absent/set':
       return { ...state, absent: action.absent };
@@ -199,6 +228,16 @@ export function reducer(state: State, action: Action): State {
       return { ...state, ui: { ...state.ui, nap: action.on } };
     case 'game/hover':
       return { ...state, hover: action.hover };
+    case 'anim/push':
+      return { ...state, ui: { ...state.ui, anim: [...state.ui.anim, ...action.items] } };
+    case 'anim/shift':
+      return { ...state, ui: { ...state.ui, anim: state.ui.anim.slice(1) } };
+    case 'anim/hold':
+      return { ...state, ui: { ...state.ui, holdUntil: action.until } };
+    case 'ui/napPending':
+      return { ...state, ui: { ...state.ui, napPending: action.on } };
+    case 'ui/new':
+      return { ...state, ui: { ...state.ui, newCardId: action.cardId } };
     case 'ui/reveal':
       return { ...state, ui: { ...state.ui, reveal: action.card } };
     case 'ui/flash':
@@ -244,8 +283,8 @@ export function reducer(state: State, action: Action): State {
         settings: { ...state.settings, tipsSeen: false },
       };
     case 'settings/set':
-      return { ...state, settings: action.settings };
+      return withToastRule({ ...state, settings: action.settings });
     case 'settings/patch':
-      return { ...state, settings: { ...state.settings, ...action.patch } };
+      return withToastRule({ ...state, settings: { ...state.settings, ...action.patch } });
   }
 }

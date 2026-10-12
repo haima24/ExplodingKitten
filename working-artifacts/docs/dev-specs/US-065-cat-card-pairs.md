@@ -80,7 +80,7 @@ Make Cat cards useful: two Cat cards of the same design, played together at anot
 | Check | Level |
 | --- | --- |
 | 3,000 simulated games with about 16,000 random pairs, 7,700 invalid pairs, Nopes, timeouts and leaves: all invariants hold, invalid pairs rejected, no leaked hand or pile card ids | U (done) |
-| Deck has 20 Cat cards (5 × 4) and valid deals for 2 to 4 players | U |
+| Deck has 20 Cat cards (5 × 4) and valid deals for 2 to 5 players | U |
 | Pair: right cards, discard order, target rules, Nope odd and even, fizzles when the target is empty | U |
 | `PLAY_PAIR` schema rejects wrong shapes; handler injects `playerId` | I |
 | Two clients: select a pair, picker, target, hands change by -1 for both, log lines on both | E (done, headless Chrome) |

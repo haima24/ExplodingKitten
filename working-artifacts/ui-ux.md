@@ -520,7 +520,7 @@ Honour `prefers-reduced-motion` and the in-app toggle (US-038). No flashing more
 - No external links on game screens. A footer "About" page may link out only behind an adult-oriented "For grown-ups" label **[C]**.
 - Minimal data. Players pick a name from a **curated name builder** and an avatar. No real names, photos, or emails are requested. A hint says "Don't use real names."
 - **No chat and no free text** shown to other players. Names come from word lists; the host can remove a player.
-- **Safe sharing:** the lobby says "Only share this with people you trust." Rooms hold at most 4 players, lock when the game starts, and expire.
+- **Safe sharing:** the lobby says "Only share this with people you trust." Rooms hold at most 5 players, lock when the game starts, and expire.
 - The Create screen suggests "Ask a grown-up to be the host" without blocking children (OQ-17).
 - Failure is gentle: "nap time", no leaderboards of "losers", rematch is one tap for the host.
 - Waiting is never shamed: an absent player is described neutrally ("Pip's connection dropped"), not as a fault.
@@ -650,7 +650,7 @@ Observable criteria for developers and testers. Each maps to one or more stories
 | DAC-29 | After a reload or a short connection loss (≤ 60 s) the same device returns to the same seat with the same hand; a **Rejoin** banner appears on Home when applicable; actions are inert while offline | US-043 |
 | DAC-30 | Original art only: no Exploding Kittens logos, artwork, or card text appear in the UI or assets. Card names are the permitted exception | US-050 |
 | DAC-31 | The host sees the room code as text with **Copy code**, **Copy link**, and (where supported) **Share…**; each copy action is announced; opening the copied link shows Join with the code prefilled | US-054, US-006 |
-| DAC-32 | The lobby lists every joined player with a Host badge and connection status text; **Start game** is enabled only for the host with 2–4 players; **Remove** needs confirmation and the removed player is told | US-055 |
+| DAC-32 | The lobby lists every joined player with a Host badge and connection status text; **Start game** is enabled only for the host with 2–5 players; **Remove** needs confirmation and the removed player is told | US-055 |
 | DAC-33 | Room not found, room full, game already started, room closed, and too many attempts each show a distinct plain-language message and a way back | US-006, US-061 |
 | DAC-34 | If it is an absent player's turn, every device shows the absent-player banner with a countdown; after 60 s only the host sees **Keep waiting** and **Skip [Name]** | US-058 |
 | DAC-35 | When the host leaves or is gone beyond the window, everyone sees either "[Name] is the new host" or "The host left, so the room has closed" | US-059 |

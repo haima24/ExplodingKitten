@@ -74,7 +74,7 @@ function Robot({ color }: { color: string }): JSX.Element {
   );
 }
 
-const ROBOTS: Record<string, string> = { 'bot-1': '#8AB4F8', 'bot-2': '#9AE6B4', 'bot-3': '#F6A5A5' };
+const ROBOTS: Record<string, string> = { 'bot-1': '#8AB4F8', 'bot-2': '#9AE6B4', 'bot-3': '#F6A5A5', 'bot-4': '#F6D67A' };
 
 export function AvatarArt({ avatarId }: { avatarId: string }): JSX.Element {
   let body: ReactNode;

@@ -48,6 +48,18 @@ if (noName.length > 0 || listed('ADJECTIVES').length === 0 || listed('NOUNS').le
   process.exit(1);
 }
 
+// Old Vietnamese card names must not come back (US-068): every string and spoken line uses the new names.
+const viText = readFileSync(dir + 'vi.ts', 'utf8');
+const oldName = /Mèo [Nn]ổ [Tt]ung|Gỡ Bom|Bỏ Qua|Tiên [Tt]ri|Nhờ Vả|(?<![\p{L}])[Vv]ả(?![\p{L}])/u;
+const oldNames = viText
+  .split('\n')
+  .map((line, i) => ({ line: line.trim(), at: i + 1 }))
+  .filter(({ line }) => oldName.test(line));
+if (oldNames.length > 0) {
+  console.error(`Old card names in vi.ts:\n  ${oldNames.map((o) => `line ${o.at}: ${o.line.slice(0, 80)}`).join('\n  ')}`);
+  process.exit(1);
+}
+
 if (missing.length > 0 || extra.length > 0) {
   if (missing.length > 0) console.error(`Missing in vi.ts (${missing.length}):\n  ${missing.join('\n  ')}`);
   if (extra.length > 0) console.error(`Not in en.ts (${extra.length}):\n  ${extra.join('\n  ')}`);

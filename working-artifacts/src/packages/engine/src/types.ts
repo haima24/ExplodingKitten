@@ -18,7 +18,8 @@ export interface Card {
   variant?: 1 | 2 | 3 | 4 | 5;
 }
 
-export type DeckProfileName = 'mvp' | 'mvp+should';
+/** One card set for every player count (US-068); the smaller `mvp` set is retired. */
+export type DeckProfileName = 'mvp+should';
 
 export type Phase = 'turn' | 'decision' | 'finished';
 export type PlayerStatus = 'active' | 'out';

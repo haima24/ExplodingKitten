@@ -62,7 +62,7 @@ export const AVATARS = ['biscuit', 'pip', 'marmalade', 'mochi', 'juniper', 'waff
 export type AvatarId = (typeof AVATARS)[number];
 
 /** Reserved for bot members (US-023); players can never pick these. */
-export const BOT_AVATARS = ['bot-1', 'bot-2', 'bot-3'] as const;
+export const BOT_AVATARS = ['bot-1', 'bot-2', 'bot-3', 'bot-4'] as const;
 export const BOT_NAMES: readonly DisplayName[] = [
   { adjective: 'Beepy', noun: 'Buddy' },
   { adjective: 'Boopy', noun: 'Buddy' },
