@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Draft v0.2 — updated for online rooms (host + players) |
 | Last updated | 2026-10-12 |
-| Related documents | [Product brief](product-brief.md) · [User stories](user-stories.md) |
+| Related documents | [Product brief](product-brief.md) |
 | Repository baseline | **No UI exists** in the repository (no components, styles, or assets). All items below are *Proposed*. See [product brief §H](product-brief.md#h-technical-context). |
 
 Terminology follows the brief: **Exploding Kitten** (exploding card), **Defuse** (defuse), **Skip** (skip), **See the Future** (see the future), **Shuffle** (shuffle), **Cat card** (no-effect card), **Attack** (attack, Should), **Favor** (favor, Should), **Nope** (nope, Should). The ruleset is a product decision (OQ-04); this document never asserts it is official.
@@ -615,7 +615,7 @@ Non-visual modules referenced by the UI (not components): the **game engine** (U
 
 ## I. Design Acceptance Criteria
 
-Observable criteria for developers and testers. Each maps to one or more stories in [user-stories.md](user-stories.md).
+Observable criteria for developers and testers. Each maps to one or more stories in the [story index](docs/user-stories/README.md).
 
 | ID | Criterion | Stories |
 | --- | --- | --- |

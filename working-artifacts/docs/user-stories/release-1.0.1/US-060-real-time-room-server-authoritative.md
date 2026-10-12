@@ -1,6 +1,6 @@
 # US-060 — Real-time room server (authoritative)
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Must (enabler)
 - **Release:** 1.0.1

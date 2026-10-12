@@ -1,6 +1,6 @@
 # US-047 — Multi-device end-to-end tests (host and players)
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Must
 - **Release:** 1.0.1

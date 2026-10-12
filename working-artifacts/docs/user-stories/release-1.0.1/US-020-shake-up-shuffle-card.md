@@ -1,6 +1,6 @@
 # US-020 — Shuffle (shuffle) card
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Must
 - **Release:** 1.0.1

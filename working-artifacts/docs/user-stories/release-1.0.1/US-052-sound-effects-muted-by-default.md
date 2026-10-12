@@ -1,6 +1,6 @@
 # US-052 — Sound effects (muted by default)
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Could
 - **Release:** 1.0.1

@@ -1,6 +1,6 @@
 # US-044 — Loading and asset-failure handling
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Should
 - **Release:** 1.0.1

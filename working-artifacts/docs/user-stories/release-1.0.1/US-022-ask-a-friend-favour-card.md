@@ -1,6 +1,6 @@
 # US-022 — Favor (favour) card
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Should
 - **Release:** 1.0.1

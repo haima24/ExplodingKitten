@@ -264,7 +264,7 @@ The card pictures are original inline SVG icons (nine card types, with five symb
 | [US-029](../release-1.0.1/US-029-how-to-play-tour.md), [US-030](../release-1.0.1/US-030-card-guide-and-per-card-help.md) | Help text and counts |
 | [US-069](US-069-explosion-and-winner-animations.md) | The "Mèo nổ" sound and the bigger burst are shared with the explosion animation |
 | [US-037](../release-1.0.1/US-037-colour-independence-and-contrast.md), [US-009](../release-1.0.1/US-009-view-my-hand.md) | Pictures stay distinct and readable on cards in the hand |
-| Product brief §C4 and [user-stories.md](../../../user-stories.md) | Card counts shown in the documents |
+| Product brief §C4 | Card counts shown in the documents |
 
 ### Changes to existing stories (to apply when this story is approved)
 - **US-014:** Defuse in the game becomes 6 for every player count; See the Future becomes 5; the smaller `mvp` set is retired.

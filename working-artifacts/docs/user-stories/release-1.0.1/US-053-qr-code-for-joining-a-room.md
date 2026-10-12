@@ -1,6 +1,6 @@
 # US-053 — QR code for joining a room
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Could
 - **Release:** 1.0.1

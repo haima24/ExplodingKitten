@@ -1,6 +1,6 @@
 # User story index
 
-One file per story. Source of truth for coverage matrix, design cross-reference, and Definition of Done: [user-stories.md](../../user-stories.md). Related: [product brief](../../product-brief.md), [UI/UX specification](../../ui-ux.md).
+One file per story. Related: [product brief](../../product-brief.md), [UI/UX specification](../../ui-ux.md).
 
 | Story | Title | Release | Priority | Epic |
 | --- | --- | --- | --- | --- |

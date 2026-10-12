@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Draft v0.2 — updated for online room-based multiplayer (host + players) |
 | Last updated | 2026-10-12 |
-| Related documents | [UI/UX specification](ui-ux.md) · [User stories](user-stories.md) |
+| Related documents | [UI/UX specification](ui-ux.md) |
 | Scope of this document | Discovery and planning only. No application code exists or is changed by this work. |
 
 **Labelling convention.** *Existing* = verified in the repository. *Proposed* = recommendation made by this document. *Decision needed* = open question with a stated default (see [section I](#i-assumptions-risks-and-open-questions)).
@@ -501,4 +501,4 @@ Stage 1 is the earliest point where the product is *playable*; Stage 2 is the ea
 
 ## Appendix — Traceability (Must-have features → stories)
 
-See the [coverage matrix in user-stories.md](user-stories.md#coverage-matrix-mvp-features--stories).
+See the [story index](docs/user-stories/README.md).

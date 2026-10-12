@@ -1,6 +1,6 @@
 # US-045 — Unsupported browser notice
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Could
 - **Release:** 1.0.1

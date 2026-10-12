@@ -1,6 +1,6 @@
 # US-032 — Guided first game (coach marks)
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Should
 - **Release:** 1.0.1

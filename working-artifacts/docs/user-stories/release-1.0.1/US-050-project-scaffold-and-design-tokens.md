@@ -1,6 +1,6 @@
 # US-050 — Project scaffold and design tokens
 
-[Back to story index](../README.md) | Source: [user-stories.md](../../../user-stories.md)
+[Back to story index](../README.md)
 
 - **Priority:** Must (enabler)
 - **Release:** 1.0.1
