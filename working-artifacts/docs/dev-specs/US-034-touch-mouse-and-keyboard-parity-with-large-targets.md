@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-034](../user-stories/US-034-touch-mouse-and-keyboard-parity-with-large-targets.md) · Must · Responsive UI and accessibility |
+| Story | [US-034](../user-stories/release-1.0.1/US-034-touch-mouse-and-keyboard-parity-with-large-targets.md) · Must · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-11, F-12, DAC-19 |
 | Area | `apps/client` (`components/common`, CSS) |

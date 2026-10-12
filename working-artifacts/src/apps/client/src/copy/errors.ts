@@ -1,4 +1,4 @@
-import { CARD_CATALOG } from '@wb/engine/cards';
+import { cardNotPlayableReason } from './cards';
 import type { CardKind } from '@wb/engine/types';
 import { t } from './index';
 
@@ -9,7 +9,7 @@ export function messageForError(
 ): string {
   switch (code) {
     case 'NOT_PLAYABLE': {
-      const reason = context.cardKind ? CARD_CATALOG[context.cardKind].notPlayableReason : undefined;
+      const reason = context.cardKind ? cardNotPlayableReason(context.cardKind) : undefined;
       return reason ?? t('error.generic');
     }
     case 'NOT_YOUR_TURN':

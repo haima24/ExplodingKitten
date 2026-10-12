@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-039](../user-stories/US-039-text-size-setting.md) · Should · Responsive UI and accessibility |
+| Story | [US-039](../user-stories/release-1.0.1/US-039-text-size-setting.md) · Should · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-26, DAC-24 |
 | Area | `apps/client` (settings, CSS) |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-022](../user-stories/US-022-ask-a-friend-favour-card.md) · Should · Cards and rules |
+| Story | [US-022](../user-stories/release-1.0.1/US-022-ask-a-friend-favour-card.md) · Should · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-22, OQ-04 |
 | Area | `packages/engine`, `apps/server` (absent handling), `apps/client` (`TargetPicker`, `FavorPickDialog`) |

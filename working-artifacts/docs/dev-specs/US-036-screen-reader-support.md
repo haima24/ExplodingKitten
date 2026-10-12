@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-036](../user-stories/US-036-screen-reader-support.md) · Must · Responsive UI and accessibility |
+| Story | [US-036](../user-stories/release-1.0.1/US-036-screen-reader-support.md) · Must · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-12, DAC-21, [UI/UX §F7](../../ui-ux.md#f7-screen-reader-support) |
 | Area | `apps/client` (`Announcer`, semantics) |

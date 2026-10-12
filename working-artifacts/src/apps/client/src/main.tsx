@@ -1,7 +1,12 @@
 import '@fontsource/baloo-2/latin-700.css';
 import '@fontsource/baloo-2/latin-800.css';
+// Vietnamese letters and tone marks (loaded by the browser only when such text is shown).
+import '@fontsource/baloo-2/vietnamese-700.css';
+import '@fontsource/baloo-2/vietnamese-800.css';
 import '@fontsource/nunito/latin-400.css';
 import '@fontsource/nunito/latin-700.css';
+import '@fontsource/nunito/vietnamese-400.css';
+import '@fontsource/nunito/vietnamese-700.css';
 import './styles/tokens.css';
 import './styles/global.css';
 

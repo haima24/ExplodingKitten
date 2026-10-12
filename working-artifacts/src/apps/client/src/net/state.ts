@@ -1,13 +1,21 @@
-import type { Card, PlayerView } from '@wb/engine/types';
+import type { Card, CardKind, PlayerView } from '@wb/engine/types';
 import type { AbsentInfo, RoomEndedReason, RoomView } from '@wb/protocol/shared';
+import type { CopyKey } from '../copy';
 import { loadSession, type Session } from '../lib/session';
 import { loadSettings, type Settings } from '../lib/settings';
 
 export type ConnStatus = 'idle' | 'connecting' | 'online' | 'reconnecting' | 'offline';
 
+/**
+ * A log line is stored as a catalog key plus values, not as finished text, so
+ * switching language re-words the whole history (US-064). Card names are kept as
+ * kinds for the same reason.
+ */
 export interface LogEntry {
   seq: number;
-  text: string;
+  key: CopyKey;
+  params?: Record<string, string | number>;
+  cards?: Record<string, CardKind>;
 }
 
 export interface Message {
@@ -41,6 +49,8 @@ export interface State {
     /** Secret See the Future result: memory only, cleared on close. */
     peek: Card[] | null;
     nap: boolean;
+    /** Player whose chip is briefly highlighted (Attack). */
+    flash: { playerId: string; id: number } | null;
     menuOpen: boolean;
     /** Count of open modal dialogs; controls are inert while > 0. */
     overlays: number;
@@ -65,6 +75,7 @@ export function initialState(): State {
       toast: null,
       peek: null,
       nap: false,
+      flash: null,
       menuOpen: false,
       overlays: 0,
       tips: { visible: null, done: [], queued: [], hidden: settings.tipsSeen },
@@ -89,13 +100,16 @@ export type Action =
   | { type: 'ui/toast'; message: Message | null }
   | { type: 'ui/peek'; cards: Card[] | null }
   | { type: 'ui/nap'; on: boolean }
+  | { type: 'ui/flash'; flash: { playerId: string; id: number } | null }
   | { type: 'ui/menu'; open: boolean }
   | { type: 'ui/overlay'; delta: 1 | -1 }
   | { type: 'tips/trigger'; tip: number }
   | { type: 'tips/dismiss' }
   | { type: 'tips/skip' }
   | { type: 'tips/reset' }
-  | { type: 'settings/set'; settings: Settings };
+  | { type: 'settings/set'; settings: Settings }
+  /** Merges into the latest settings, so a slow toggle cannot undo a newer change. */
+  | { type: 'settings/patch'; patch: Partial<Settings> };
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -165,6 +179,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, ui: { ...state.ui, peek: action.cards } };
     case 'ui/nap':
       return { ...state, ui: { ...state.ui, nap: action.on } };
+    case 'ui/flash':
+      return { ...state, ui: { ...state.ui, flash: action.flash } };
     case 'ui/menu':
       return { ...state, ui: { ...state.ui, menuOpen: action.open } };
     case 'ui/overlay':
@@ -207,5 +223,7 @@ export function reducer(state: State, action: Action): State {
       };
     case 'settings/set':
       return { ...state, settings: action.settings };
+    case 'settings/patch':
+      return { ...state, settings: { ...state.settings, ...action.patch } };
   }
 }

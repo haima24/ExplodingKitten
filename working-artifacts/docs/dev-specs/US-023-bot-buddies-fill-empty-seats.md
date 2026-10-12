@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-023](../user-stories/US-023-bot-buddies-fill-empty-seats.md) · **Could** · Cards and rules |
+| Story | [US-023](../user-stories/release-1.0.1/US-023-bot-buddies-fill-empty-seats.md) · **Could** · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-20, OQ-12 |
 | Area | `apps/server` (`bots`), `apps/client` (lobby) |

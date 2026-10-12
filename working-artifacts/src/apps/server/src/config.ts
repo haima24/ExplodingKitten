@@ -37,6 +37,8 @@ export interface Config {
   actionDedupeWindow: number;
   /** How long a Nope response window stays open (the engine has no clock). */
   nopeWindowMs: number;
+  /** Default seconds per turn for new rooms; 0 = Off (US-063). */
+  turnTimerDefaultSec: 0 | 15 | 30 | 60;
   connPerMinute: number;
 
   botMinDelayMs: number;
@@ -59,6 +61,11 @@ const list = (raw: string | undefined): string[] =>
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
+
+const turnTimer = (n: number): 0 | 15 | 30 | 60 => {
+  if (n === 0 || n === 15 || n === 30 || n === 60) return n;
+  throw new Error('TURN_TIMER_SEC must be 0, 15, 30 or 60');
+};
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   const production = env['NODE_ENV'] === 'production';
@@ -107,6 +114,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     msgBurst: num(env, 'MSG_BURST', 40),
     actionDedupeWindow: num(env, 'ACTION_DEDUPE_WINDOW', 64),
     nopeWindowMs: num(env, 'NOPE_WINDOW_MS', t ? 1_500 : 8_000),
+    turnTimerDefaultSec: turnTimer(num(env, 'TURN_TIMER_SEC', t ? 0 : 30)),
     connPerMinute: num(env, 'CONN_PER_MINUTE', t ? 10_000 : 30),
 
     botMinDelayMs: t ? 20 : 800,

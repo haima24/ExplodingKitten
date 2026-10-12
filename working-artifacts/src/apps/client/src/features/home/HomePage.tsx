@@ -45,6 +45,24 @@ function RejoinBanner(): JSX.Element | null {
   );
 }
 
+/** One tap to switch between English and Tiếng Việt, named in the other language. */
+function LanguageSwitch(): JSX.Element {
+  const { state, dispatch } = useStore();
+  const next = state.settings.language === 'vi' ? 'en' : 'vi';
+  const nextName = next === 'vi' ? 'Tiếng Việt' : 'English';
+  return (
+    <Button
+      compact
+      lang={next}
+      aria-label={t('lang.switchAria', { name: nextName })}
+      onClick={() => dispatch({ type: 'settings/patch', patch: { language: next } })}
+    >
+      <span aria-hidden="true">🌐 </span>
+      {nextName}
+    </Button>
+  );
+}
+
 export function HomePage(): JSX.Element {
   const { client } = useStore();
   const navigate = useNavigate();
@@ -108,6 +126,7 @@ export function HomePage(): JSX.Element {
 
       <footer className={s['footer']}>
         <p>{t('home.footer')}</p>
+        <LanguageSwitch />
         <Link to="/privacy">{t('home.privacy')}</Link>
       </footer>
     </div>

@@ -531,7 +531,7 @@
   - Negative: Given the player whose card is waiting leaves the game, then the card is dropped and the window closes.
   - Negative: Given a player who holds a Nope leaves during the window, then they are removed from the responders and the window closes if nobody is left.
   - Negative: Given a modified client sends a Nope when there is no window or it is not a responder, then the server rejects it with no state change.
-- **Dependencies:** [US-011](US-011-select-and-play-an-action-card.md), [US-058](US-058-absent-player-during-the-game.md), [US-060](US-060-real-time-room-server-authoritative.md).
+- **Dependencies:** [US-011](docs/user-stories/release-1.0.1/US-011-select-and-play-an-action-card.md), [US-058](docs/user-stories/release-1.0.1/US-058-absent-player-during-the-game.md), [US-060](docs/user-stories/release-1.0.1/US-060-real-time-room-server-authoritative.md).
 - **Notes:** The window reveals that at least one other player holds a Nope; who holds it stays private. 5 Nope cards are added to the deck in profile `mvp+should`. Bots stop an occasional card and never chain Nopes (US-023).
 
 ### US-023 — Bot Buddies fill empty seats

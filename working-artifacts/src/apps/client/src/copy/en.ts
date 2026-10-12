@@ -408,6 +408,61 @@ export const en = {
   'room.resuming': 'Getting back to your game…',
   'room.noSeat': "We couldn't find your seat",
 
+  // Shared
+  'common.someone': 'Someone',
+  'title.room': 'Room',
+
+  // Turn timer (US-063)
+  'timer.title': 'Turn timer',
+  'timer.off': 'Off',
+  'timer.sec': '{n} seconds',
+  'timer.note': 'Each turn has a time limit. If time runs out, the game plays the next step for that player.',
+  'timer.readonly': 'Turn timer: {value}',
+  'clock.mine': 'You have {n} s',
+  'clock.other': '{name} has {n} s',
+  'clock.hurry': 'Hurry! {n} s left',
+  'clock.paused': 'Timer paused',
+  'clock.warnMine': 'You have {n} seconds left.',
+  'clock.warnOther': '{name} has {n} seconds left.',
+  'log.timeout': '{name} ran out of time',
+
+  // Sound, voice, language (US-063, US-064)
+  'sound.off': 'Sound off',
+  'sound.offOpen': 'Sound is off. Open settings.',
+  'sound.blocked': 'Tap to turn on sound',
+  'voice.replay': 'Replay last line',
+  'voice.sample': 'Voice is on.',
+  'lang.switchAria': 'Change language to {name}',
+  'settings.language': 'Language',
+  'settings.volume': 'Volume',
+  'settings.voice': 'Voice-over',
+  'settings.voice.on': 'Voice on',
+  'settings.voice.off': 'Voice off',
+  'settings.voiceVolume': 'Voice volume',
+  'settings.voice.note': 'Short spoken lines in the language you picked. Everything is also shown as text.',
+  'settings.voice.unavailable': "This device has no voice for the chosen language, so you may hear nothing. The text still shows.",
+
+  // Spoken lines (no names, no cards in hands)
+  'voice.V01': "It's your turn to draw.",
+  'voice.V03': 'You drew a card.',
+  'voice.V04': 'Five seconds left!',
+  'voice.V05': "Time's up! You draw automatically.",
+  'voice.V05b': "Time's up! The game chose for you.",
+  'voice.V06': 'Slap! The next player takes two turns.',
+  'voice.V06a': 'Slap! You take two turns.',
+  'voice.V07': 'Skip the turn!',
+  'voice.V08': 'You see the top three cards.',
+  'voice.V09': 'The deck was shuffled.',
+  'voice.V10': 'A friend asks you for a card. Choose one.',
+  'voice.V11': 'Nope! The card was stopped.',
+  'voice.V12': 'Do you want to stop it?',
+  'voice.V13': 'Exploding Kitten! Defuse it.',
+  'voice.V14': 'Defused!',
+  'voice.V15': 'You are out.',
+  'voice.V16': 'A player is out.',
+  'voice.V17': 'You won!',
+  'voice.V18': 'Game over. Congratulations to the winner!',
+
   // Privacy
   'privacy.title': 'Privacy',
   'privacy.intro':
@@ -419,9 +474,10 @@ export const en = {
   'privacy.item.token':
     'A rejoin token: stored in this browser tab so you can come back after a refresh. The server keeps only a scrambled copy.',
   'privacy.item.settings':
-    'Your settings (motion, sound, text size): stored on this device only and never sent anywhere.',
+    'Your settings (language, motion, sound, voice, text size): stored on this device only and never sent anywhere.',
   'privacy.item.ip':
     'Your IP address: seen by the hosting service like any website, kept in its logs for up to 7 days, and never joined with your nickname.',
+  'privacy.draftNotice': 'Translations are for convenience. The English text is the official version.',
   'privacy.item.none': 'No cookies, no analytics, no ads, and nothing loaded from other websites.',
 } as const;
 

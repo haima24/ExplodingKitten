@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-008](../user-stories/US-008-private-hands-on-every-device.md) · Must · Gameplay |
+| Story | [US-008](../user-stories/release-1.0.1/US-008-private-hands-on-every-device.md) · Must · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-04, FR-06, DAC-06, DAC-37 |
 | Area | `packages/engine` (`viewFor`, `visibleEvents`), `apps/server` (broadcast), `apps/client` (menu) |

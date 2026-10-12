@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-014](../user-stories/US-014-build-the-deck-by-player-count.md) · Must · Cards and rules |
+| Story | [US-014](../user-stories/release-1.0.1/US-014-build-the-deck-by-player-count.md) · Must · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-03, DAC-04, OQ-04, OQ-06 |
 | Area | `packages/engine` (`deck.ts`, `cards.ts`) |

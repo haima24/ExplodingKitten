@@ -5,6 +5,10 @@ import type { ErrorCode, RoomEndedReason } from './errors';
 export const PROTOCOL_VERSION = 1;
 
 
+/** Turn timer choices for the host, in seconds. 0 means Off (US-063). */
+export const TURN_TIMER_OPTIONS = [0, 15, 30, 60] as const;
+export type TurnTimerSec = (typeof TURN_TIMER_OPTIONS)[number];
+
 export type RoomPhase = 'LOBBY' | 'PLAYING' | 'FINISHED' | 'CLOSED';
 export type MemberStatus = 'LOBBY' | 'ACTIVE' | 'OUT' | 'LEFT';
 
@@ -29,6 +33,13 @@ export interface RoomView {
   /** Bot that is currently "thinking" (US-023). */
   thinkingId?: string;
   idleWarning?: { expiresAt: number; absolute?: boolean };
+  /** Seconds per turn chosen by the host; 0 = Off (US-063). */
+  turnTimerSec: TurnTimerSec;
+  /**
+   * The running turn clock. `deadlineAt` is server time in ms, or null while the
+   * clock is paused (Nope window, or the player is away).
+   */
+  turnClock?: { playerId: string; deadlineAt: number | null };
 }
 
 export interface RoomNotice {

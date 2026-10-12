@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-040](../user-stories/US-040-invalid-action-feedback.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-040](../user-stories/release-1.0.1/US-040-invalid-action-feedback.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-14, DAC-12, DAC-25, [UI/UX §E6](../../ui-ux.md#e6-invalid-actions-and-error-recovery) |
 | Area | `apps/client` (`copy/errors.ts`, `InlineMessage`), engine reasons |

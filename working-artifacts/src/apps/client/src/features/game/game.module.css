@@ -557,3 +557,66 @@
   font-size: 4rem;
   line-height: 1;
 }
+
+/* ---------- Turn clock and audio status (US-063, US-064) ---------- */
+.clock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 28rem;
+  font-weight: 800;
+}
+.clockText {
+  color: var(--color-ink);
+}
+.clockBar {
+  display: block;
+  height: 0.5rem;
+  border: 2px solid var(--color-ink);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  overflow: hidden;
+}
+.clockFill {
+  display: block;
+  height: 100%;
+  background: var(--color-info);
+  transition: width 0.25s linear;
+}
+.clockHurry .clockFill {
+  background: var(--color-boom);
+}
+.clockHurry .clockText {
+  color: var(--color-boom);
+}
+:root[data-motion='reduced'] .clockFill {
+  transition: none;
+}
+.audioStatus {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+.chipFlash {
+  outline: 4px solid var(--color-accent);
+  outline-offset: 2px;
+  animation: chipFlash 1.2s ease-out 1;
+}
+@keyframes chipFlash {
+  0% {
+    transform: scale(1.06) rotate(-2deg);
+  }
+  25% {
+    transform: scale(1.06) rotate(2deg);
+  }
+  50% {
+    transform: scale(1.04) rotate(-1deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+:root[data-motion='reduced'] .chipFlash {
+  animation: none;
+}

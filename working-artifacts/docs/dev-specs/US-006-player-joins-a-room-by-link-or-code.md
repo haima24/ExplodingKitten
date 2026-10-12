@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-006](../user-stories/US-006-player-joins-a-room-by-link-or-code.md) · Must · Rooms and lobby |
+| Story | [US-006](../user-stories/release-1.0.1/US-006-player-joins-a-room-by-link-or-code.md) · Must · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-19, FR-22, DAC-03, DAC-31, DAC-33 |
 | Area | `apps/server` (join), `apps/client` (`/join`, `/join/:code`) |

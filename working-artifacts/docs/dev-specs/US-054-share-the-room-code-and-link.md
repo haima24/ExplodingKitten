@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-054](../user-stories/US-054-share-the-room-code-and-link.md) · Must · Rooms and lobby |
+| Story | [US-054](../user-stories/release-1.0.1/US-054-share-the-room-code-and-link.md) · Must · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-18, FR-03, DAC-31, OQ-18, OQ-19 |
 | Area | `apps/client` (`features/rooms/ShareRoomPanel`) |

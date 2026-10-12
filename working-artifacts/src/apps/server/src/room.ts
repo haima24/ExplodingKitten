@@ -1,6 +1,6 @@
 import type { GameState } from '@wb/engine/types';
 import type { Rng } from '@wb/engine';
-import type { AbsentInfo, DisplayName, MemberView, RoomPhase, RoomView } from '@wb/protocol';
+import type { AbsentInfo, DisplayName, MemberView, RoomPhase, RoomView, TurnTimerSec } from '@wb/protocol';
 import type { Connection } from './connection';
 import type { Config } from './config';
 
@@ -44,6 +44,21 @@ export interface Room {
   /** When the open Nope window times out, and which window it belongs to. */
   nopeDeadlineAt: number | null;
   nopeKey: string | null;
+  /** Host setting: seconds per turn, 0 = Off (US-063). */
+  turnTimerSec: TurnTimerSec;
+  turn: TurnClock | null;
+}
+
+/**
+ * The server-side turn clock. `key` names the thing being waited on, so a new
+ * turn, decision or Favor re-arms the clock at full time. `deadlineAt` is null
+ * while paused; `remainingMs` is kept only for a Nope-window pause.
+ */
+export interface TurnClock {
+  key: string;
+  playerId: string;
+  deadlineAt: number | null;
+  remainingMs: number | null;
 }
 
 export const present = (room: Room): Member[] => room.members.filter((m) => !m.left);
@@ -99,8 +114,10 @@ export function toRoomView(room: Room, config: Config): RoomView {
     capacity: config.roomCapacity,
     deckProfile: config.deckProfile,
     members,
+    turnTimerSec: room.turnTimerSec,
   };
   if (room.botActorId && room.botDueAt !== null) view.thinkingId = room.botActorId;
   if (room.idleWarning) view.idleWarning = { ...room.idleWarning };
+  if (room.turn) view.turnClock = { playerId: room.turn.playerId, deadlineAt: room.turn.deadlineAt };
   return view;
 }

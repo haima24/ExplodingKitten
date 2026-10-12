@@ -1,5 +1,6 @@
 import {
   createContext,
+  useLayoutEffect,
   useCallback,
   useContext,
   useEffect,
@@ -9,6 +10,7 @@ import {
   type Dispatch,
   type ReactNode,
 } from 'react';
+import { setLocale } from '../copy';
 import { applySettings, saveSettings } from '../lib/settings';
 import { GameClient } from './client';
 import { initialState, reducer, type Action, type State } from './state';
@@ -33,6 +35,11 @@ export function StoreProvider({ children }: { children: ReactNode }): JSX.Elemen
   }, []);
 
   const client = useMemo(() => new GameClient(dispatch, () => mirror.current), [dispatch]);
+
+  // The language switches before paint, so no frame shows mixed languages.
+  useLayoutEffect(() => {
+    setLocale(state.settings.language);
+  }, [state.settings.language]);
 
   // Persist and apply settings whenever they change (device-only storage).
   useEffect(() => {

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-051](../user-stories/US-051-pure-game-engine-module.md) · Must (enabler) · Foundation |
+| Story | [US-051](../user-stories/release-1.0.1/US-051-pure-game-engine-module.md) · Must (enabler) · Foundation |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-17, FR-06, DAC-06, DAC-37 |
 | Area | `packages/engine` |

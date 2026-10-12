@@ -95,7 +95,9 @@ export type ServerAction =
   | { type: 'REMOVE' }
   | { type: 'SKIP_ABSENT' }
   /** The response window timed out: every remaining responder passes. */
-  | { type: 'EXPIRE_NOPE' };
+  | { type: 'EXPIRE_NOPE' }
+  /** The turn clock ran out: the engine plays the default move for what this player owes. */
+  | { type: 'TIMEOUT' };
 
 export type Action = (PlayerAction | ServerAction) & { playerId: string };
 
@@ -145,6 +147,7 @@ export type EventType =
   | 'NOPE_PLAYED'
   | 'EFFECT_APPLIED'
   | 'NOPE_RESOLVED'
+  | 'TURN_TIMEOUT'
   // private
   | 'DRAWN_CARD'
   | 'PEEK_RESULT'

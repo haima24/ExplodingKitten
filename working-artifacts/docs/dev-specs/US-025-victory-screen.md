@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-025](../user-stories/US-025-victory-screen.md) · Must · Victory, leaving, and rematch |
+| Story | [US-025](../user-stories/release-1.0.1/US-025-victory-screen.md) · Must · Victory, leaving, and rematch |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-08, DAC-14, [UI/UX §D9](../../ui-ux.md#d9-game-over--victory-screen--m-us-025-us-026-us-027) |
 | Area | `packages/engine` (finish), `apps/server` (room phase), `apps/client` (`VictoryScreen`) |

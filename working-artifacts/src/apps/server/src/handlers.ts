@@ -153,6 +153,8 @@ function onCreate(ctx: Ctx, p: ClientPayload<'room.create'>): void {
     botDueAt: null,
     nopeDeadlineAt: null,
     nopeKey: null,
+    turnTimerSec: hub.config.turnTimerDefaultSec,
+    turn: null,
   };
   const { member, token } = addMember(room, { name: p.name, avatarId: p.avatarId, isBot: false });
   room.hostId = member.playerId;
@@ -348,6 +350,16 @@ function onAddBot(ctx: Ctx): void {
   hub.broadcastRoom(room);
 }
 
+function onSettings(ctx: Ctx, p: ClientPayload<'room.settings'>): void {
+  const b = asHost(ctx);
+  if (!b) return;
+  if (b.room.phase !== 'LOBBY') return fail(ctx, 'WRONG_ROOM_PHASE');
+  b.room.turnTimerSec = p.turnTimerSec;
+  ctx.hub.touch(b.room);
+  ctx.hub.ack(ctx.conn, ctx.id);
+  ctx.hub.broadcastRoom(b.room);
+}
+
 function onKeepAlive(ctx: Ctx): void {
   const b = bound(ctx);
   if (!b) return;
@@ -463,6 +475,7 @@ export const handlers: Handlers = {
   'room.rematch': onRematch,
   'room.keepAlive': onKeepAlive,
   'room.addBot': onAddBot,
+  'room.settings': onSettings,
   'game.action': onGameAction,
   'game.end': onEndGame,
   'game.skipAbsent': onSkipAbsent,

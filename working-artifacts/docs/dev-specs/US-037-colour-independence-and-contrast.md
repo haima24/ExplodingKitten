@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-037](../user-stories/US-037-colour-independence-and-contrast.md) · Must · Responsive UI and accessibility |
+| Story | [US-037](../user-stories/release-1.0.1/US-037-colour-independence-and-contrast.md) · Must · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-12, DAC-22, [UI/UX §B1, §F3, §F4](../../ui-ux.md#b1-colour-palette) |
 | Area | `apps/client` (tokens, components), `tools/` (contrast check) |

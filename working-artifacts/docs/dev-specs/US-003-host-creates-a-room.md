@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-003](../user-stories/US-003-host-creates-a-room.md) · Must · Rooms and lobby |
+| Story | [US-003](../user-stories/release-1.0.1/US-003-host-creates-a-room.md) · Must · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-18, FR-03, DAC-03, OQ-13, OQ-17 |
 | Area | `apps/server` (room manager), `apps/client` (`/create`) |

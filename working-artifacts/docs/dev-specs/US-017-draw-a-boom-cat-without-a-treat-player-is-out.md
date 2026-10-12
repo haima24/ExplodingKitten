@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-017](../user-stories/US-017-draw-a-boom-cat-without-a-treat-player-is-out.md) · Must · Cards and rules |
+| Story | [US-017](../user-stories/release-1.0.1/US-017-draw-a-boom-cat-without-a-treat-player-is-out.md) · Must · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-07, DAC-11, OQ-05 |
 | Area | `packages/engine` (`eliminate.ts`), `apps/client` (`NapDialog`, out state) |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-007](../user-stories/US-007-show-whose-turn-it-is-and-each-player-s-status.md) · Must · Gameplay |
+| Story | [US-007](../user-stories/release-1.0.1/US-007-show-whose-turn-it-is-and-each-player-s-status.md) · Must · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-04, F-05, DAC-05, [UI/UX §D4, §E1](../../ui-ux.md#e1-turn-indicators-and-player-status) |
 | Area | `apps/client` (`features/game`), engine events |

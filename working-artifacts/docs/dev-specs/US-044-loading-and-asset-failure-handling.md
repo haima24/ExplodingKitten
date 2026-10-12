@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-044](../user-stories/US-044-loading-and-asset-failure-handling.md) · Should · Error handling, reliability, connection, and privacy |
+| Story | [US-044](../user-stories/release-1.0.1/US-044-loading-and-asset-failure-handling.md) · Should · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-27 |
 | Area | `apps/client` (`LoadingScreen`, image fallback, boot script) |

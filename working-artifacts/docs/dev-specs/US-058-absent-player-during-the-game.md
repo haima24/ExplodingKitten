@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-058](../user-stories/US-058-absent-player-during-the-game.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-058](../user-stories/release-1.0.1/US-058-absent-player-during-the-game.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-40, FR-24, DAC-34, OQ-15 |
 | Area | `apps/server` (`presence`, room), `apps/client` (`AbsentPlayerBanner`) |

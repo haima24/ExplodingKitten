@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { CARD_CATALOG, kindsForProfile } from '@wb/engine/cards';
 import { t } from '../../copy';
+import { cardEffect, cardName, cardNotPlayableReason } from '../../copy/cards';
 import { Button } from '../../components/common/Button';
 import { CardArt } from '../game/Card';
 import { useStore } from '../../net/context';
@@ -84,16 +85,16 @@ export function CardGuide(): JSX.Element {
                 <CardArt kind={kind} />
               </span>
               <span className={s['cardRowText']}>
-                <h3>{info.name}</h3>
-                <span>{info.effect}</span>
+                <h3>{cardName(kind)}</h3>
+                <span>{cardEffect(kind)}</span>
                 <span className="sr-only">
                   {info.playable
                     ? t('detail.playable')
-                    : t('detail.notPlayable', { reason: info.notPlayableReason ?? '' })}
+                    : t('detail.notPlayable', { reason: cardNotPlayableReason(kind) ?? '' })}
                 </span>
                 {!info.playable ? (
-                  <InfoPopover label={t('help.infoOpen', { name: info.name })}>
-                    <span>{info.notPlayableReason}</span>
+                  <InfoPopover label={t('help.infoOpen', { name: cardName(kind) })}>
+                    <span>{cardNotPlayableReason(kind)}</span>
                   </InfoPopover>
                 ) : null}
               </span>
@@ -151,7 +152,7 @@ function Tour({ onExit }: { onExit: () => void }): JSX.Element {
                   <CardArt kind={k} />
                 </span>
                 <span>
-                  <strong>{CARD_CATALOG[k].name}</strong>: {CARD_CATALOG[k].effect}
+                  <strong>{cardName(k)}</strong>: {cardEffect(k)}
                 </span>
               </li>
             ))}

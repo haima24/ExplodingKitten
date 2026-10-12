@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-055](../user-stories/US-055-lobby-with-host-controls.md) · Must · Rooms and lobby |
+| Story | [US-055](../user-stories/release-1.0.1/US-055-lobby-with-host-controls.md) · Must · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-18, FR-04, FR-23, DAC-17, DAC-32, [UI/UX §D3](../../ui-ux.md#d3-lobby--m-us-054-us-055) |
 | Area | `apps/server` (room), `apps/client` (`features/rooms/LobbyPage`) |

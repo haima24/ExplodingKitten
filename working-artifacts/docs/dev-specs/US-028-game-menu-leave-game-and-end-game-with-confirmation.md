@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-028](../user-stories/US-028-game-menu-leave-game-and-end-game-with-confirmation.md) · Must · Victory, leaving, and rematch |
+| Story | [US-028](../user-stories/release-1.0.1/US-028-game-menu-leave-game-and-end-game-with-confirmation.md) · Must · Victory, leaving, and rematch |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-10, DAC-17, [UI/UX §D8](../../ui-ux.md#d8-game-menu-leave-and-end-game--m-us-028-us-002) |
 | Area | `apps/client` (`GameMenu`), `apps/server` (leave, end, kick in game) |

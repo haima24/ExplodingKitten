@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-011](../user-stories/US-011-select-and-play-an-action-card.md) · Must · Gameplay |
+| Story | [US-011](../user-stories/release-1.0.1/US-011-select-and-play-an-action-card.md) · Must · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-04, F-06, DAC-07, [UI/UX §D5](../../ui-ux.md#d5-card-selection-and-card-action-interactions--m-us-011-us-018-us-019-us-020-us-040) |
 | Area | `apps/client` (`features/game`), `apps/server` (`game.action`) |

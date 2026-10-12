@@ -46,6 +46,9 @@ export const clientSchemas = {
   'room.rematch': empty,
   'room.keepAlive': empty,
   'room.addBot': empty,
+  'room.settings': z.object({
+    turnTimerSec: z.union([z.literal(0), z.literal(15), z.literal(30), z.literal(60)]),
+  }),
   'game.action': z.object({ actionId: z.string().min(1).max(64), action: gameActionSchema }),
   'game.end': empty,
   'game.skipAbsent': z.object({ playerId: text(64), decision: z.enum(['WAIT', 'SKIP']) }),

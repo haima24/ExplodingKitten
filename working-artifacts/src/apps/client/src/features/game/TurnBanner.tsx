@@ -4,6 +4,8 @@ import { t } from '../../copy';
 import { Button } from '../../components/common/Button';
 import { announcer } from '../../lib/announcer';
 import { useStore } from '../../net/context';
+import { AudioStatus } from './AudioStatus';
+import { CountdownText } from './TurnClock';
 import { hintText, nameOf, selectBanner, selectHint, selectIsHost, selectMyId } from './selectors';
 import g from './game.module.css';
 
@@ -44,7 +46,9 @@ export function TurnBanner(): JSX.Element {
       <div className={g['bannerTop']}>
         <h2>{heading}</h2>
         {twoTurns ? <span className={g['turnsBadge']}>{t('turn.badge2')}</span> : null}
+        <AudioStatus />
       </div>
+      <CountdownText />
       <p className={g['hint']}>{hint}</p>
     </div>
   );

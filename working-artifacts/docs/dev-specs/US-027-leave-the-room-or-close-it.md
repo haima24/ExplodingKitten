@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-027](../user-stories/US-027-leave-the-room-or-close-it.md) · Must · Victory, leaving, and rematch |
+| Story | [US-027](../user-stories/release-1.0.1/US-027-leave-the-room-or-close-it.md) · Must · Victory, leaving, and rematch |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-08, FR-13 |
 | Area | `apps/server` (room), `apps/client` (victory, session) |

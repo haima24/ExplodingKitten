@@ -5,13 +5,19 @@ import { t } from '../../copy';
 import { messageForError } from '../../copy/errors';
 import { Avatar } from '../../components/common/Avatar';
 import { Button } from '../../components/common/Button';
+import { Choice } from '../../components/common/Choice';
+import f from '../../components/common/forms.module.css';
 import c from '../../components/common/common.module.css';
 import { ConfirmDialog } from '../../components/common/Modal';
+import { TURN_TIMER_OPTIONS, type TurnTimerSec } from '@wb/protocol/shared';
 import { ServerError } from '../../net/client';
 import { useStore } from '../../net/context';
 import { selectIsHost } from '../game/selectors';
 import { ShareRoomPanel } from './ShareRoomPanel';
 import r from './rooms.module.css';
+
+export const timerLabel = (sec: TurnTimerSec): string =>
+  sec === 0 ? t('timer.off') : t('timer.sec', { n: sec });
 
 export function LobbyPage(): JSX.Element | null {
   const { state, client } = useStore();
@@ -85,6 +91,31 @@ export function LobbyPage(): JSX.Element | null {
           })}
         </ul>
         {!full ? <p className={c['muted']}>{t('lobby.waitingMore')}</p> : null}
+      </section>
+
+      <section className={r['panel']} aria-labelledby="timer-title">
+        <h2 id="timer-title">{t('timer.title')}</h2>
+        {isHost ? (
+          <fieldset className={f['fieldset']}>
+            <legend className="sr-only">{t('timer.title')}</legend>
+            <div className={f['stackChoices']}>
+              {TURN_TIMER_OPTIONS.map((sec) => (
+                <Choice
+                  key={sec}
+                  name="turnTimer"
+                  value={String(sec)}
+                  checked={room.turnTimerSec === sec}
+                  onChange={() => void run('timer', () => client.setTurnTimer(sec))}
+                >
+                  {timerLabel(sec)}
+                </Choice>
+              ))}
+            </div>
+          </fieldset>
+        ) : (
+          <p data-testid="timer-readonly">{t('timer.readonly', { value: timerLabel(room.turnTimerSec) })}</p>
+        )}
+        <p className={c['muted']}>{t('timer.note')}</p>
       </section>
 
       <div className={`${r['footer']} ${r['lobbyFull']}`}>

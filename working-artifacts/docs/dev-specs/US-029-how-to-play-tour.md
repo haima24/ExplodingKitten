@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-029](../user-stories/US-029-how-to-play-tour.md) · Must · Rules and help |
+| Story | [US-029](../user-stories/release-1.0.1/US-029-how-to-play-tour.md) · Must · Rules and help |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-09, DAC-15, [UI/UX §D7](../../ui-ux.md#d7-rules-and-contextual-help--m-us-029-us-030-us-031) |
 | Area | `apps/client` (`features/rules`) |

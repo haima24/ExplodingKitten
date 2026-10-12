@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-045](../user-stories/US-045-unsupported-browser-notice.md) · **Could** · Error handling, reliability, connection, and privacy |
+| Story | [US-045](../user-stories/release-1.0.1/US-045-unsupported-browser-notice.md) · **Could** · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | [Brief §F browser support](../../product-brief.md#f-non-functional-requirements) |
 | Area | `apps/client` (boot script) |

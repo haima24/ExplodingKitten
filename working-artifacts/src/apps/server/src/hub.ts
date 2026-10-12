@@ -10,7 +10,7 @@ import { serverMessage } from '@wb/protocol';
 import { formatName } from '@wb/protocol';
 import type { Config } from './config';
 import type { Connection } from './connection';
-import { expireNopeWindow, runBot } from './gameService';
+import { expireNopeWindow, expireTurn, runBot, syncTurnClock } from './gameService';
 import { WindowLimiter } from './limits';
 import { findMember, connectedHumans, deciderId, toRoomView, type Room } from './room';
 import { codeHash, type Clock, type Logger } from './util';
@@ -170,6 +170,7 @@ export class Hub {
     const changed = JSON.stringify(next) !== JSON.stringify(room.absent);
     room.absent = next;
     if (changed) this.broadcastAbsent(room);
+    syncTurnClock(this, room);
   }
 
   onClose(conn: Connection): void {
@@ -270,6 +271,9 @@ export class Hub {
 
     // Nope window out of time.
     if (room.nopeDeadlineAt !== null && now >= room.nopeDeadlineAt) expireNopeWindow(this, room);
+
+    // Turn clock ran out.
+    if (room.turn?.deadlineAt != null && now >= room.turn.deadlineAt) expireTurn(this, room);
 
     // Bot waiting to act.
     if (room.botDueAt !== null && now >= room.botDueAt) runBot(this, room);

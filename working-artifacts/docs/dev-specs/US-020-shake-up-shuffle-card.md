@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-020](../user-stories/US-020-shake-up-shuffle-card.md) · Must · Cards and rules |
+| Story | [US-020](../user-stories/release-1.0.1/US-020-shake-up-shuffle-card.md) · Must · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-06 |
 | Area | `packages/engine`, `apps/client` |

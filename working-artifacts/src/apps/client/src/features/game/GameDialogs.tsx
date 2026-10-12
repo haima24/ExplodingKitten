@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { CARD_CATALOG } from '@wb/engine/cards';
 import type { Card as CardData, InsertPosition } from '@wb/engine/types';
 import { t } from '../../copy';
+import { cardName } from '../../copy/cards';
 import { Button } from '../../components/common/Button';
 import { Choice } from '../../components/common/Choice';
 import c from '../../components/common/common.module.css';
@@ -10,6 +10,7 @@ import { Modal } from '../../components/common/Modal';
 import { useStore } from '../../net/context';
 import { CardIcon } from './art/CardIcon';
 import { Card } from './Card';
+import { CountdownText } from './TurnClock';
 import { nameOf } from './selectors';
 import { useGameActions } from './useGameActions';
 import g from './game.module.css';
@@ -31,6 +32,7 @@ export function BoomDialog(): JSX.Element {
         <CardIcon kind="BOOM_CAT" size={96} />
       </div>
       <p>{t('boom.body')}</p>
+      <CountdownText />
       <div className={c['dialogActions']}>
         <Button variant="primary" data-autofocus loading={pending} onClick={() => void spendTreat()}>
           {t('boom.useTreat')}
@@ -67,6 +69,7 @@ export function ReinsertPicker(): JSX.Element {
           ))}
         </div>
       </fieldset>
+      <CountdownText />
       <div className={c['dialogActions']}>
         <Button variant="primary" data-autofocus loading={pending} onClick={() => void reinsert(position)}>
           {t('reinsert.confirm')}
@@ -90,6 +93,7 @@ export function FavorPickDialog(): JSX.Element | null {
       announce={`${t('favorPick.title', { name: requester })}. ${t('favorPick.prompt')}`}
     >
       <p>{t('favorPick.prompt')}</p>
+      <CountdownText />
       <ul className={g['favorHand']}>
         {view.you.hand.map((card) => (
           <li key={card.id}>
@@ -121,7 +125,7 @@ export function NopeDialog(): JSX.Element | null {
   if (!view || decision?.kind !== 'NOPE_WINDOW') return null;
   const pending = state.ui.pendingActionId !== null;
   const actor = nameOf(state.room.view, decision.actorId);
-  const card = CARD_CATALOG[decision.cardKind].name;
+  const card = cardName(decision.cardKind);
   const seconds =
     view.nopeDeadlineAt === undefined
       ? null
@@ -182,7 +186,7 @@ export function PeekOverlay({ cards }: { cards: CardData[] }): JSX.Element {
   const { dispatch } = useStore();
   const close = (): void => dispatch({ type: 'ui/peek', cards: null });
   const labels = [t('peek.top'), t('peek.second'), t('peek.third')];
-  const reading = cards.map((card, i) => `${labels[i] ?? ''}: ${CARD_CATALOG[card.kind].name}`).join('. ');
+  const reading = cards.map((card, i) => `${labels[i] ?? ''}: ${cardName(card.kind)}`).join('. ');
   return (
     <Modal title={t('peek.title')} onClose={close} announce={`${t('peek.title')} ${reading}`}>
       {cards.length === 0 ? (

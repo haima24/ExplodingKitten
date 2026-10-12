@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, useSyncExternalStore } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppShell } from './components/common/AppShell';
 import { HomePage } from './features/home/HomePage';
@@ -6,6 +6,7 @@ import { NotFoundPage } from './features/home/NotFoundPage';
 import { CreatePage } from './features/rooms/CreatePage';
 import { JoinPage } from './features/rooms/JoinPage';
 import { RoomPage } from './features/rooms/RoomPage';
+import { getLocale, subscribeLocale } from './copy';
 import { StoreProvider } from './net/context';
 
 // Static pages are split out of the main bundle.
@@ -20,6 +21,9 @@ const PrivacyPage = lazy(() =>
 );
 
 export function App(): JSX.Element {
+  // Re-render the whole tree when the language changes (every `t()` call is plain
+  // text, so a parent render is what refreshes it). State is kept.
+  useSyncExternalStore(subscribeLocale, getLocale);
   return (
     <BrowserRouter>
       <StoreProvider>

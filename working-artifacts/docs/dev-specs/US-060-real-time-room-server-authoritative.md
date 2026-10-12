@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-060](../user-stories/US-060-real-time-room-server-authoritative.md) · Must (enabler) · Foundation |
+| Story | [US-060](../user-stories/release-1.0.1/US-060-real-time-room-server-authoritative.md) · Must (enabler) · Foundation |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-17, FR-06, DAC-06, DAC-37, OQ-07, OQ-20 |
 | Area | `apps/server`, `packages/protocol` |

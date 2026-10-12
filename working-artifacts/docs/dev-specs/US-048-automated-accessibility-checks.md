@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-048](../user-stories/US-048-automated-accessibility-checks.md) · Should · Testing and quality |
+| Story | [US-048](../user-stories/release-1.0.1/US-048-automated-accessibility-checks.md) · Should · Testing and quality |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-28, metric M6, DAC-22; `.github/skills/testing-accessibility-testing/` |
 | Area | `tests/e2e` (a11y specs), CI |

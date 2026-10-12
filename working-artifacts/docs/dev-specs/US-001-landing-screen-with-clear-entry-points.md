@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-001](../user-stories/US-001-landing-screen-with-clear-entry-points.md) · Must · Home and navigation |
+| Story | [US-001](../user-stories/release-1.0.1/US-001-landing-screen-with-clear-entry-points.md) · Must · Home and navigation |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-01, FR-01, DAC-01, [UI/UX §D1](../../ui-ux.md#d1-landing--home-screen--m-us-001-us-002) |
 | Area | `apps/client` |

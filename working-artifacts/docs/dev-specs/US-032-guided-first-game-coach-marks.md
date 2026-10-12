@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-032](../user-stories/US-032-guided-first-game-coach-marks.md) · Should · Rules and help |
+| Story | [US-032](../user-stories/release-1.0.1/US-032-guided-first-game-coach-marks.md) · Should · Rules and help |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-23, metric M3 |
 | Area | `apps/client` (`features/game/CoachMarks`, settings storage) |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-004](../user-stories/US-004-choose-a-name-and-avatar.md) · Must · Rooms and lobby |
+| Story | [US-004](../user-stories/release-1.0.1/US-004-choose-a-name-and-avatar.md) · Must · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-02, F-15, DAC-03, OQ-14 |
 | Area | `packages/protocol` (lists, validation), `apps/server`, `apps/client` |

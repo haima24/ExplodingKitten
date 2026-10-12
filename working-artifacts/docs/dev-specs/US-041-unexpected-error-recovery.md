@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-041](../user-stories/US-041-unexpected-error-recovery.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-041](../user-stories/release-1.0.1/US-041-unexpected-error-recovery.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-14, DAC-26 |
 | Area | `apps/client` (`ErrorBoundary`, `ErrorScreen`) |

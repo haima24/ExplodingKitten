@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-019](../user-stories/US-019-peek-look-at-the-top-3-cards.md) · Must · Cards and rules |
+| Story | [US-019](../user-stories/release-1.0.1/US-019-peek-look-at-the-top-3-cards.md) · Must · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-06, DAC-13, DAC-37 |
 | Area | `packages/engine`, `apps/server` (private delivery), `apps/client` (`PeekOverlay`) |

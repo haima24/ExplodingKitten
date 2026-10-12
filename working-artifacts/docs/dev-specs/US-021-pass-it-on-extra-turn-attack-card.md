@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-021](../user-stories/US-021-pass-it-on-extra-turn-attack-card.md) · Should · Cards and rules |
+| Story | [US-021](../user-stories/release-1.0.1/US-021-pass-it-on-extra-turn-attack-card.md) · Should · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-21, OQ-04 |
 | Area | `packages/engine` (profile `mvp+should`), `apps/client` (badge) |

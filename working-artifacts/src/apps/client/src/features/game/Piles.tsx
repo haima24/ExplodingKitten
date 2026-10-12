@@ -1,5 +1,5 @@
-import { CARD_CATALOG } from '@wb/engine/cards';
 import { t } from '../../copy';
+import { cardName } from '../../copy/cards';
 import { useStore } from '../../net/context';
 import { Card, CardBack } from './Card';
 import { selectCanAct } from './selectors';
@@ -44,7 +44,7 @@ export function Piles({ shuffling }: { shuffling: boolean }): JSX.Element | null
 
       <div className={g['pile']}>
         {top ? (
-          <div role="group" aria-label={t('piles.discard', { name: CARD_CATALOG[top.kind].name })}>
+          <div role="group" aria-label={t('piles.discard', { name: cardName(top.kind) })}>
             <Card kind={top.kind} />
           </div>
         ) : (

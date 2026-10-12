@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-012](../user-stories/US-012-draw-a-card-to-end-the-turn.md) · Must · Gameplay |
+| Story | [US-012](../user-stories/release-1.0.1/US-012-draw-a-card-to-end-the-turn.md) · Must · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-04, DAC-08 |
 | Area | `packages/engine` (`DRAW`), `apps/client` (Draw control) |

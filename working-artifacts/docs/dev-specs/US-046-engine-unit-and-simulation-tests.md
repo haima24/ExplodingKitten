@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-046](../user-stories/US-046-engine-unit-and-simulation-tests.md) · Must · Testing and quality |
+| Story | [US-046](../user-stories/release-1.0.1/US-046-engine-unit-and-simulation-tests.md) · Must · Testing and quality |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-16, metric M8, [engine contract](README.md#22-engine-contract-packagesengine-spec-in-us-051) |
 | Area | `packages/engine/test`, `apps/server/test` |

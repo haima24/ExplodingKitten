@@ -1,6 +1,7 @@
 import { CARD_CATALOG } from '@wb/engine/cards';
 import type { CardKind } from '@wb/engine/types';
 import { t } from '../../copy';
+import { cardEffect, cardName } from '../../copy/cards';
 import { CardIcon } from './art/CardIcon';
 import s from './card.module.css';
 
@@ -16,9 +17,9 @@ export function CardArt({ kind, size = 44 }: { kind: CardKind; size?: number }):
 export function cardAriaLabel(kind: CardKind, selected?: boolean): string {
   const info = CARD_CATALOG[kind];
   const base = t('card.aria', {
-    name: info.name,
+    name: cardName(kind),
     type: t(`card.type.${info.type}` as const),
-    effect: info.effect.replace(/[.!]+$/, ''),
+    effect: cardEffect(kind).replace(/[.!]+$/, ''),
   });
   const locked = info.playable ? '' : ` ${info.reaction ? t('card.reaction') : t('card.locked')}`;
   if (selected === undefined) return `${base}${locked}`;
@@ -53,9 +54,9 @@ export function Card({
     .join(' ');
   const face = (
     <>
-      <span className={s['name']}>{info.name}</span>
+      <span className={s['name']}>{cardName(kind)}</span>
       <CardArt kind={kind} />
-      <span className={s['effect']}>{info.effect}</span>
+      <span className={s['effect']}>{cardEffect(kind)}</span>
       {selected ? (
         <span className={s['badge']} aria-hidden="true">
           ✓

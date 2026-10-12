@@ -12,10 +12,11 @@
     "dev": "pnpm -r --parallel --filter \"./apps/*\" dev",
     "build": "pnpm -r build",
     "start": "pnpm --filter @wb/server start",
-    "lint": "eslint apps packages",
+    "lint": "eslint apps packages && node apps/client/scripts/check-copy.mjs",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check:copy": "node apps/client/scripts/check-copy.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

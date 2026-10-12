@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-035](../user-stories/US-035-keyboard-operation-and-visible-focus.md) · Must · Responsive UI and accessibility |
+| Story | [US-035](../user-stories/release-1.0.1/US-035-keyboard-operation-and-visible-focus.md) · Must · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-12, DAC-20, WCAG 2.4.7, 2.4.11, 2.1.1, 2.1.4 |
 | Area | `apps/client` (focus styles, dialogs, hand, shortcuts) |

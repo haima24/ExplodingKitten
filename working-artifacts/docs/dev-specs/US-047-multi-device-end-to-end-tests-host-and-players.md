@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-047](../user-stories/US-047-multi-device-end-to-end-tests-host-and-players.md) · Must · Testing and quality |
+| Story | [US-047](../user-stories/release-1.0.1/US-047-multi-device-end-to-end-tests-host-and-players.md) · Must · Testing and quality |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-16, metrics M4, M11, M12; `instructions/testing/copilot-instructions.md` |
 | Area | `tests/e2e`, server test mode |

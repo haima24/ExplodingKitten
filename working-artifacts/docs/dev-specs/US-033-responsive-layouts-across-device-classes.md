@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-033](../user-stories/US-033-responsive-layouts-across-device-classes.md) · Must · Responsive UI and accessibility |
+| Story | [US-033](../user-stories/release-1.0.1/US-033-responsive-layouts-across-device-classes.md) · Must · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-11, DAC-18, DAC-24, [UI/UX §C](../../ui-ux.md#c-responsive-behaviour) |
 | Area | `apps/client` (layout CSS, `AppShell`, dialogs) |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-002](../user-stories/US-002-navigation-and-back-behaviour.md) · Must · Home and navigation |
+| Story | [US-002](../user-stories/release-1.0.1/US-002-navigation-and-back-behaviour.md) · Must · Home and navigation |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-01, F-10, DAC-02 |
 | Area | `apps/client` (router, history), static hosting |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-013](../user-stories/US-013-recent-action-message-log.md) · Should · Gameplay |
+| Story | [US-013](../user-stories/release-1.0.1/US-013-recent-action-message-log.md) · Should · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-24 |
 | Area | `apps/client` (`features/game/ActionLog`) |

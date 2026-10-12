@@ -10,9 +10,10 @@ import {
   useState,
 } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { t } from '../../copy';
+import { t, type CopyKey } from '../../copy';
 import { announcer } from '../../lib/announcer';
 import { useStore } from '../../net/context';
+import { SoundOffButton } from '../../features/game/AudioStatus';
 import { IconButton } from './Button';
 import s from './common.module.css';
 import { ConnectionBanner, ConnectionIndicator, Toast } from './Feedback';
@@ -32,13 +33,13 @@ interface ShellApi {
 const ShellContext = createContext<ShellApi>({ openRules: () => undefined, openSettings: () => undefined });
 export const useShell = (): ShellApi => useContext(ShellContext);
 
-const TITLES: [RegExp, string][] = [
-  [/^\/create/, 'Create a room'],
-  [/^\/join/, 'Join a room'],
-  [/^\/room\//, 'Room'],
-  [/^\/rules/, 'How to Play'],
-  [/^\/settings/, 'Settings'],
-  [/^\/privacy/, 'Privacy'],
+const TITLES: [RegExp, CopyKey][] = [
+  [/^\/create/, 'create.title'],
+  [/^\/join/, 'join.title'],
+  [/^\/room\//, 'title.room'],
+  [/^\/rules/, 'rules.title'],
+  [/^\/settings/, 'settings.title'],
+  [/^\/privacy/, 'privacy.title'],
 ];
 
 /** Header, live regions, banners, toast, and the page outlet. */
@@ -61,7 +62,7 @@ export function AppShell(): JSX.Element {
   // Page title, noindex for join and room pages, and focus to the new page on navigation.
   useEffect(() => {
     const match = TITLES.find(([re]) => re.test(location.pathname));
-    document.title = match ? `${match[1]} · ${t('app.name')}` : t('app.name');
+    document.title = match ? `${t(match[1])} · ${t('app.name')}` : t('app.name');
 
     let robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
     const hidden = /^\/(join|room)\//.test(location.pathname);
@@ -77,7 +78,7 @@ export function AppShell(): JSX.Element {
 
     if (firstRoute.current) firstRoute.current = false;
     else mainRef.current?.focus({ preventScroll: true });
-  }, [location.pathname]);
+  }, [location.pathname, state.settings.language]);
 
   const phase = state.room.view?.phase;
   const inGame = /^\/room\//.test(location.pathname) && phase === 'PLAYING';
@@ -122,6 +123,7 @@ export function AppShell(): JSX.Element {
           </div>
           <span className={s['brand']}>{t('app.name')}</span>
           <div className={s['headerRight']}>
+            {inGame ? <SoundOffButton /> : null}
             <ConnectionIndicator />
             <IconButton glyph="?" label={t('nav.help')} onClick={onHelp} />
           </div>

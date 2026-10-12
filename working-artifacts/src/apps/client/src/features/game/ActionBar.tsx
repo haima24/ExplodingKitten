@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { CARD_CATALOG } from '@wb/engine/cards';
 import { formatName } from '@wb/protocol/shared';
 import { t } from '../../copy';
+import { cardEffect, cardName, cardNotPlayableReason } from '../../copy/cards';
 import { Avatar } from '../../components/common/Avatar';
 import { Button } from '../../components/common/Button';
 import c from '../../components/common/common.module.css';
@@ -17,13 +18,13 @@ import g from './game.module.css';
 function CardDetailPanel({ kind }: { kind: keyof typeof CARD_CATALOG }): JSX.Element {
   const info = CARD_CATALOG[kind];
   return (
-    <div className={g['detail']} role="region" aria-label={info.name}>
+    <div className={g['detail']} role="region" aria-label={cardName(kind)}>
       <span className={g['detailArt']}>
         <CardArt kind={kind} />
       </span>
       <span className={g['detailText']}>
         <span className={g['detailHead']}>
-          <span className={g['detailName']}>{info.name}</span>
+          <span className={g['detailName']}>{cardName(kind)}</span>
           <span className={g['detailStatus']}>
             {info.playable
               ? `✔ ${t('detail.playable')}`
@@ -33,7 +34,7 @@ function CardDetailPanel({ kind }: { kind: keyof typeof CARD_CATALOG }): JSX.Ele
           </span>
         </span>
         <span className={g['detailEffect']}>
-          {info.playable || info.reaction ? info.effect : (info.notPlayableReason ?? info.effect)}
+          {info.playable || info.reaction ? cardEffect(kind) : (cardNotPlayableReason(kind) ?? cardEffect(kind))}
         </span>
       </span>
     </div>
@@ -58,7 +59,7 @@ function TargetPicker({
       <div className={g['targets']}>
         {targets.map((o, index) => {
           const m = members.find((x) => x.playerId === o.id);
-          const name = m ? formatName(m.name) : 'Someone';
+          const name = m ? formatName(m.name) : t('common.someone');
           return (
             <button
               key={o.id}
@@ -116,7 +117,7 @@ export function ActionBar(): JSX.Element | null {
     reason = t('action.wait', { name: view.waitingFor ? nameOf(state.room.view, view.waitingFor) : currentName });
   }
 
-  const playLabel = selected ? t('action.play', { card: CARD_CATALOG[selected.kind].name }) : t('action.pick');
+  const playLabel = selected ? t('action.play', { card: cardName(selected.kind) }) : t('action.pick');
   const playBlocked = !canAct || !selected || !info?.playable;
 
   const onPlay = (): void => {

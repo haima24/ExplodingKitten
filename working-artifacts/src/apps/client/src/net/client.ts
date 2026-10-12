@@ -9,7 +9,8 @@ import {
   type ServerPayloads,
 } from '@wb/protocol/shared';
 import { t } from '../copy';
-import { processGameUpdate } from '../features/game/events';
+import { speechTag } from '../copy/locale';
+import { processGameUpdate, type Processed } from '../features/game/events';
 import { announcer } from '../lib/announcer';
 import { clearSession, saveSession } from '../lib/session';
 import type { Action, State } from './state';
@@ -312,10 +313,31 @@ export class GameClient {
     if (result.peek) this.dispatch({ type: 'ui/peek', cards: result.peek });
     if (result.nap) this.dispatch({ type: 'ui/nap', on: true });
     for (const tip of result.tips) this.dispatch({ type: 'tips/trigger', tip });
-    if (state.settings.sound && result.sounds.length > 0) {
-      void import('../lib/audio').then((audio) => {
-        for (const sound of result.sounds.slice(0, 2)) audio.playSound(sound);
+    if (result.flash) this.dispatch({ type: 'ui/flash', flash: { playerId: result.flash, id: ++this.toastId } });
+    this.feedback(result.sounds, result.voice);
+  }
+
+  /** Sound effects first, then the spoken line, each only if the player turned it on. */
+  feedback(sounds: Processed['sounds'], voice: Processed['voice']): void {
+    const { settings } = this.getState();
+    let soundSeconds = 0;
+    const effects =
+      settings.sound && sounds.length > 0
+        ? import('../lib/audio').then((audio) => {
+            audio.setVolume(settings.volume);
+            soundSeconds = audio.playSequence(sounds);
+          })
+        : Promise.resolve();
+    if (settings.voice && voice.length > 0) {
+      void Promise.all([effects, import('../lib/voice')]).then(([, speech]) => {
+        speech.configureVoice({ lang: speechTag(settings.language), volume: settings.voiceVolume });
+        speech.enqueueVoice(
+          voice.map((cue) => ({ id: cue.id, text: t(`voice.${cue.id}` as const), priority: cue.priority })),
+          Math.min(1500, Math.round(soundSeconds * 1000)),
+        );
       });
+    } else {
+      void effects;
     }
   }
 
@@ -397,6 +419,11 @@ export class GameClient {
 
   async command(type: 'room.close' | 'room.start' | 'room.rematch' | 'room.addBot' | 'game.end' | 'room.keepAlive'): Promise<void> {
     await this.request(type, {});
+  }
+
+  /** Host only, in the lobby: seconds per turn, 0 = Off (US-063). */
+  async setTurnTimer(turnTimerSec: 0 | 15 | 30 | 60): Promise<void> {
+    await this.request('room.settings', { turnTimerSec });
   }
 
   async kick(playerId: string): Promise<void> {

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-010](../user-stories/US-010-see-the-draw-pile-and-discard-pile.md) · Must · Gameplay |
+| Story | [US-010](../user-stories/release-1.0.1/US-010-see-the-draw-pile-and-discard-pile.md) · Must · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-05, DAC-09 |
 | Area | `apps/client` (`DeckPile`, `DiscardPile`), `packages/engine` (`checkInvariants`), `apps/server` |

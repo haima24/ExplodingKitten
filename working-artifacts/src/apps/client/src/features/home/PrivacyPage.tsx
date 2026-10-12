@@ -1,4 +1,4 @@
-import { t } from '../../copy';
+import { getLocale, t } from '../../copy';
 import c from '../../components/common/common.module.css';
 
 const ITEMS = [
@@ -15,6 +15,11 @@ export function PrivacyPage(): JSX.Element {
   return (
     <div className={c['page']}>
       <h1>{t('privacy.title')}</h1>
+      {getLocale() !== 'en' ? (
+        <p role="note" className={c['muted']}>
+          {t('privacy.draftNotice')}
+        </p>
+      ) : null}
       <p>{t('privacy.intro')}</p>
       <ul className={c['stack']} style={{ paddingLeft: '1.25rem' }}>
         {ITEMS.map((key) => (

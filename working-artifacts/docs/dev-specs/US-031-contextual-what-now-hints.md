@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-031](../user-stories/US-031-contextual-what-now-hints.md) · Must · Rules and help |
+| Story | [US-031](../user-stories/release-1.0.1/US-031-contextual-what-now-hints.md) · Must · Rules and help |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-09, DAC-05 |
 | Area | `apps/client` (`selectHint`, `TurnBanner`) |

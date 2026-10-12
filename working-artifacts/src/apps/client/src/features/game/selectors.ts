@@ -1,12 +1,13 @@
 import type { PlayerView } from '@wb/engine/types';
 import { formatName, type MemberView, type RoomView } from '@wb/protocol/shared';
 import { t, type CopyKey, type CopyParams } from '../../copy';
+import { cardName } from '../../copy/cards';
 import { CARD_CATALOG } from '@wb/engine/cards';
 import type { State } from '../../net/state';
 
 export function nameOf(room: RoomView | null, playerId: string | undefined): string {
   const member = room?.members.find((m) => m.playerId === playerId);
-  return member ? formatName(member.name) : 'Someone';
+  return member ? formatName(member.name) : t('common.someone');
 }
 
 export const selectMyId = (s: State): string | null =>
@@ -51,7 +52,7 @@ export function selectBanner(s: State): Banner {
     return {
       kind: 'NOPE',
       name: nameOf(s.room.view, view.nopeWindow.actorId),
-      card: CARD_CATALOG[view.nopeWindow.cardKind].name,
+      card: cardName(view.nopeWindow.cardKind),
     };
   }
   if (view.waitingFor) {
@@ -78,6 +79,8 @@ export interface Chip {
   /** "2 turns" badge (Attack). */
   twoTurns: boolean;
   thinking: boolean;
+  /** Briefly highlighted after an Attack. */
+  flash: boolean;
 }
 
 export function selectChips(s: State): Chip[] {
@@ -95,7 +98,7 @@ export function selectChips(s: State): Chip[] {
     const current = view.phase !== 'finished' && r.id === view.currentPlayerId && !r.out;
     return {
       id: r.id,
-      name: m ? formatName(m.name) : 'Someone',
+      name: m ? formatName(m.name) : t('common.someone'),
       avatarId: m?.avatarId ?? 'biscuit',
       isBot: m?.isBot ?? false,
       isMe: r.id === view.you.id,
@@ -104,6 +107,7 @@ export function selectChips(s: State): Chip[] {
       connected: m?.connected ?? true,
       twoTurns: current && view.pendingTurns > 1,
       thinking: room.thinkingId === r.id,
+      flash: s.ui.flash?.playerId === r.id,
     };
   });
 }
@@ -133,7 +137,7 @@ export function selectHint(s: State): Hint | null {
   if (myTurn) {
     const selected = view.you.hand.find((c) => c.id === s.ui.selectedCardId);
     if (selected && CARD_CATALOG[selected.kind].playable) {
-      return { key: 'hint.selected', params: { card: CARD_CATALOG[selected.kind].name } };
+      return { key: 'hint.selected', params: { card: cardName(selected.kind) } };
     }
     if (s.game.playedThisTurn) return { key: 'hint.playedMore' };
     return { key: 'hint.myTurn' };

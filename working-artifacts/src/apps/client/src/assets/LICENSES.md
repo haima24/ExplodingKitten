@@ -4,12 +4,13 @@ Every asset shipped with the client must be listed here with its origin and lice
 
 | Asset | Origin | Licence |
 | --- | --- | --- |
-| Baloo 2 (headings, buttons) | npm package `@fontsource/baloo-2`, Latin subset, self-hosted | SIL Open Font License 1.1 |
-| Nunito (body text) | npm package `@fontsource/nunito`, Latin subset, self-hosted | SIL Open Font License 1.1 |
+| Baloo 2 (headings, buttons) | npm package `@fontsource/baloo-2`, Latin and Vietnamese subsets, self-hosted | SIL Open Font License 1.1 |
+| Nunito (body text) | npm package `@fontsource/nunito`, Latin and Vietnamese subsets, self-hosted | SIL Open Font License 1.1 |
 | `public/favicon.svg` | Drawn for this project | Project original |
 | Card icons, cat and robot avatars, logo | Original inline SVG drawn for this project (`features/game/art/CardIcon.tsx`, `AvatarArt.tsx`, `components/common/Logo.tsx`). Simple flat shapes; replace with commissioned illustrations later (UI/UX section A3) | Project original |
 | Confetti and a few decorative glyphs | Unicode emoji rendered by the visitor's system font (no files shipped) | n/a |
-| Sound effects | Generated at runtime with the Web Audio API (no audio files) | Project original |
+| Sound effects (one per card, warning, timeout) | Generated at runtime with the Web Audio API (no audio files) | Project original |
+| Spoken lines (English and Vietnamese) | Read aloud by the visitor's browser speech engine (no audio files). Vietnamese wording is a draft for native review | Project original text |
 | `qrcode-generator` | npm package, loaded lazily when the host shows a QR code | MIT |
 
 No asset is loaded from a third-party origin.

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-005](../user-stories/US-005-start-a-game-and-deal-cards.md) · Must · Rooms and lobby |
+| Story | [US-005](../user-stories/release-1.0.1/US-005-start-a-game-and-deal-cards.md) · Must · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-03, FR-04, DAC-04 |
 | Area | `apps/server` (room, gameService), `packages/engine` (createGame), `apps/client` (Start button) |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-030](../user-stories/US-030-card-guide-and-per-card-help.md) · Must · Rules and help |
+| Story | [US-030](../user-stories/release-1.0.1/US-030-card-guide-and-per-card-help.md) · Must · Rules and help |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-09, DAC-16 |
 | Area | `apps/client` (`features/rules`, `CardDetailPanel`), `packages/engine/cards` |

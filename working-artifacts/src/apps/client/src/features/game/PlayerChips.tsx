@@ -28,7 +28,12 @@ function PlayerChip({ chip }: { chip: Chip }): JSX.Element {
   return (
     <li
       ref={ref}
-      className={[g['chip'], chip.status === 'active' && g['chipActive'], chip.status === 'out' && g['chipOut']]
+      className={[
+        g['chip'],
+        chip.status === 'active' && g['chipActive'],
+        chip.status === 'out' && g['chipOut'],
+        chip.flash && g['chipFlash'],
+      ]
         .filter(Boolean)
         .join(' ')}
       aria-label={label}
@@ -59,7 +64,14 @@ function PlayerChip({ chip }: { chip: Chip }): JSX.Element {
 }
 
 export function PlayerChips(): JSX.Element {
-  const { state } = useStore();
+  const { state, dispatch } = useStore();
+  const flash = state.ui.flash;
+  // The highlight lasts a moment; the clear keeps it from replaying on re-render.
+  useEffect(() => {
+    if (!flash) return undefined;
+    const timer = window.setTimeout(() => dispatch({ type: 'ui/flash', flash: null }), 1300);
+    return () => window.clearTimeout(timer);
+  }, [flash, dispatch]);
   const chips = selectChips(state);
   return (
     <ul className={g['chipRow']} aria-label={t('chip.row')}>

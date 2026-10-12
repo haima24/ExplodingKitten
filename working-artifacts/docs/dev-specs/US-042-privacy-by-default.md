@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-042](../user-stories/US-042-privacy-by-default.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-042](../user-stories/release-1.0.1/US-042-privacy-by-default.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-15, DAC-27, OQ-10 |
 | Area | Client, server, static hosting configuration |

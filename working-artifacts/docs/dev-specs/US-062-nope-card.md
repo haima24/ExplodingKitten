@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-062](../user-stories/US-062-nope-card.md) · Should · Cards and rules |
+| Story | [US-062](../user-stories/release-1.0.1/US-062-nope-card.md) · Should · Cards and rules |
 | Status | Draft v0.1 (implemented in the first build) · [Baseline](README.md) |
 | Refs | F-41, OQ-04 |
 | Area | `packages/engine`, `packages/protocol`, `apps/server`, `apps/client` |

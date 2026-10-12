@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-050](../user-stories/US-050-project-scaffold-and-design-tokens.md) · Must (enabler) · Foundation |
+| Story | [US-050](../user-stories/release-1.0.1/US-050-project-scaffold-and-design-tokens.md) · Must (enabler) · Foundation |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-17, DAC-27, DAC-30, [UI/UX §B](../../ui-ux.md#b-design-system) |
 | Area | Repository, tooling, client shell, token CSS |

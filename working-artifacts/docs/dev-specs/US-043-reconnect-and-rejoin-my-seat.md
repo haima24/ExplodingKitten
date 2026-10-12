@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-043](../user-stories/US-043-reconnect-and-rejoin-my-seat.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-043](../user-stories/release-1.0.1/US-043-reconnect-and-rejoin-my-seat.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-40, FR-21, DAC-29, metric M12 |
 | Area | `apps/client` (`ConnectionManager`, banner), `apps/server` (presence, rejoin) |

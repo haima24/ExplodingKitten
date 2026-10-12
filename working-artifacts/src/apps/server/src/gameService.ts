@@ -67,10 +67,14 @@ function afterStateChange(hub: Hub, room: Room, events: GameEvent[]): boolean {
   }
 
   trackNopeWindow(hub, room);
+  const clockChanged = syncTurnClock(hub, room, false);
 
   if (game.phase === 'finished' && room.phase !== 'FINISHED') {
     room.phase = 'FINISHED';
     room.finishedAt = hub.clock.now();
+    room.turn = null;
+    hub.broadcastRoom(room);
+  } else if (clockChanged) {
     hub.broadcastRoom(room);
   }
   broadcastGame(hub, room, events);
@@ -104,6 +108,83 @@ export function expireNopeWindow(hub: Hub, room: Room): void {
   const pending = room.game?.pending;
   if (pending?.kind === 'NOPE_WINDOW') {
     applyEngine(hub, room, { type: 'EXPIRE_NOPE', playerId: pending.playerId });
+  }
+}
+
+// --------------------------------------------------------------- turn clock
+
+interface ClockSubject {
+  key: string;
+  playerId: string;
+  /** A Nope window is open: the clock pauses and keeps its remaining time. */
+  paused: boolean;
+}
+
+/** Who the game is waiting for, and on what; null when no clock applies. */
+function clockSubject(room: Room): ClockSubject | null {
+  const game = room.game;
+  if (!game || room.phase !== 'PLAYING' || game.phase === 'finished') return null;
+  const turnKey = `TURN:${game.currentPlayerId}:${game.stats.turnsPlayed}`;
+  const pending = game.pending;
+  if (pending?.kind === 'NOPE_WINDOW') return { key: turnKey, playerId: game.currentPlayerId, paused: true };
+  if (!pending) return { key: turnKey, playerId: game.currentPlayerId, paused: false };
+  return {
+    key: `${pending.kind}:${pending.playerId}:${game.stats.turnsPlayed}`,
+    playerId: pending.playerId,
+    paused: false,
+  };
+}
+
+/**
+ * Keeps `room.turn` in step with the game (US-063). A new turn or decision starts
+ * at full time; a Nope window pauses and later resumes; a player who is away is
+ * left to the absent-player rules and gets a full clock when they return. Bots
+ * never get a clock. Returns true if the clock the clients see changed.
+ */
+export function syncTurnClock(hub: Hub, room: Room, broadcast = true): boolean {
+  const before = JSON.stringify(room.turn);
+  const now = hub.clock.now();
+  const limitMs = room.turnTimerSec * 1000;
+  const subject = limitMs > 0 ? clockSubject(room) : null;
+  const owner = subject ? findMember(room, subject.playerId) : undefined;
+
+  if (!subject || !owner || owner.isBot || owner.left) {
+    room.turn = null;
+  } else {
+    const cur = room.turn && room.turn.key === subject.key ? room.turn : null;
+    const away = room.absent !== null && room.absent.playerId === subject.playerId;
+    if (subject.paused) {
+      room.turn = {
+        key: subject.key,
+        playerId: subject.playerId,
+        deadlineAt: null,
+        remainingMs: cur ? (cur.deadlineAt !== null ? Math.max(0, cur.deadlineAt - now) : cur.remainingMs) : limitMs,
+      };
+    } else if (away) {
+      room.turn = { key: subject.key, playerId: subject.playerId, deadlineAt: null, remainingMs: null };
+    } else if (cur && cur.deadlineAt !== null) {
+      room.turn = cur;
+    } else if (cur && cur.remainingMs !== null) {
+      room.turn = { ...cur, deadlineAt: now + cur.remainingMs, remainingMs: null };
+    } else {
+      room.turn = { key: subject.key, playerId: subject.playerId, deadlineAt: now + limitMs, remainingMs: null };
+    }
+  }
+  const changed = JSON.stringify(room.turn) !== before;
+  if (changed && broadcast) hub.broadcastRoom(room);
+  return changed;
+}
+
+/** Called by the sweep: the active player ran out of time, so the engine plays the default move. */
+export function expireTurn(hub: Hub, room: Room): void {
+  const turn = room.turn;
+  if (!turn || turn.deadlineAt === null) return;
+  const error = applyEngine(hub, room, { type: 'TIMEOUT', playerId: turn.playerId });
+  if (error && room.turn === turn) {
+    // Nothing changed (should not happen): try again after a full interval instead of spinning.
+    hub.log.warn('turn_timeout_failed', { codeHash: codeHash(room.code), code: error.code });
+    room.turn = { ...turn, deadlineAt: hub.clock.now() + room.turnTimerSec * 1000 };
+    hub.broadcastRoom(room);
   }
 }
 
@@ -141,7 +222,9 @@ export function startGame(hub: Hub, room: Room): boolean {
   room.absent = null;
   room.nopeDeadlineAt = null;
   room.nopeKey = null;
+  room.turn = null;
   hub.touch(room);
+  syncTurnClock(hub, room, false);
   hub.broadcastRoom(room);
   broadcastGame(hub, room, result.events);
   hub.recomputeAbsent(room);
@@ -162,6 +245,7 @@ export function resetToLobby(hub: Hub, room: Room): void {
   room.botDueAt = null;
   room.nopeDeadlineAt = null;
   room.nopeKey = null;
+  room.turn = null;
   room.dedupe.clear();
   hub.touch(room);
   hub.broadcastRoom(room);

@@ -16,6 +16,7 @@ import {
 import { GameMenu } from './GameMenu';
 import { Hand } from './Hand';
 import { PlayerChips } from './PlayerChips';
+import { TurnClockEffects } from './TurnClock';
 import { Piles } from './Piles';
 import { AbsentPlayerBanner, TurnBanner } from './TurnBanner';
 import g from './game.module.css';
@@ -83,7 +84,7 @@ export function GameBoard(): JSX.Element | null {
   const lastShuffle = useRef<string | null>(null);
   useEffect(() => {
     const top = state.game.log[0];
-    if (top && /shuffled/i.test(top.text) && lastShuffle.current !== String(top.seq)) {
+    if (top && top.key === 'log.shuffled' && lastShuffle.current !== String(top.seq)) {
       lastShuffle.current = String(top.seq);
       setShuffling(true);
       const timer = window.setTimeout(() => setShuffling(false), 450);
@@ -96,6 +97,7 @@ export function GameBoard(): JSX.Element | null {
 
   return (
     <div className={g['board']}>
+      <TurnClockEffects />
       <div className={g['players']}>
         <PlayerChips />
       </div>

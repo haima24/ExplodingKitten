@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-061](../user-stories/US-061-room-code-security-and-abuse-protection.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-061](../user-stories/release-1.0.1/US-061-room-code-security-and-abuse-protection.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-15, FR-26, DAC-33, OQ-19, risk R10 |
 | Area | `apps/server` (`codes`, `limits`, gateway) |

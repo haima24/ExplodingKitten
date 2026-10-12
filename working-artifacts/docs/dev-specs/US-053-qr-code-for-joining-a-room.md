@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-053](../user-stories/US-053-qr-code-for-joining-a-room.md) · **Could** · Rooms and lobby |
+| Story | [US-053](../user-stories/release-1.0.1/US-053-qr-code-for-joining-a-room.md) · **Could** · Rooms and lobby |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-32, UQ-07 |
 | Area | `apps/client` (`ShareRoomPanel`) |

@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-052](../user-stories/US-052-sound-effects-muted-by-default.md) · **Could** · Responsive UI and accessibility |
+| Story | [US-052](../user-stories/release-1.0.1/US-052-sound-effects-muted-by-default.md) · **Could** · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-30, OQ-09 |
 | Area | `apps/client` (`lib/audio`) |

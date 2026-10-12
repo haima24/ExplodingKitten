@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-056](../user-stories/US-056-room-lifetime-and-data-deletion.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-056](../user-stories/release-1.0.1/US-056-room-lifetime-and-data-deletion.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-18, F-15, FR-26, DAC-36, OQ-15 |
 | Area | `apps/server` (`roomManager`, timers) |

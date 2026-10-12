@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Draft v0.1 — **proposed**, for engineering review |
 | Last updated | 2026-10-12 |
-| Scope | One developer spec per user story (60 specs) plus this shared baseline |
+| Scope | One developer spec per user story (62 specs) plus this shared baseline |
 | Inputs | [User stories](../user-stories/README.md) · [UI/UX specification](../../ui-ux.md) · [Product brief](../../product-brief.md) |
 | Repository baseline | **No application code exists.** Every module, path, message, and command below is a *proposal*. Nothing here describes existing code. |
 
@@ -40,16 +40,16 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 - API: `createGame(config, players, rng)`, `applyAction(state, action, rng)`, `viewFor(state, playerId)`, `visibleEvents(events, playerId)`, `checkInvariants(state)`.
 - `Rng` is injected (`nextInt(maxExclusive)`); the engine never calls `Math.random` or `Date`.
 - Card kinds: `BOOM_CAT`, `TREAT`, `HOP_OVER`, `PEEK`, `SHAKE_UP`, `COZY_CAT`, `PASS_IT_ON`, `ASK_A_FRIEND`, `NOPE`.
-- Actions (the client **never sends `playerId`**; the server injects it from the connection): `PLAY_CARD {cardId, targetId?}`, `DRAW`, `USE_TREAT`, `REINSERT_BOOM {position: TOP|MIDDLE|BOTTOM|RANDOM}`, `PICK_FAVOR_CARD {cardId}`, `NOPE`, `PASS_NOPE`, plus server-issued `LEAVE`, `REMOVE`, `SKIP_ABSENT`, `EXPIRE_NOPE` (US-062).
+- Actions (the client **never sends `playerId`**; the server injects it from the connection): `PLAY_CARD {cardId, targetId?}`, `DRAW`, `USE_TREAT`, `REINSERT_BOOM {position: TOP|MIDDLE|BOTTOM|RANDOM}`, `PICK_FAVOR_CARD {cardId}`, `NOPE`, `PASS_NOPE`, plus server-issued `LEAVE`, `REMOVE`, `SKIP_ABSENT`, `EXPIRE_NOPE` (US-062), `TIMEOUT` (US-063).
 - Phases: `turn`, `decision` (with `pending` = `TREAT_DECISION` | `REINSERT` | `FAVOR_PICK` | `NOPE_WINDOW`), `finished`.
 - Engine error codes: `GAME_FINISHED`, `NOT_IN_GAME`, `PLAYER_OUT`, `NOT_YOUR_TURN`, `WRONG_PHASE`, `CARD_NOT_IN_HAND`, `NOT_PLAYABLE`, `INVALID_TARGET`, `INVALID_POSITION`, `INVALID_CONFIG`.
-- Events: public `CARD_PLAYED`, `CARD_DRAWN`, `PEEKED`, `DECK_SHUFFLED`, `TREAT_USED`, `BOOM_TUCKED`, `PLAYER_OUT`, `FAVOR_REQUESTED`, `FAVOR_GIVEN`, `TURN_STARTED`, `GAME_FINISHED`, `NOPE_PLAYED`, `EFFECT_APPLIED` (a played card takes effect), `NOPE_RESOLVED`; private `DRAWN_CARD`, `PEEK_RESULT`, `BOOM_DRAWN {hasTreat}`, `FAVOR_RECEIVED`.
+- Events: public `CARD_PLAYED`, `CARD_DRAWN`, `PEEKED`, `DECK_SHUFFLED`, `TREAT_USED`, `BOOM_TUCKED`, `PLAYER_OUT`, `FAVOR_REQUESTED`, `FAVOR_GIVEN`, `TURN_STARTED`, `GAME_FINISHED`, `NOPE_PLAYED`, `EFFECT_APPLIED` (a played card takes effect), `NOPE_RESOLVED`, `TURN_TIMEOUT` (US-063); private `DRAWN_CARD`, `PEEK_RESULT`, `BOOM_DRAWN {hasTreat}`, `FAVOR_RECEIVED`.
 - Invariants I1–I8 (US-051): boom count = active players − 1; draw pile never empty of Exploding Kittens while ≥ 2 players are active; card conservation; current player is active; `pendingTurns ≥ 1`; out players hold no cards; `phase = decision` iff `pending`; unique card ids.
 
 ### 2.3 Protocol contract (`packages/protocol`, spec in US-060)
 
 - Transport: secure WebSocket at `/ws`, JSON text frames, envelope `{ v: 1, t: "<type>", id?: "<client msg id>", p: { … } }`.
-- Client → server: `room.create`, `room.join`, `room.rejoin`, `room.leave`, `room.close`, `room.kick`, `room.start`, `room.rematch`, `room.keepAlive`, `room.addBot` *(Could)*, `game.action`, `game.end`, `game.skipAbsent`, `ping`.
+- Client → server: `room.create`, `room.join`, `room.rejoin`, `room.leave`, `room.close`, `room.kick`, `room.start`, `room.rematch`, `room.keepAlive`, `room.addBot` *(Could)*, `room.settings` (host, lobby: turn timer, US-063), `game.action`, `game.end`, `game.skipAbsent`, `ping`.
 - Server → client: `hello`, `ack`, `error`, `room.joined`, `room.update`, `game.update`, `absent.update`, `room.ended`, `pong`.
 - `game.update` carries `{ version, view: PlayerView, events: GameEvent[] }`, already filtered for that player.
 - Room error codes: `INVALID_MESSAGE`, `RATE_LIMITED`, `INVALID_CODE`, `ROOM_NOT_FOUND`, `ROOM_FULL`, `GAME_STARTED`, `ROOM_CLOSED`, `INVALID_NAME`, `INVALID_AVATAR`, `AVATAR_TAKEN`, `ALREADY_IN_ROOM`, `NOT_HOST`, `NOT_IN_ROOM`, `BAD_TOKEN`, `REMOVED`, `TOO_MANY_ROOMS`, `NOT_ENOUGH_PLAYERS`, `WRONG_ROOM_PHASE`, `SERVER_ERROR`. Engine codes are passed through on `game.action` failures.
@@ -69,13 +69,14 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 | `JOIN_FAIL_LIMIT` | 10 per 60 s | `MAX_ROOMS_PER_IP` / `MAX_ROOMS` | 5 / 500 |
 | `MAX_MESSAGE_BYTES` | 4096 | `MSG_RATE` | 20/s, burst 40 |
 | `ACTION_DEDUPE_WINDOW` | 64 ids per player | `ACK_TIMEOUT_MS` (client) | 5 000 |
+| `NOPE_WINDOW_MS` | 8 000 | `TURN_TIMER_SEC` | 30 (0, 15, 30, 60; US-063) |
 
 ### 2.5 Client conventions (`apps/client`, spec in US-001, US-002, US-043)
 
 - Routes: `/`, `/create`, `/join`, `/join/:code`, `/room/:code`, `/rules`, `/settings`, `*`.
 - Store slices: `connection`, `session`, `room`, `game`, `ui`, `settings`. Server data is never edited locally; controls are inert until the server answers.
-- Browser storage: `sessionStorage["wb.session"] = { code, token, playerId }`; `localStorage["wb.settings"] = { motion, sound, textScale, tipsSeen }`. Nothing else.
-- All user-visible strings live in a **copy catalog** (`copy/en.ts`), keyed and parameterised, so wording can be reviewed and translated.
+- Browser storage: `sessionStorage["wb.session"] = { code, token, playerId }`; `localStorage["wb.settings"] = { motion, sound, volume, voice, voiceVolume, language, textScale, tipsSeen }`. Nothing else.
+- All user-visible strings live in a **copy catalog** (`copy/en.ts`, with `copy/vi.ts` for Vietnamese, US-064), keyed and parameterised, so wording can be reviewed and translated. A missing translation falls back to English; `pnpm check:copy` keeps the two in step. Card text is read through `copy/cards.ts`.
 - A single `Announcer` owns the polite and assertive live regions.
 
 ### 2.6 Test levels used in the specs
@@ -117,6 +118,8 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 | US-021 | [Attack](US-021-pass-it-on-extra-turn-attack-card.md) | engine |
 | US-022 | [Favor](US-022-ask-a-friend-favour-card.md) | engine, client |
 | US-062 | [Nope card](US-062-nope-card.md) | engine, server, client |
+| US-063 | [Turn timer and card sound effects](US-063-turn-timer-and-card-sounds.md) *(Release 1.0.2)* | engine, protocol, server, client |
+| US-064 | [Vietnamese localization (text and voice)](US-064-vietnamese-localization.md) *(Release 1.0.2)* | client |
 | US-023 | [Bot Buddies](US-023-bot-buddies-fill-empty-seats.md) | server |
 | US-025 | [Victory screen](US-025-victory-screen.md) | client, server |
 | US-026 | [Host starts a rematch](US-026-host-starts-a-rematch.md) | server, client |
@@ -166,3 +169,4 @@ Foundation first, then the playable core, then hardening (see [brief §J](../../
 3. **Stage 2:** US-028 – US-031, US-033 – US-043, US-056, US-058, US-059, US-061, US-040 – US-042, US-047.
 4. **Stage 3 (Should):** US-013, US-021, US-022, US-062, US-032, US-039, US-044, US-048, US-049.
 5. **Could:** US-023, US-045, US-052, US-053.
+6. **Release 1.0.2:** US-063 (timer, then sounds), then US-064 (text, then voice).

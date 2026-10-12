@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-038](../user-stories/US-038-settings-reduced-motion-and-sound.md) · Must · Responsive UI and accessibility |
+| Story | [US-038](../user-stories/release-1.0.1/US-038-settings-reduced-motion-and-sound.md) · Must · Responsive UI and accessibility |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-13, DAC-23, [UI/UX §D10](../../ui-ux.md#d10-settings--m-us-038-text-size-s-us-039) |
 | Area | `apps/client` (`features/settings`, motion utilities) |

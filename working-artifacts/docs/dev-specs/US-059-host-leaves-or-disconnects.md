@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-059](../user-stories/US-059-host-leaves-or-disconnects.md) · Must · Error handling, reliability, connection, and privacy |
+| Story | [US-059](../user-stories/release-1.0.1/US-059-host-leaves-or-disconnects.md) · Must · Error handling, reliability, connection, and privacy |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-40, FR-25, DAC-35, OQ-16 |
 | Area | `apps/server` (room host logic), `apps/client` (host-dependent UI) |

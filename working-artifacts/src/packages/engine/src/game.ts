@@ -107,6 +107,8 @@ function dispatch(s: GameState, a: Action, rng: Rng, ev: GameEvent[]): EngineErr
       return passNope(s, a.playerId, rng, ev);
     case 'EXPIRE_NOPE':
       return expireNope(s, rng, ev);
+    case 'TIMEOUT':
+      return timeout(s, a.playerId, rng, ev);
     case 'LEAVE':
       eliminate(s, a.playerId, 'LEFT', ev, rng);
       return null;
@@ -186,6 +188,36 @@ function expireNope(s: GameState, rng: Rng, ev: GameEvent[]): EngineError | null
   pending.responders = [];
   resolveWindow(s, rng, ev);
   return null;
+}
+
+/**
+ * The turn clock ran out. Plays the default move for whatever this player owes:
+ * draw (turn), use the Defuse (Exploding Kitten drawn), tuck at a random spot, or
+ * give a random card (Favor). A Nope window is never timed out here.
+ */
+function timeout(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): EngineError | null {
+  const pending = s.pending;
+  if (pending?.kind === 'NOPE_WINDOW') return engineError('WRONG_PHASE');
+  const owner = pending ? pending.playerId : s.currentPlayerId;
+  if (owner !== playerId) return engineError('NOT_YOUR_TURN');
+  const step = pending ? pending.kind : 'TURN';
+  emit(s, ev, 'TURN_TIMEOUT', { playerId, step });
+  switch (pending?.kind) {
+    case undefined:
+      return draw(s, playerId, rng, ev);
+    case 'TREAT_DECISION':
+      return useTreat(s, playerId, ev);
+    case 'REINSERT':
+      return reinsertBoom(s, playerId, 'RANDOM', rng, ev);
+    case 'FAVOR_PICK': {
+      const hand = getPlayer(s, playerId).hand;
+      const pick = hand[rng.nextInt(hand.length)];
+      if (!pick) return engineError('CARD_NOT_IN_HAND');
+      return pickFavorCard(s, playerId, pick.id, ev);
+    }
+    default:
+      return engineError('WRONG_PHASE');
+  }
 }
 
 function draw(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): EngineError | null {

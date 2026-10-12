@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-009](../user-stories/US-009-view-my-hand.md) · Must · Gameplay |
+| Story | [US-009](../user-stories/release-1.0.1/US-009-view-my-hand.md) · Must · Gameplay |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-05, DAC-18, DAC-19, [UI/UX §B6, §C1](../../ui-ux.md#b6-cards-and-game-tokens) |
 | Area | `apps/client` (`features/game/Hand`, `components/common/Card`) |

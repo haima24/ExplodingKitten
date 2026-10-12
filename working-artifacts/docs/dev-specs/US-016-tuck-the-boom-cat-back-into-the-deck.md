@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-016](../user-stories/US-016-tuck-the-boom-cat-back-into-the-deck.md) · Must · Cards and rules |
+| Story | [US-016](../user-stories/release-1.0.1/US-016-tuck-the-boom-cat-back-into-the-deck.md) · Must · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-07, DAC-10, DAC-37 |
 | Area | `packages/engine`, `apps/client` (`ReinsertPicker`) |

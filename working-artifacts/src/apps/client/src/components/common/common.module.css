@@ -163,6 +163,15 @@
   color: var(--color-ink);
   white-space: nowrap;
 }
+/* Very narrow phones: the pages carry their own title, so the centre brand makes room for the controls. */
+@media (max-width: 380px) {
+  .header {
+    grid-template-columns: 1fr auto;
+  }
+  .brand {
+    display: none;
+  }
+}
 .main {
   flex: 1;
   display: flex;

@@ -156,4 +156,4 @@ STATIC_DIR=apps/client/dist pnpm start      # http://localhost:3001
 
 Other scripts: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm format`.
 
-Server settings come from environment variables (defaults in `apps/server/src/config.ts`): `PORT`, `DECK_PROFILE` (`mvp` or `mvp+should`), `ALLOWED_ORIGINS`, `TRUSTED_PROXIES`, `STATIC_DIR`, and the timers and limits listed in the dev-spec baseline. `TEST_MODE=1` shortens timers and seeds each room; the server refuses to start with it when `NODE_ENV=production`.
+Server settings come from environment variables (defaults in `apps/server/src/config.ts`): `PORT`, `DECK_PROFILE` (`mvp` or `mvp+should`), `TURN_TIMER_SEC` (default seconds per turn for new rooms: `0` Off, `15`, `30`, `60`; default 30), `ALLOWED_ORIGINS`, `TRUSTED_PROXIES`, `STATIC_DIR`, and the timers and limits listed in the dev-spec baseline. `TEST_MODE=1` shortens timers and seeds each room; the server refuses to start with it when `NODE_ENV=production`.

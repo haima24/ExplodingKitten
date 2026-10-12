@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-015](../user-stories/US-015-draw-a-boom-cat-and-use-a-treat.md) · Must · Cards and rules |
+| Story | [US-015](../user-stories/release-1.0.1/US-015-draw-a-boom-cat-and-use-a-treat.md) · Must · Cards and rules |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-07, DAC-10, [UI/UX §D6](../../ui-ux.md#d6-draw-interaction-and-boom-resolution--m-us-012-us-015-us-016-us-017) |
 | Area | `packages/engine`, `apps/client` (`BoomDialog`) |

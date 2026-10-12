@@ -2,7 +2,7 @@
 
 | Item | Value |
 | --- | --- |
-| Story | [US-049](../user-stories/US-049-performance-budget-check.md) · Should · Testing and quality |
+| Story | [US-049](../user-stories/release-1.0.1/US-049-performance-budget-check.md) · Should · Testing and quality |
 | Status | Draft v0.1 (proposed) · [Baseline](README.md) |
 | Refs | F-28, metric M5, DAC-28, DAC-38; `.github/skills/performance-generate-k6-scripts/` |
 | Area | CI, `tests/load`, `apps/client` build |
