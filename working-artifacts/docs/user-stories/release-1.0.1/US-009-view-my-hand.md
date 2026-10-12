@@ -11,6 +11,7 @@
   - Given the game is running, then every card in my hand is shown by name, icon, and card type.
   - Given a hand of up to 12 cards on a 320 px-wide screen, then cards are in a horizontally scrollable, scroll-snapping row and each card shows ≥ 56 px of its width with height ≥ 100 px.
   - Given the hand is scrolled, then a "n cards" counter is shown and the selected card remains in view.
+  - Given the hand is wider than its area, then no scrollbar is shown; instead each side with cut-off cards shows an indicator with the number of hidden cards and an arrow that can be tapped to move the hand, and a mouse pointer near the left or right edge slides the hand that way (BUG-001, [report](../../bugs/BUG-001-hand-overflows-with-many-cards.md)).
   - Given a keyboard, then Left/Right arrows move between cards (roving tabindex).
   - Given an empty hand (possible only in rare edge cases), then the text "No cards. Draw one!" is shown.
   - Given it is another player's turn, then my hand stays visible to me and cards can be inspected, but nothing can be played.

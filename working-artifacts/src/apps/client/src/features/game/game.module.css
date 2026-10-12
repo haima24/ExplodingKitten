@@ -120,8 +120,13 @@
   display: flex;
   gap: var(--space-2);
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: var(--space-2) var(--space-1);
   scroll-snap-type: x proximity;
+}
+.chipRow::-webkit-scrollbar {
+  display: none;
 }
 .chip {
   position: relative;
@@ -291,20 +296,71 @@
   font-size: var(--text-small);
   font-weight: 800;
 }
+.handViewport {
+  position: relative;
+}
 .hand {
   list-style: none;
   display: flex;
   align-items: flex-end;
   gap: 0;
   overflow-x: auto;
+  /* No scrollbar: the hand slides by swipe, by the mouse near an edge, or by the arrows. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: var(--space-5) var(--space-2) var(--space-2);
   margin-top: calc(-1 * var(--space-5));
   scroll-snap-type: x proximity;
   scroll-padding: 0 var(--space-4);
 }
+.hand::-webkit-scrollbar {
+  display: none;
+}
+/* Snapping helps a finger, but it pulls a mouse-driven slide back, so a mouse gets free scrolling. */
+@media (hover: hover) and (pointer: fine) {
+  .hand {
+    scroll-snap-type: none;
+  }
+}
 .handItem {
   flex: none;
   scroll-snap-align: center;
+}
+/* "More cards this way" indicator: a count and an arrow on a soft fade at each edge. */
+.handMore {
+  position: absolute;
+  top: var(--space-5); /* below the "N cards" counter */
+  bottom: var(--space-2);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  width: 4.25rem;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.handMoreLeft {
+  left: 0;
+  justify-content: flex-start;
+  background: linear-gradient(to right, var(--color-bg) 30%, transparent);
+}
+.handMoreRight {
+  right: 0;
+  justify-content: flex-end;
+  background: linear-gradient(to left, var(--color-bg) 30%, transparent);
+}
+.handMoreLabel {
+  margin: 0 var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: var(--outline-sticker);
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 .handItem + .handItem {
   /* Phone: overlap up to 25% so each card keeps >= 56px visible. */

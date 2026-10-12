@@ -192,6 +192,8 @@ export const en = {
   'hand.empty': 'No cards. Draw one!',
   'hand.count': '{n} cards',
   'hand.count1': '1 card',
+  'hand.moreLeft': '{n} more cards to the left. Tap to see them.',
+  'hand.moreRight': '{n} more cards to the right. Tap to see them.',
   'hand.hidden': 'Your hand is hidden while the menu is open.',
   'piles.draw': 'Draw pile, {n} cards',
   'piles.discard': 'Discard pile, top card {name}',

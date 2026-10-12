@@ -195,6 +195,8 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'hand.empty': 'Hết bài. Hãy rút một lá!',
   'hand.count': '{n} lá',
   'hand.count1': '1 lá',
+  'hand.moreLeft': 'Còn {n} lá bài bên trái. Chạm để xem.',
+  'hand.moreRight': 'Còn {n} lá bài bên phải. Chạm để xem.',
   'hand.hidden': 'Bài của bạn được ẩn khi menu đang mở.',
   'piles.draw': 'Chồng rút bài, {n} lá',
   'piles.discard': 'Chồng bài bỏ, lá trên cùng là {name}',
