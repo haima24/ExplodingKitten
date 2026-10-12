@@ -3,8 +3,9 @@ import { clone } from './clone';
 import { buildDeal, MAX_PLAYERS, MIN_PLAYERS } from './deck';
 import { eliminate } from './eliminate';
 import { emit, engineError } from './events';
-import { shuffle, type Rng } from './rng';
-import { endTurnUnit, getPlayer, passTurnTo, startTurn } from './turn';
+import type { Rng } from './rng';
+import { nopeHolders, openWindowOrResolve, resolveWindow } from './nope';
+import { endTurnUnit, getPlayer, startTurn } from './turn';
 import {
   INSERT_POSITIONS,
   type Action,
@@ -93,21 +94,27 @@ function dispatch(s: GameState, a: Action, rng: Rng, ev: GameEvent[]): EngineErr
     case 'PLAY_CARD':
       return playCard(s, a.playerId, a.cardId, a.targetId, rng, ev);
     case 'DRAW':
-      return draw(s, a.playerId, ev);
+      return draw(s, a.playerId, rng, ev);
     case 'USE_TREAT':
       return useTreat(s, a.playerId, ev);
     case 'REINSERT_BOOM':
       return reinsertBoom(s, a.playerId, a.position, rng, ev);
     case 'PICK_FAVOR_CARD':
       return pickFavorCard(s, a.playerId, a.cardId, ev);
+    case 'NOPE':
+      return playNope(s, a.playerId, rng, ev);
+    case 'PASS_NOPE':
+      return passNope(s, a.playerId, rng, ev);
+    case 'EXPIRE_NOPE':
+      return expireNope(s, rng, ev);
     case 'LEAVE':
-      eliminate(s, a.playerId, 'LEFT', ev);
+      eliminate(s, a.playerId, 'LEFT', ev, rng);
       return null;
     case 'REMOVE':
-      eliminate(s, a.playerId, 'REMOVED', ev);
+      eliminate(s, a.playerId, 'REMOVED', ev, rng);
       return null;
     case 'SKIP_ABSENT':
-      eliminate(s, a.playerId, 'SKIPPED', ev);
+      eliminate(s, a.playerId, 'SKIPPED', ev, rng);
       return null;
     default:
       return engineError('WRONG_PHASE', 'Unknown action');
@@ -142,33 +149,46 @@ function playCard(
   s.discardPile.unshift(card);
   emit(s, ev, 'CARD_PLAYED', { playerId, kind: card.kind, cardId: card.id });
 
-  switch (card.kind) {
-    case 'HOP_OVER':
-      endTurnUnit(s, ev);
-      break;
-    case 'PEEK':
-      emit(s, ev, 'PEEKED', { playerId });
-      emit(s, ev, 'PEEK_RESULT', { cards: s.drawPile.slice(0, 3) }, playerId);
-      break;
-    case 'SHAKE_UP':
-      s.drawPile = shuffle(s.drawPile, rng);
-      emit(s, ev, 'DECK_SHUFFLED', { playerId });
-      break;
-    case 'PASS_IT_ON':
-      passTurnTo(s, 2, ev);
-      break;
-    case 'ASK_A_FRIEND':
-      emit(s, ev, 'FAVOR_REQUESTED', { requesterId: playerId, targetId });
-      s.pending = { kind: 'FAVOR_PICK', playerId: targetId as string, requesterId: playerId };
-      s.phase = 'decision';
-      break;
-    default:
-      break;
-  }
+  // Other players holding a Nope get a chance to stop the card before it takes effect.
+  openWindowOrResolve(s, card, playerId, targetId, rng, ev);
   return null;
 }
 
-function draw(s: GameState, playerId: string, ev: GameEvent[]): EngineError | null {
+function playNope(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): EngineError | null {
+  const pending = s.pending;
+  if (!pending || pending.kind !== 'NOPE_WINDOW') return engineError('WRONG_PHASE');
+  if (!pending.responders.includes(playerId)) return engineError('NOT_YOUR_TURN');
+  const me = getPlayer(s, playerId);
+  const at = me.hand.findIndex((c) => c.kind === 'NOPE');
+  if (at < 0) return engineError('CARD_NOT_IN_HAND');
+  const [nope] = me.hand.splice(at, 1);
+  s.discardPile.unshift(nope!);
+  pending.nopes += 1;
+  emit(s, ev, 'NOPE_PLAYED', { playerId, count: pending.nopes });
+  // Anyone else holding a Nope may Nope it back; the player who just played one sits this round out.
+  pending.responders = nopeHolders(s, [playerId]);
+  if (pending.responders.length === 0) resolveWindow(s, rng, ev);
+  return null;
+}
+
+function passNope(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): EngineError | null {
+  const pending = s.pending;
+  if (!pending || pending.kind !== 'NOPE_WINDOW') return engineError('WRONG_PHASE');
+  if (!pending.responders.includes(playerId)) return engineError('NOT_YOUR_TURN');
+  pending.responders = pending.responders.filter((id) => id !== playerId);
+  if (pending.responders.length === 0) resolveWindow(s, rng, ev);
+  return null;
+}
+
+function expireNope(s: GameState, rng: Rng, ev: GameEvent[]): EngineError | null {
+  const pending = s.pending;
+  if (!pending || pending.kind !== 'NOPE_WINDOW') return engineError('WRONG_PHASE');
+  pending.responders = [];
+  resolveWindow(s, rng, ev);
+  return null;
+}
+
+function draw(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): EngineError | null {
   if (s.currentPlayerId !== playerId) return engineError('NOT_YOUR_TURN');
   if (s.phase !== 'turn') return engineError('WRONG_PHASE');
   if (s.drawPile.length === 0) return engineError('WRONG_PHASE', 'The draw pile is empty');
@@ -192,7 +212,7 @@ function draw(s: GameState, playerId: string, ev: GameEvent[]): EngineError | nu
 
   s.discardPile.unshift(top);
   emit(s, ev, 'BOOM_DRAWN', { hasTreat: false }, playerId);
-  eliminate(s, playerId, 'BOOM', ev);
+  eliminate(s, playerId, 'BOOM', ev, rng);
   return null;
 }
 

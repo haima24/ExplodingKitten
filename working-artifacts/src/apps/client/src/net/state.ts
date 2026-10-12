@@ -38,7 +38,7 @@ export interface State {
     pendingSince: number;
     inlineMessage: Message | null;
     toast: Message | null;
-    /** Secret Peek result: memory only, cleared on close. */
+    /** Secret See the Future result: memory only, cleared on close. */
     peek: Card[] | null;
     nap: boolean;
     menuOpen: boolean;

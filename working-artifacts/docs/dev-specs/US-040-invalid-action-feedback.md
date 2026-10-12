@@ -17,8 +17,8 @@ Friendly, specific messages for everything that can't be done, without changing 
 
 | Source code | Message |
 | --- | --- |
-| Catalog `notPlayableReason` Cozy Cat / `NOT_PLAYABLE` | "Cozy Cats just like to cuddle. Pick another card!" |
-| Catalog reason Treat | "Treats save you automatically when a Boom Cat shows up." |
+| Catalog `notPlayableReason` Cat card / `NOT_PLAYABLE` | "Cat cards just like to cuddle. Pick another card!" |
+| Catalog reason Defuse | "Defuse cards save you automatically when an Exploding Kitten shows up." |
 | `NOT_YOUR_TURN` (stale tap) | "Oops, that was too late. It's {name}'s turn now." |
 | Not my turn (pre-check) | "Wait for {name}." |
 | Offline | "Reconnecting… try again in a moment." |
@@ -49,7 +49,7 @@ The client uses the catalog's `playable` flag and `selectCanAct` to disable Play
 
 | Check | Level |
 | --- | --- |
-| Cozy Cat and Treat reasons shown without a request | C |
+| Cat card and Defuse reasons shown without a request | C |
 | Every engine and room error code has a mapping (exhaustiveness test) | U |
 | Server rejection leaves state unchanged and shows the message | I, C |
 | Message auto-clears in 5 s and on next interaction; announced politely | C |

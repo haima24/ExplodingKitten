@@ -8,7 +8,7 @@
 - **Context:** F-16, M4, M11, M12. The repository's testing instructions specify Playwright with the Page Object Model (`instructions/testing/copilot-instructions.md`); Playwright supports several browser contexts in one test.
 - **Acceptance criteria:**
   - Given a test with a host and 2 players in three separate browser contexts and a seeded random source, then the scripted journey runs: host creates a room, copies the link, players open the link and join, host starts, the game is played to a winner, and the host starts a rematch.
-  - Given the run, then it covers Peek, Hop Over, Shake Up, a Boom Cat defused, a Boom Cat elimination, the game menu, Leave game, and Play again.
+  - Given the run, then it covers See the Future, Skip, Shuffle, an Exploding Kitten defused, an Exploding Kitten elimination, the game menu, Leave game, and Play again.
   - Given the host runs at 1280 × 800 and the players at 390 × 844 and 768 × 1024 (and a landscape 844 × 390 variant), then every step passes.
   - Given a simulated offline period of 20 s for one player, then that player rejoins the same seat with the same hand; given 70 s on that player's turn, then the host's **Skip** option appears (US-058).
   - Given the join error cases (wrong code, full room, started game, closed room), then each shows its expected message.

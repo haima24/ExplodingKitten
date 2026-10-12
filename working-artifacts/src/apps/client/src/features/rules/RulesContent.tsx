@@ -144,7 +144,7 @@ function Tour({ onExit }: { onExit: () => void }): JSX.Element {
       {index === 3 ? (
         <ul className={s['miniList']}>
           {kindsForProfile(profile)
-            .filter((k) => CARD_CATALOG[k].playable)
+            .filter((k) => CARD_CATALOG[k].playable || CARD_CATALOG[k].reaction)
             .map((k) => (
               <li key={k} className={s['miniItem']}>
                 <span style={{ fontSize: '1.75rem' }}>

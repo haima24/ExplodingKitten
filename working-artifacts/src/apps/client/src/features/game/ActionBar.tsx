@@ -25,18 +25,22 @@ function CardDetailPanel({ kind }: { kind: keyof typeof CARD_CATALOG }): JSX.Ele
         <span className={g['detailHead']}>
           <span className={g['detailName']}>{info.name}</span>
           <span className={g['detailStatus']}>
-            {info.playable ? `✔ ${t('detail.playable')}` : `zzz ${t('detail.notPlayableShort')}`}
+            {info.playable
+              ? `✔ ${t('detail.playable')}`
+              : info.reaction
+                ? `⚡ ${t('detail.reaction')}`
+                : `zzz ${t('detail.notPlayableShort')}`}
           </span>
         </span>
         <span className={g['detailEffect']}>
-          {info.playable ? info.effect : (info.notPlayableReason ?? info.effect)}
+          {info.playable || info.reaction ? info.effect : (info.notPlayableReason ?? info.effect)}
         </span>
       </span>
     </div>
   );
 }
 
-/** Ask a Friend: large avatar buttons for valid targets only. */
+/** Favor: large avatar buttons for valid targets only. */
 function TargetPicker({
   onPick,
   onCancel,
@@ -107,6 +111,7 @@ export function ActionBar(): JSX.Element | null {
   if (out) reason = t('action.out');
   else if (state.connection.status !== 'online') reason = t('action.reconnecting');
   else if (pending) reason = t('action.sending');
+  else if (view.nopeWindow) reason = t('action.nopeWait');
   else if (view.currentPlayerId !== view.you.id || view.phase !== 'turn') {
     reason = t('action.wait', { name: view.waitingFor ? nameOf(state.room.view, view.waitingFor) : currentName });
   }

@@ -26,8 +26,8 @@
   font-weight: 600;
 }
 .cats {
-  font-size: 2.5rem;
-  letter-spacing: 0.25em;
+  display: flex;
+  gap: var(--space-3);
 }
 .actions {
   display: flex;

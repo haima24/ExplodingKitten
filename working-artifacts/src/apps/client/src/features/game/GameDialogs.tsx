@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CARD_CATALOG } from '@wb/engine/cards';
 import type { Card as CardData, InsertPosition } from '@wb/engine/types';
 import { t } from '../../copy';
@@ -8,12 +8,13 @@ import c from '../../components/common/common.module.css';
 import f from '../../components/common/forms.module.css';
 import { Modal } from '../../components/common/Modal';
 import { useStore } from '../../net/context';
+import { CardIcon } from './art/CardIcon';
 import { Card } from './Card';
 import { nameOf } from './selectors';
 import { useGameActions } from './useGameActions';
 import g from './game.module.css';
 
-/** Forced choice: "Uh-oh, a Boom Cat!" Escape and backdrop do nothing. */
+/** Forced choice: "Uh-oh, an Exploding Kitten!" Escape and backdrop do nothing. */
 export function BoomDialog(): JSX.Element {
   const { state } = useStore();
   const { spendTreat } = useGameActions();
@@ -27,12 +28,12 @@ export function BoomDialog(): JSX.Element {
       announce={`${t('boom.title')} ${t('boom.body')}`}
     >
       <div className={g['dialogArt']} aria-hidden="true">
-        🙀
+        <CardIcon kind="BOOM_CAT" size={96} />
       </div>
       <p>{t('boom.body')}</p>
       <div className={c['dialogActions']}>
         <Button variant="primary" data-autofocus loading={pending} onClick={() => void spendTreat()}>
-          🐟 {t('boom.useTreat')}
+          {t('boom.useTreat')}
         </Button>
       </div>
     </Modal>
@@ -41,7 +42,7 @@ export function BoomDialog(): JSX.Element {
 
 const POSITIONS: InsertPosition[] = ['TOP', 'MIDDLE', 'BOTTOM', 'RANDOM'];
 
-/** Where to tuck the Boom Cat. Random is preselected, so a choice is always made. */
+/** Where to tuck the Exploding Kitten. Random is preselected, so a choice is always made. */
 export function ReinsertPicker(): JSX.Element {
   const { state } = useStore();
   const { reinsert } = useGameActions();
@@ -75,7 +76,7 @@ export function ReinsertPicker(): JSX.Element {
   );
 }
 
-/** Ask a Friend, target side: pick one of your own cards to give. */
+/** Favor, target side: pick one of your own cards to give. */
 export function FavorPickDialog(): JSX.Element | null {
   const { state } = useStore();
   const { pickFavor } = useGameActions();
@@ -100,7 +101,58 @@ export function FavorPickDialog(): JSX.Element | null {
   );
 }
 
-/** Not a forced choice: "Oh no, a Boom Cat popped!" Kind wording, never "you lost". */
+/**
+ * Someone played an action card and you hold a Nope. Play it to stop the card
+ * (or flip a Nope back), or let it go. Escape means "let it go"; the server also
+ * lets the window time out.
+ */
+export function NopeDialog(): JSX.Element | null {
+  const { state } = useStore();
+  const { nope, passNope } = useGameActions();
+  const [now, setNow] = useState(() => Date.now());
+  const view = state.game.view;
+  const decision = view?.decision;
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 250);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  if (!view || decision?.kind !== 'NOPE_WINDOW') return null;
+  const pending = state.ui.pendingActionId !== null;
+  const actor = nameOf(state.room.view, decision.actorId);
+  const card = CARD_CATALOG[decision.cardKind].name;
+  const seconds =
+    view.nopeDeadlineAt === undefined
+      ? null
+      : Math.max(0, Math.ceil((view.nopeDeadlineAt - (now + state.connection.offset)) / 1000));
+  const body = t('nope.body', { name: actor, card });
+  const ask = decision.nopes > 0 ? t('nope.chain') : t('nope.ask');
+
+  return (
+    <Modal
+      title={t('nope.title')}
+      narrow
+      announce={`${t('nope.title')} ${body} ${ask}`}
+      onClose={() => void passNope()}
+    >
+      <div className={g['dialogArt']} aria-hidden="true">
+        <CardIcon kind="NOPE" size={96} />
+      </div>
+      <p>{body}</p>
+      <p>{ask}</p>
+      {seconds !== null ? <p role="timer">{t('nope.seconds', { n: seconds })}</p> : null}
+      <div className={c['dialogActions']}>
+        <Button variant="primary" data-autofocus loading={pending} onClick={() => void nope()}>
+          ✋ {t('nope.play')}
+        </Button>
+        <Button onClick={() => void passNope()}>{t('nope.pass')}</Button>
+      </div>
+    </Modal>
+  );
+}
+
+/** Not a forced choice: "Oh no, an Exploding Kitten popped!" Kind wording, never "you lost". */
 export function NapDialog(): JSX.Element {
   const { state, dispatch } = useStore();
   const name = nameOf(state.room.view, state.game.view?.you.id);
@@ -113,7 +165,7 @@ export function NapDialog(): JSX.Element {
       announce={`${t('nap.title')} ${t('nap.body', { name })}`}
     >
       <div className={g['dialogArt']} aria-hidden="true">
-        😴
+        <CardIcon kind="COZY_CAT" size={96} />
       </div>
       <p>{t('nap.body', { name })}</p>
       <div className={c['dialogActions']}>
@@ -125,7 +177,7 @@ export function NapDialog(): JSX.Element {
   );
 }
 
-/** Private Peek result: held in memory only and cleared on close. */
+/** Private See the Future result: held in memory only and cleared on close. */
 export function PeekOverlay({ cards }: { cards: CardData[] }): JSX.Element {
   const { dispatch } = useStore();
   const close = (): void => dispatch({ type: 'ui/peek', cards: null });

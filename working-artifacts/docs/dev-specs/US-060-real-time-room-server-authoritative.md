@@ -74,7 +74,7 @@ All defaults are in the [baseline](README.md#24-server-defaults-all-proposed-rea
 | Check | Level |
 | --- | --- |
 | Create, join, start, play over real WebSockets with 2–4 clients | I |
-| Every outbound message scanned in simulated games: no foreign card ids, no draw-pile order, no Peek of others | I (US-046) |
+| Every outbound message scanned in simulated games: no foreign card ids, no draw-pile order, no See the Future of others | I (US-046) |
 | Out-of-turn, non-member, and non-host requests rejected with no state change | I |
 | Duplicate action ids applied once | I |
 | Update reaches all clients within 300 ms p95 locally | I, then P (US-049) |

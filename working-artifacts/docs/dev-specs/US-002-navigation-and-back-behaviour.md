@@ -29,7 +29,7 @@ Predictable routing: working Back buttons, share links that open the right scree
 
 - On-screen **Back** uses `navigate(-1)` when `history.state.idx > 0`, else navigates to `/`.
 - **In a game** (`room.phase = PLAYING`): on entering `/room/:code` push a sentinel history entry. A `popstate` handler re-pushes the sentinel and opens the **GameMenu** (US-028). In lobby and finished states, Back leaves normally (leaving the lobby does not leave the room; the Rejoin banner is offered on Home).
-- A forced-choice dialog (Boom Cat decision) disables the Back-opens-menu behaviour (the menu is disabled then).
+- A forced-choice dialog (Exploding Kitten decision) disables the Back-opens-menu behaviour (the menu is disabled then).
 
 ### 2.3 Hosting rule
 

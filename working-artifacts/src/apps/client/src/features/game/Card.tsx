@@ -1,30 +1,18 @@
 import { CARD_CATALOG } from '@wb/engine/cards';
 import type { CardKind } from '@wb/engine/types';
 import { t } from '../../copy';
+import { CardIcon } from './art/CardIcon';
 import s from './card.module.css';
 
-// Placeholder art (emoji). Decorative only: every card also shows its name and
-// effect as text, so a missing glyph never blocks play (US-044).
-const ART: Record<CardKind, string> = {
-  BOOM_CAT: '🙀',
-  TREAT: '🐟',
-  HOP_OVER: '🐾',
-  PEEK: '👀',
-  SHAKE_UP: '🔀',
-  COZY_CAT: '😴',
-  PASS_IT_ON: '👉',
-  ASK_A_FRIEND: '💬',
-};
-
-export function CardArt({ kind }: { kind: CardKind }): JSX.Element {
+export function CardArt({ kind, size = 44 }: { kind: CardKind; size?: number }): JSX.Element {
   return (
     <span className={s['art']} aria-hidden="true">
-      {ART[kind]}
+      <CardIcon kind={kind} size={size} />
     </span>
   );
 }
 
-/** "Peek, action card. Secretly look at the top 3 cards. Selected." */
+/** "See the Future, action card. Secretly look at the top 3 cards. Selected." */
 export function cardAriaLabel(kind: CardKind, selected?: boolean): string {
   const info = CARD_CATALOG[kind];
   const base = t('card.aria', {
@@ -32,7 +20,7 @@ export function cardAriaLabel(kind: CardKind, selected?: boolean): string {
     type: t(`card.type.${info.type}` as const),
     effect: info.effect.replace(/[.!]+$/, ''),
   });
-  const locked = info.playable ? '' : ` ${t('card.locked')}.`;
+  const locked = info.playable ? '' : ` ${info.reaction ? t('card.reaction') : t('card.locked')}`;
   if (selected === undefined) return `${base}${locked}`;
   return `${base}${locked} ${selected ? t('card.selected') : t('card.notSelected')}.`;
 }
@@ -74,7 +62,7 @@ export function Card({
         </span>
       ) : !info.playable ? (
         <span className={s['badge']} aria-hidden="true">
-          zzz
+          {info.reaction ? '⚡' : 'zzz'}
         </span>
       ) : null}
     </>

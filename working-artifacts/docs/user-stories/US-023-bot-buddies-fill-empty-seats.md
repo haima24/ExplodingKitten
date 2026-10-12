@@ -9,8 +9,8 @@
 - **Acceptance criteria:**
   - Given I am the host in the lobby, when I press **Add Bot Buddy**, then a bot takes a seat (up to 4 total), is labelled "Bot" in text, and counts toward the 2-player minimum.
   - Given a bot's turn, then "[Bot] is thinking…" shows for 0.8–1.5 s, then the bot acts using only legal actions.
-  - Given the bot holds Hop Over and the next card is unknown, then it plays Hop Over with a fixed probability (proposed 30 %) using the injected random source.
-  - Given a Boom Cat is drawn with a Treat, then the bot uses it and tucks the Boom Cat in at a random position.
+  - Given the bot holds Skip and the next card is unknown, then it plays Skip with a fixed probability (proposed 30 %) using the injected random source.
+  - Given an Exploding Kitten is drawn with a Defuse, then the bot uses it and tucks the Exploding Kitten in at a random position.
   - Given a bot's actions, then each is announced like a human's.
   - Given a seeded random source, then a simulation of 10,000 all-bot games completes without any illegal action or invariant break.
   - Negative: Given the bot's hand contains only unplayable cards, then it simply draws.

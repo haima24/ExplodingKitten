@@ -23,7 +23,7 @@ The store keeps `game.log: LogEntry[]` (max 10, newest first). Each `game.update
 | `CARD_DRAWN` | "{name} drew a card" (`log.drew`) |
 | `PEEKED` | "{name} peeked" |
 | `DECK_SHUFFLED` | "{name} shuffled the deck" |
-| `TREAT_USED` / `BOOM_TUCKED` | "{name} used a Treat" / "Boom Cat tucked back in" |
+| `TREAT_USED` / `BOOM_TUCKED` | "{name} used a Defuse" / "Exploding Kitten tucked back in" |
 | `PLAYER_OUT` | "{name} is taking a nap" (reason `SKIPPED`: "{name} was skipped"; `REMOVED`: "{name} was removed"; `LEFT`: "{name} left the game") |
 | `FAVOR_GIVEN` | "{from} gave {to} a card" |
 | `GAME_FINISHED` | "{name} wins the round!" |
@@ -47,7 +47,7 @@ Names come from the room members; card names from the catalog.
 | Public events produce the right entries; private events produce none | U |
 | Max 10 entries, newest first | U |
 | `role="log"` present and not live-announced | C |
-| Peek entry shows no cards | C |
+| See the Future entry shows no cards | C |
 
 ## 5. Tasks
 

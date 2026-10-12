@@ -15,6 +15,8 @@ export function useGameActions(): {
   spendTreat: () => Promise<boolean>;
   reinsert: (position: InsertPosition) => Promise<boolean>;
   pickFavor: (cardId: string) => Promise<boolean>;
+  nope: () => Promise<boolean>;
+  passNope: () => Promise<boolean>;
 } {
   const { state, client } = useStore();
   const view = state.game.view;
@@ -47,5 +49,7 @@ export function useGameActions(): {
     spendTreat: () => run({ type: 'USE_TREAT' }),
     reinsert: (position) => run({ type: 'REINSERT_BOOM', position }),
     pickFavor: (cardId) => run({ type: 'PICK_FAVOR_CARD', cardId }),
+    nope: () => run({ type: 'NOPE' }),
+    passNope: () => run({ type: 'PASS_NOPE' }),
   };
 }

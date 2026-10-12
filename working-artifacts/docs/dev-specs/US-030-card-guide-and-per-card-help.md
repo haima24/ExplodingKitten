@@ -30,7 +30,7 @@ One data source (the card catalog) feeds the card guide, the card detail panel, 
 
 ## 3. Edge cases and errors
 
-- Cards not in the current profile are not listed (Pass It On and Ask a Friend with `mvp`).
+- Cards not in the current profile are not listed (Attack and Favor with `mvp`).
 - A card kind missing from the catalog: the guide skips it and a test fails (catalog completeness test).
 
 ## 4. Verification

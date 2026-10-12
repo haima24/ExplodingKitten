@@ -9,7 +9,7 @@ interface ModalProps {
   children: ReactNode;
   /** Called on Escape, backdrop click, or a close control. */
   onClose?: () => void;
-  /** Forced-choice dialogs (Boom Cat, re-insert, favour) are not dismissible. */
+  /** Forced-choice dialogs (Exploding Kitten, re-insert, favour) are not dismissible. */
   dismissible?: boolean;
   /** Spoken assertively when the dialog opens. */
   announce?: string;

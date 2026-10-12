@@ -20,12 +20,12 @@ Returns a copy key (and params) by the first matching rule:
 | # | Condition | Hint (≤ 12 words) |
 | --- | --- | --- |
 | 1 | Offline or reconnecting | "Reconnecting… your cards are safe." |
-| 2 | My decision pending: Treat | "Use your Treat to calm the Boom Cat." |
-| 3 | My decision pending: re-insert | "Pick where to tuck the Boom Cat in." |
+| 2 | My decision pending: Defuse | "Use your Defuse to calm the Exploding Kitten." |
+| 3 | My decision pending: re-insert | "Pick where to tuck the Exploding Kitten in." |
 | 4 | My decision pending: favour | "Pick a card to give." |
 | 5 | Waiting for someone else's decision | "Waiting for {name}…" |
 | 6 | My turn, card selected and playable | "Tap Play to use {card}." |
-| 7 | My turn, I already played Peek or Shake Up this turn | "You can play another card, or draw to end your turn." |
+| 7 | My turn, I already played See the Future or Shuffle this turn | "You can play another card, or draw to end your turn." |
 | 8 | My turn | "Play a card or tap the deck to draw." |
 | 9 | Another player's turn | "It's {name}'s turn." |
 | 10 | Out | "Cheer the others on!" |
@@ -38,7 +38,7 @@ The `Announcer` receives the hint text only when the **key or params change** (n
 
 ### 2.3 Boundaries
 
-Hints are not coach marks (US-032). The Boom Cat dialogs state their own next step in their text.
+Hints are not coach marks (US-032). The Exploding Kitten dialogs state their own next step in their text.
 
 ## 3. Edge cases and errors
 

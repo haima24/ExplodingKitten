@@ -24,6 +24,7 @@ Implement the rules of Family Rules v0 as a pure, deterministic library that the
 | `game.ts` | `createGame`, `applyAction` dispatcher |
 | `turn.ts` | `endTurnUnit`, `nextActive` |
 | `eliminate.ts` | Single elimination path (US-017, US-028, US-058) |
+| `nope.ts`, `effects.ts` | Nope response window and card effects, resolved after the window (US-062) |
 | `view.ts` | `viewFor`, `visibleEvents` |
 | `invariants.ts` | `checkInvariants` |
 | `index.ts` | Public exports; the client-safe entry points are `engine/cards` and `engine/types` |
@@ -44,6 +45,7 @@ interface PlayerState { id: string; seat: number; hand: Card[]; status: 'active'
 type Pending = { kind:'TREAT_DECISION'; playerId: string; boomCard: Card }
              | { kind:'REINSERT'; playerId: string; boomCard: Card }
              | { kind:'FAVOR_PICK'; playerId: string; requesterId: string }
+             | { kind:'NOPE_WINDOW'; playerId: string; card: Card; targetId?: string; nopes: number; responders: string[] }  // US-062
 ```
 
 ### 2.3 Mechanics shared by all rules
@@ -53,8 +55,8 @@ type Pending = { kind:'TREAT_DECISION'; playerId: string; boomCard: Card }
 - **Versioning:** `version` increases by one per accepted action.
 - **Turn model:** `endTurnUnit`: if `pendingTurns > 1` decrement and keep the player, else move to `nextActive()` with `pendingTurns = 1`; always emit `TURN_STARTED` when the current player or the count changes and `stats.turnsPlayed++`.
 - **Events:** each has `seq` (per game), `type`, `visibility` (`PUBLIC` or `{ to }`), and `data`.
-- **`viewFor`:** returns `you` (own hand), `others[]` (id, seat, `handCount`, status), `phase`, `currentPlayerId`, `pendingTurns`, `drawCount`, `discardPile`, optional `decision` (only for the decider), optional `waitingFor` (public decider id), `winnerId`, and stats when finished. It **never** includes other hands, draw-pile contents or order, `boomCard`, re-insert positions, or Peek results.
-- **Invariants:** I1 boom cards in `drawPile` plus pending `boomCard` = active players − 1; I2 draw pile holds ≥ 1 Boom Cat while ≥ 2 active and no pending; I3 card conservation (same multiset of ids across hands, piles, pending); I4 current player is active unless finished; I5 `pendingTurns ≥ 1`; I6 out players have empty hands; I7 `phase = 'decision'` iff `pending ≠ null`; I8 card ids unique.
+- **`viewFor`:** returns `you` (own hand), `others[]` (id, seat, `handCount`, status), `phase`, `currentPlayerId`, `pendingTurns`, `drawCount`, `discardPile`, optional `decision` (only for the decider), optional `waitingFor` (public decider id), `winnerId`, and stats when finished. It **never** includes other hands, draw-pile contents or order, `boomCard`, re-insert positions, or See the Future results.
+- **Invariants:** I1 boom cards in `drawPile` plus pending `boomCard` = active players − 1; I2 draw pile holds ≥ 1 Exploding Kitten while ≥ 2 active and no pending; I3 card conservation (same multiset of ids across hands, piles, pending); I4 current player is active unless finished; I5 `pendingTurns ≥ 1`; I6 out players have empty hands; I7 `phase = 'decision'` iff `pending ≠ null`; I8 card ids unique.
 
 ## 3. Edge cases and errors
 
@@ -87,4 +89,4 @@ type Pending = { kind:'TREAT_DECISION'; playerId: string; boomCard: Card }
 
 - Depends on US-050.
 - Risk: rule changes after playtests. Mitigation: card counts and texts are data; each rule has focused tests.
-- Open: Cozy Cats playable or not (OQ-06) is a one-flag change in the catalog.
+- Open: Cat cards playable or not (OQ-06) is a one-flag change in the catalog.

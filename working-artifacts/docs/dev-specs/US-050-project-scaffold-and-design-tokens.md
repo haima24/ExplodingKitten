@@ -60,7 +60,7 @@ Colour values are *proposed* and must be re-verified by the contrast test (US-03
 | `lint`, `typecheck`, `test` pass for every package | CI |
 | First page load makes zero third-party requests and sets no cookies | E (network assertion), DAC-27 |
 | Tokens present with the contract names | U (CSS parse test) |
-| `assets/LICENSES.md` lists every asset; no forbidden brand names in the repo | CI script (grep for the protected names), DAC-30 |
+| `assets/LICENSES.md` lists every asset; no Exploding Kittens artwork, logo, or card text in the repo (card names are allowed) | CI script (grep for logo and artwork file names), DAC-30 |
 | Dependency rule violations fail lint | U (lint fixture) |
 
 ## 5. Tasks

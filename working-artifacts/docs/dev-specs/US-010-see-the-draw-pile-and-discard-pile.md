@@ -9,7 +9,7 @@
 
 ## 1. Goal
 
-Show the draw count and the top discard on every device, update them promptly, and never reveal pile contents or Boom Cat positions.
+Show the draw count and the top discard on every device, update them promptly, and never reveal pile contents or Exploding Kitten positions.
 
 ## 2. Technical design
 
@@ -31,7 +31,7 @@ From `PlayerView`: `drawCount` and `discardPile` (public, most recent first). No
 
 ### 2.4 Invariant guard (server)
 
-After each action the server runs `checkInvariants`. I2 states the draw pile holds a Boom Cat while ≥ 2 players are active, so `drawCount === 0` with ≥ 2 active players is a violation: log `invariant_violation`, send `room.ended {reason:'ERROR'}` (US-060). Clients never compute this.
+After each action the server runs `checkInvariants`. I2 states the draw pile holds an Exploding Kitten while ≥ 2 players are active, so `drawCount === 0` with ≥ 2 active players is a violation: log `invariant_violation`, send `room.ended {reason:'ERROR'}` (US-060). Clients never compute this.
 
 ## 3. Edge cases and errors
 
@@ -43,7 +43,7 @@ After each action the server runs `checkInvariants`. I2 states the draw pile hol
 
 | Check | Level |
 | --- | --- |
-| Counts and top discard update after play, draw, Boom Cat events | C, I |
+| Counts and top discard update after play, draw, Exploding Kitten events | C, I |
 | Empty discard shows the outline and text | C |
 | No draw-pile card data in any payload | I (leak scan) |
 | Invariant I2 holds in 10,000 simulated games | U (US-046) |
@@ -59,4 +59,4 @@ After each action the server runs `checkInvariants`. I2 states the draw pile hol
 ## 6. Dependencies and risks
 
 - Depends on US-005, US-051, US-060; Draw wiring is US-012.
-- Risk: showing a count that reveals Boom Cat position. It does not: only the total is shown.
+- Risk: showing a count that reveals Exploding Kitten position. It does not: only the total is shown.

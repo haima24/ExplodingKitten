@@ -20,7 +20,7 @@ Up to four short tips during the first game on a device, never blocking controls
 | 1 | Hand | First `game.update` of the first game | `tips.hand` "These are your cards." |
 | 2 | Deck pile | My first turn starts | `tips.deck` "Tap the deck to draw a card." |
 | 3 | A playable card | I select a card for the first time | `tips.select` "Tap Play to use it." |
-| 4 | Boom Cat | The first time `BOOM_DRAWN` is received | `tips.boom` "A Treat saves you from a Boom Cat." |
+| 4 | Exploding Kitten | The first time `BOOM_DRAWN` is received | `tips.boom` "A Defuse saves you from an Exploding Kitten." |
 
 Each tip is shown at most once per device and is dismissed with a button (**Got it**). A tip never covers the control it points at (positioned beside the anchor; on small screens as a strip above the action bar).
 

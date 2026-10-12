@@ -2,7 +2,7 @@ import { applyAction, checkInvariants, createGame, viewFor, visibleEvents } from
 import type { Action, EngineError, GameEvent, GameState } from '@wb/engine/types';
 import { chooseAction } from './bots';
 import type { Hub } from './hub';
-import { deciderId, findMember, present, type Member, type Room } from './room';
+import { botToAct, findMember, present, type Member, type Room } from './room';
 import { codeHash } from './util';
 
 /** Thrown by the test/dev leak guard when a payload would expose hidden cards. */
@@ -12,9 +12,11 @@ function assertNoLeak(game: GameState, recipientId: string, payload: unknown): v
   const json = JSON.stringify(payload);
   const forbidden: string[] = game.drawPile.map((c) => c.id);
   for (const p of game.players) if (p.id !== recipientId) forbidden.push(...p.hand.map((c) => c.id));
-  if (game.pending && game.pending.kind !== 'FAVOR_PICK') forbidden.push(game.pending.boomCard.id);
+  if (game.pending && (game.pending.kind === 'TREAT_DECISION' || game.pending.kind === 'REINSERT')) {
+    forbidden.push(game.pending.boomCard.id);
+  }
 
-  // The recipient's own Peek result legitimately contains draw-pile ids.
+  // The recipient's own See the Future result legitimately contains draw-pile ids.
   const peeked = new Set<string>();
   for (const e of (payload as { events?: GameEvent[] }).events ?? []) {
     if (e.type === 'PEEK_RESULT') {
@@ -32,11 +34,9 @@ export function broadcastGame(hub: Hub, room: Room, events: GameEvent[]): void {
   if (!game) return;
   for (const m of room.members) {
     if (!m.conn) continue;
-    const payload = {
-      version: game.version,
-      view: viewFor(game, m.playerId),
-      events: visibleEvents(events, m.playerId),
-    };
+    const view = viewFor(game, m.playerId);
+    if (view.nopeWindow && room.nopeDeadlineAt !== null) view.nopeDeadlineAt = room.nopeDeadlineAt;
+    const payload = { version: game.version, view, events: visibleEvents(events, m.playerId) };
     if (!hub.config.production) assertNoLeak(game, m.playerId, payload);
     hub.send(m.conn, 'game.update', payload);
   }
@@ -46,7 +46,9 @@ export function broadcastGame(hub: Hub, room: Room, events: GameEvent[]): void {
 export function sendSnapshot(hub: Hub, room: Room, member: Member): void {
   const game = room.game;
   if (!game || !member.conn) return;
-  const payload = { version: game.version, view: viewFor(game, member.playerId), events: [] };
+  const view = viewFor(game, member.playerId);
+  if (view.nopeWindow && room.nopeDeadlineAt !== null) view.nopeDeadlineAt = room.nopeDeadlineAt;
+  const payload = { version: game.version, view, events: [] };
   if (!hub.config.production) assertNoLeak(game, member.playerId, payload);
   hub.send(member.conn, 'game.update', payload);
 }
@@ -64,6 +66,8 @@ function afterStateChange(hub: Hub, room: Room, events: GameEvent[]): boolean {
     return false;
   }
 
+  trackNopeWindow(hub, room);
+
   if (game.phase === 'finished' && room.phase !== 'FINISHED') {
     room.phase = 'FINISHED';
     room.finishedAt = hub.clock.now();
@@ -73,6 +77,34 @@ function afterStateChange(hub: Hub, room: Room, events: GameEvent[]): boolean {
   hub.recomputeAbsent(room);
   scheduleBot(hub, room);
   return true;
+}
+
+/**
+ * The engine has no clock, so the server times the Nope window: a new window, or
+ * a new Nope inside one, restarts the countdown; when it ends the server issues
+ * EXPIRE_NOPE so slow or disconnected players cannot hold the game up.
+ */
+function trackNopeWindow(hub: Hub, room: Room): void {
+  const pending = room.game?.pending;
+  if (!pending || pending.kind !== 'NOPE_WINDOW') {
+    room.nopeDeadlineAt = null;
+    room.nopeKey = null;
+    return;
+  }
+  const key = `${pending.card.id}:${pending.nopes}`;
+  if (room.nopeKey !== key) {
+    room.nopeKey = key;
+    room.nopeDeadlineAt = hub.clock.now() + hub.config.nopeWindowMs;
+  }
+}
+
+/** Called by the sweep loop: close a Nope window whose time ran out. */
+export function expireNopeWindow(hub: Hub, room: Room): void {
+  room.nopeDeadlineAt = null;
+  const pending = room.game?.pending;
+  if (pending?.kind === 'NOPE_WINDOW') {
+    applyEngine(hub, room, { type: 'EXPIRE_NOPE', playerId: pending.playerId });
+  }
 }
 
 /** Applies an engine action for a room; returns the engine error, if any. */
@@ -107,6 +139,8 @@ export function startGame(hub: Hub, room: Room): boolean {
   room.dedupe.clear();
   room.finishedAt = null;
   room.absent = null;
+  room.nopeDeadlineAt = null;
+  room.nopeKey = null;
   hub.touch(room);
   hub.broadcastRoom(room);
   broadcastGame(hub, room, result.events);
@@ -126,6 +160,8 @@ export function resetToLobby(hub: Hub, room: Room): void {
   room.absent = null;
   room.botActorId = null;
   room.botDueAt = null;
+  room.nopeDeadlineAt = null;
+  room.nopeKey = null;
   room.dedupe.clear();
   hub.touch(room);
   hub.broadcastRoom(room);
@@ -135,11 +171,8 @@ export function resetToLobby(hub: Hub, room: Room): void {
 // --------------------------------------------------------------------- bots
 
 export function scheduleBot(hub: Hub, room: Room): void {
-  const game = room.game;
-  const actor =
-    game && game.phase !== 'finished' && room.phase === 'PLAYING'
-      ? findMember(room, deciderId(game))
-      : undefined;
+  const botId = room.phase === 'PLAYING' ? botToAct(room) : null;
+  const actor = botId ? findMember(room, botId) : undefined;
 
   if (!actor || !actor.isBot || actor.left) {
     if (room.botActorId !== null) {
@@ -162,7 +195,7 @@ export function runBot(hub: Hub, room: Room): void {
   const botId = room.botActorId;
   room.botDueAt = null;
   const game = room.game;
-  if (!botId || !game || deciderId(game) !== botId) {
+  if (!botId || !game || botToAct(room) !== botId) {
     scheduleBot(hub, room);
     return;
   }
@@ -173,6 +206,8 @@ export function runBot(hub: Hub, room: Room): void {
 
   if (error && room.phase === 'PLAYING' && room.game?.phase === 'turn') {
     error = applyEngine(hub, room, { type: 'DRAW', playerId: botId });
+  } else if (error && room.game?.pending?.kind === 'NOPE_WINDOW') {
+    error = applyEngine(hub, room, { type: 'PASS_NOPE', playerId: botId });
   }
   if (error && room.phase === 'PLAYING') {
     hub.log.warn('bot_stuck', { codeHash: codeHash(room.code), code: error.code });

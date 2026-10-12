@@ -33,7 +33,7 @@ interface AbsentInfo { playerId: string; since: number; deadlineAt: number; host
 - Broadcast `absent.update { absent: AbsentInfo | null, hostId }` to everyone on every change.
 - Host sends `game.skipAbsent { playerId, decision: 'WAIT' | 'SKIP' }` (non-hosts get `NOT_HOST`; only valid while `hostMayDecide`).
   - `WAIT`: `deadlineAt = now + 60 s`, `hostMayDecide = false`; asked again later.
-  - `SKIP`: engine `SKIP_ABSENT` for the player (`outReason = SKIPPED`): hand and any pending Boom Cat go to the discard pile; the favour or decision is cancelled; play continues or the game finishes (US-017, US-025). The member stays in the room as an **out** player; if they return they can watch (US-043).
+  - `SKIP`: engine `SKIP_ABSENT` for the player (`outReason = SKIPPED`): hand and any pending Exploding Kitten go to the discard pile; the favour or decision is cancelled; play continues or the game finishes (US-017, US-025). The member stays in the room as an **out** player; if they return they can watch (US-043).
 
 ### 2.4 Client `AbsentPlayerBanner`
 
@@ -46,7 +46,7 @@ interface AbsentInfo { playerId: string; since: number; deadlineAt: number; host
 - Host is the absent decider: host transfer happens at the same deadline (US-059) and the new host decides.
 - Player reconnects at the same instant as `SKIP`: the queue order decides; if `SKIP` is processed first they return as out.
 - Two disconnected players: only the **decider** is counted; the other is handled when they become the decider.
-- Pending decisions (Boom Cat dialog, favour pick) use the same rule.
+- Pending decisions (Exploding Kitten dialog, favour pick) use the same rule.
 - Room expiry still applies (US-056).
 
 ## 4. Verification

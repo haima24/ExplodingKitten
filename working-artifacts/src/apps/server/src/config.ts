@@ -35,6 +35,8 @@ export interface Config {
   msgRate: number;
   msgBurst: number;
   actionDedupeWindow: number;
+  /** How long a Nope response window stays open (the engine has no clock). */
+  nopeWindowMs: number;
   connPerMinute: number;
 
   botMinDelayMs: number;
@@ -104,6 +106,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     msgRate: num(env, 'MSG_RATE', 20),
     msgBurst: num(env, 'MSG_BURST', 40),
     actionDedupeWindow: num(env, 'ACTION_DEDUPE_WINDOW', 64),
+    nopeWindowMs: num(env, 'NOPE_WINDOW_MS', t ? 1_500 : 8_000),
     connPerMinute: num(env, 'CONN_PER_MINUTE', t ? 10_000 : 30),
 
     botMinDelayMs: t ? 20 : 800,

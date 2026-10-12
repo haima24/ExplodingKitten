@@ -1,4 +1,4 @@
-# Dev spec — US-019 Peek (look at the top 3 cards)
+# Dev spec — US-019 See the Future (look at the top 3 cards)
 
 | Item | Value |
 | --- | --- |
@@ -31,14 +31,15 @@ The player secretly sees the top three cards of the draw pile; nobody else does.
 - Opened from the event; kept in `ui.peek` (memory only). **Got it** and reducer cleanup set `ui.peek = null`, so card data does not remain in the store or DOM.
 - Draw and Play behind the overlay are inert (modal).
 - Screen reader: reads "Top card: {name}. Second card: {name}. Third card: {name}." in order.
-- Reconnecting while open: the overlay is gone (the data is not resent); the player can Peek again only by playing another Peek.
+- Reconnecting while open: the overlay is gone (the data is not resent); the player can See the Future again only by playing another See the Future.
 
 ## 3. Edge cases and errors
 
+- Timing: with profile `mvp+should`, the effect described above resolves after the Nope window (US-062). A stopped card stays in the discard pile and has no effect. Public `EFFECT_APPLIED` marks the moment it takes effect.
 - Fewer than 3 cards: show only what exists.
-- Peek then Hop Over: legal.
+- See the Future then Skip: legal.
 - Another player never receives `PEEK_RESULT` (leak scan).
-- Peek of a pile whose top is a Boom Cat: shown like any card (no extra effect).
+- See the Future of a pile whose top is an Exploding Kitten: shown like any card (no extra effect).
 
 ## 4. Verification
 
@@ -52,7 +53,7 @@ The player secretly sees the top three cards of the draw pile; nobody else does.
 
 ## 5. Tasks
 
-1. Implement the Peek branch and the private event.
+1. Implement the See the Future branch and the private event.
 2. Build `PeekOverlay`, store handling, and copy.
 3. Add leak-scan and component tests.
 

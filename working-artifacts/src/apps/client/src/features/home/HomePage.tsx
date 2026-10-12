@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { t } from '../../copy';
 import { Button, LinkButton } from '../../components/common/Button';
 import { Logo } from '../../components/common/Logo';
+import { CardIcon } from '../game/art/CardIcon';
 import { useStore } from '../../net/context';
 import s from './home.module.css';
 
@@ -75,7 +76,10 @@ export function HomePage(): JSX.Element {
         <h1>{t('app.name')}</h1>
         <p className={s['tagline']}>{t('home.tagline')}</p>
         <span className={s['cats']} aria-hidden="true">
-          🐱🙀🐟
+          <CardIcon kind="COZY_CAT" size={48} />
+          <CardIcon kind="BOOM_CAT" size={48} />
+          <CardIcon kind="TREAT" size={48} />
+          <CardIcon kind="NOPE" size={48} />
         </span>
       </div>
 

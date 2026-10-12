@@ -17,7 +17,7 @@
 
 ### A1. Name proposal
 
-**Whisker Boom** (working title). The name deliberately avoids "Exploding Kittens". The product is *inspired by* that game's genre; it must not use its name, artwork, card illustrations, or branding. Alternatives: *Purr-Panic*, *Kitty Kaboom*. **Decision needed (OQ-01):** run a trademark search before any public naming.
+**Whisker Boom** (working title). The product is *inspired by* the Exploding Kittens genre and now uses that game's **card names**; it must not reuse its artwork, card illustrations, logo, or card text. Alternatives for the title: *Purr-Panic*, *Kitty Kaboom*. **Decision (product owner):** the game uses the Exploding Kittens card names (Exploding Kitten, Defuse, Skip, See the Future, Shuffle, Attack, Favor, Cat cards). The title **Whisker Boom** is kept as a working title. Trademark and copyright risk applies to any public release; run a trademark search before public naming (OQ-01).
 
 ### A2. Vision
 
@@ -35,7 +35,7 @@ A warm, colourful, browser-based card game that a family can start in under a mi
 | Persona | Description | Needs | Success looks like |
 | --- | --- | --- | --- |
 | **Mia, 7 (child player)** | Early reader, uses a tablet, short attention span; usually a **player** who joins from a link | Big pictures, few words, instant feedback, no "you lose" shame | Plays her first card unaided, laughs at a surprise, wants a rematch |
-| **Sam, 10 (confident child)** | Reads well, likes tactics and bragging rights | Real choices, fast turns, visible progress | Uses Peek/Skip deliberately and wins at least one game |
+| **Sam, 10 (confident child)** | Reads well, likes tactics and bragging rights | Real choices, fast turns, visible progress | Uses See the Future/Skip deliberately and wins at least one game |
 | **Priya, 38 (parent)** | Usually the **host**; little time | Learn rules fast, keep the room private and safe, no data collection | Creates a room and shares the link in under 30 s; trusts the content |
 | **Grandparent / remote relative, 65** | Joins remotely by tapping a link; low digital confidence, larger text needs | Readable text, clear buttons, patient pacing | Completes a game with no help screen detours |
 
@@ -96,7 +96,7 @@ Every participant is anonymous and is either a **Host** or a **Player**. A host 
 - Bot players (kept as a Could item).
 - Accounts, log-in, cloud saves, profiles, parental dashboards.
 - Ads, in-app purchases, loot boxes, timers that pressure children.
-- Reuse of any Exploding Kittens artwork, names, card text, or logos.
+- Reuse of any Exploding Kittens artwork, card text, or logos. (Card **names** are used by product-owner decision; see section A.)
 - Localisation beyond English (keep copy externalised so it is possible later).
 - Native mobile apps.
 
@@ -116,8 +116,8 @@ Bot Buddies to fill empty seats, single-device pass-and-play, QR-code joining, p
 | J1b | **Player:** tap the shared link (or **Join a room** and type the code) → pick nickname/avatar → lobby → play → winner → wait for the host's rematch or leave | Player journey (US-006, US-004, US-055, US-025, US-027) |
 | J2 | Open site → **How to Play** → read 4-card tour → back to Home | Learn before playing (US-029) |
 | J3 | Mid-game → **Menu** → Rules/Settings/Leave game (host also: End game for everyone) with confirmation | Stay in control without stopping others (US-028) |
-| J4 | Draw a Boom Cat → use Treat → hide the Boom Cat in the deck | The signature thrill (US-015, US-016) |
-| J5 | Draw a Boom Cat with no Treat → "nap time" → keep watching | Gentle elimination (US-017) |
+| J4 | Draw an Exploding Kitten → use Defuse → hide the Exploding Kitten in the deck | The signature thrill (US-015, US-016) |
+| J5 | Draw an Exploding Kitten with no Defuse → "nap time" → keep watching | Gentle elimination (US-017) |
 | J6 | First game on a phone → guided hints (Should) | Child plays unaided (US-031, US-032) |
 | J7 | Phone sleeps or the tab reloads → automatic **rejoin** into the same seat; if a player stays away too long, the host can skip them | Resilience (US-043, US-058, US-059) |
 
@@ -178,10 +178,10 @@ flowchart TD
     B -- Yes, pick a card --> C[Show effect, confirm, resolve]
     C --> B
     B -- No / done --> D[Draw top card of deck]
-    D --> E{Boom Cat?}
+    D --> E{Exploding Kitten?}
     E -- No --> F[Add to hand, end turn]
-    E -- Yes --> G{Has a Treat?}
-    G -- Yes --> H[Use Treat, tuck Boom Cat back into deck]
+    E -- Yes --> G{Has a Defuse?}
+    G -- Yes --> H[Use Defuse, tuck Exploding Kitten back into deck]
     H --> F
     G -- No --> I[Player is out: nap time]
     I --> J{One player left?}
@@ -194,27 +194,29 @@ flowchart TD
 **Turn rules (proposed).**
 - A turn = play **zero or more** action cards, then **draw one card**. Drawing ends the turn.
 - **Skip** ends the turn *without* drawing.
-- Each player starts with **1 Treat + 4 other cards**.
-- Boom Cats in the deck = **players − 1**, counted from the players who are in the room when the host presses Start. Extra Treats in the deck = **2**.
-- Invariant (derived): while ≥2 players remain, the deck always holds ≥1 Boom Cat, so the deck cannot run out mid-game.
-- **Hidden information (proposed):** the server owns the game. Each device receives only its own hand and public facts (counts, discard pile, whose turn it is). Peek results and the Boom Cat re-insert position are sent only to the player who acted.
+- Each player starts with **1 Defuse + 4 other cards**.
+- Exploding Kittens in the deck = **players − 1**, counted from the players who are in the room when the host presses Start. Extra Defuse cards in the deck = **2**.
+- Invariant (derived): while ≥2 players remain, the deck always holds ≥1 Exploding Kitten, so the deck cannot run out mid-game.
+- **Hidden information (proposed):** the server owns the game. Each device receives only its own hand and public facts (counts, discard pile, whose turn it is). See the Future results and the Exploding Kitten re-insert position are sent only to the player who acted.
 - **Absent players (proposed, OQ-15):** a disconnected player has 60 s to reconnect. The game waits only if it is that player's turn. After 60 s the host can **Keep waiting** or **Skip [Name]** (they take a nap and their cards go to the discard pile). A player who chooses **Leave game** is out immediately. If fewer than 2 players remain, the last one wins.
 
 **Proposed MVP card set** (counts are starting values, tune in playtests):
 
 | Card (original name) | Genre equivalent | Effect | Count | Priority |
 | --- | --- | --- | --- | --- |
-| **Boom Cat** | exploding card | Drawn → you are out unless you use a Treat | players − 1 | Must |
-| **Treat** | defuse | Calms a drawn Boom Cat; you tuck it back into the deck | 1 per player + 2 in deck | Must |
-| **Hop Over** | skip | End your turn without drawing | 4 | Must |
-| **Peek** | see the future | Privately look at the top 3 cards | 4 | Must |
-| **Shake Up** | shuffle | Shuffle the draw pile | 4 | Must |
-| **Cozy Cat** (5 designs) | cat cards | No effect; not playable in MVP (filler, future combos) | 15 | Must |
-| **Pass It On** | attack | Next player takes 2 turns | 4 | Should |
-| **Ask a Friend** | favor | Ask another player for a card | 4 | Should |
-| "Not so fast" interrupt | nope | Cancel an action | — | Could (complex timing) |
+| **Exploding Kitten** | exploding card | Drawn → you are out unless you use a Defuse | players − 1 | Must |
+| **Defuse** | defuse | Calms a drawn Exploding Kitten; you tuck it back into the deck | 1 per player + 2 in deck | Must |
+| **Skip** | skip | End your turn without drawing | 4 | Must |
+| **See the Future** | see the future | Privately look at the top 3 cards | 4 | Must |
+| **Shuffle** | shuffle | Shuffle the draw pile | 4 | Must |
+| **Cat card** (5 designs) | cat cards | No effect; not playable in MVP (filler, future combos) | 15 | Must |
+| **Attack** | attack | Next player takes 2 turns | 4 | Should |
+| **Favor** | favor | Ask another player for a card | 4 | Should |
+| **Nope** | nope | Stop another player's action card. Played out of turn; a Nope can itself be Noped | 5 | Should |
 
-Deck at 4 players, MVP set: 27 non-special + 2 Treats + 3 Boom Cats = 32 total, 16 dealt to hands, 16 in the draw pile.
+**Nope timing (proposed, OQ-04).** After an action card is played, and only if another player holds a Nope, a short response window opens (about 8 seconds, set by the server). Players holding a Nope may play it or let it go; each Nope flips the outcome, so an odd number stops the card. The window closes when everyone has answered or the timer ends. If nobody holds a Nope the card resolves at once.
+
+Deck at 4 players, MVP set: 27 non-special + 2 Defuse cards + 3 Exploding Kittens = 32 total, 16 dealt to hands, 16 in the draw pile.
 
 **Elimination style (OQ-05).** Default: the player is **out of the round** ("nap time"), keeps watching, and sees a friendly "cheer others on" panel. Alternative for the youngest audience: no elimination, with a points-based soft mode (Could, post-MVP).
 
@@ -242,7 +244,7 @@ stateDiagram-v2
 
 ### C6. How children and parents understand it
 
-- Icons + one-line plain-language card text ("Hop Over: skip your draw!").
+- Icons + one-line plain-language card text ("Skip: skip your draw!").
 - Tap a card once to **see what it does**, tap **Play** to commit, which prevents accidental plays.
 - A permanent **?** button opens the How to Play tour and a card guide.
 - A banner always states whose turn it is and the one thing they can do next.
@@ -260,8 +262,8 @@ stateDiagram-v2
 | F-03 | Deck composition and dealing (host starts, server deals) | **Must** | US-005, US-014 | Foundation for all play |
 | F-04 | Turn management and private hands on each device | **Must** | US-007, US-008, US-011, US-012 | Core loop; the server hides other players' hands |
 | F-05 | Hand, deck, and discard display | **Must** | US-009, US-010 | Players must see state |
-| F-06 | Core cards: Hop Over, Peek, Shake Up, Cozy Cat | **Must** | US-014 (Cozy Cat), US-018, US-019, US-020, US-040 (Cozy Cat not playable) | Smallest set giving real choices |
-| F-07 | Boom Cat / Treat mechanics and elimination | **Must** | US-015, US-016, US-017 | Defining thrill of the genre |
+| F-06 | Core cards: Skip, See the Future, Shuffle, Cat card | **Must** | US-014 (Cat card), US-018, US-019, US-020, US-040 (Cat card not playable) | Smallest set giving real choices |
+| F-07 | Exploding Kitten / Defuse mechanics and elimination | **Must** | US-015, US-016, US-017 | Defining thrill of the genre |
 | F-08 | Victory and host-led rematch | **Must** | US-025, US-026, US-027 | Completes the loop, drives retention |
 | F-09 | Rules and contextual help | **Must** | US-029, US-030, US-031 | Children must self-serve |
 | F-10 | Game menu: leave game, host ends game, confirmations | **Must** | US-028 | Prevents accidental loss; one person cannot pause a shared game |
@@ -275,8 +277,9 @@ stateDiagram-v2
 | F-18 | Rooms: host creates a room, room code and share link, lobby with host controls, expiry | **Must** | US-003, US-054, US-055, US-056 | The core of the host/player model |
 | F-19 | Join a room via link or code | **Must** | US-006 | Players need a one-step way in |
 | F-40 | Connection resilience: rejoin, absent player, host leaves | **Must** | US-043, US-058, US-059 | Mobile connections drop; a stalled game frustrates children |
-| F-21 | Pass It On card | Should | US-021 | Adds tension; adds rules load |
-| F-22 | Ask a Friend card | Should | US-022 | Adds interaction; needs a prompt on the friend's device |
+| F-21 | Attack card | Should | US-021 | Adds tension; adds rules load |
+| F-22 | Favor card | Should | US-022 | Adds interaction; needs a prompt on the friend's device |
+| F-41 | Nope card | Should | US-062 | Only out-of-turn action; needs a timed response window |
 | F-23 | Guided first game | Should | US-032 | Strong onboarding value |
 | F-24 | Recent-action log | Should | US-013 | Helps follow other turns |
 | F-26 | Text size setting | Should | US-039 | Accessibility improvement |
@@ -292,9 +295,9 @@ stateDiagram-v2
 ### D2. Scope reasoning
 
 - **Private rooms with a host and players only.** This is the product owner's direction. One role to create and control the room (host) and one to join (player) keeps the model simple and avoids accounts, friends lists, and matchmaking. It also means a **real-time server is required**, which is the largest MVP cost (see §H) and the main privacy and safety consideration (see §F).
-- **Four core action cards only.** Skip, Peek, and Shuffle give meaningful choices with one-step UI. Attack and Favor add turn-stacking and a prompt on another player's device, so they are Should.
+- **Four core action cards only.** Skip, See the Future, and Shuffle give meaningful choices with one-step UI. Attack and Favor add turn-stacking and a prompt on another player's device, so they are Should.
 - **No interrupt ("Nope") card in MVP.** Interrupts need timing windows that are hard for young children and add network-latency fairness problems.
-- **Cozy Cats are not playable.** This avoids unneeded rules, and invalid-action feedback is then demonstrable. **Decision needed (OQ-06).**
+- **Cat cards are not playable.** This avoids unneeded rules, and invalid-action feedback is then demonstrable. **Decision needed (OQ-06).**
 - **Rooms are ephemeral.** No database and no accounts. Room state lives in server memory and is deleted when the room closes or expires. A random token in the browser only lets a device rejoin its own seat.
 - **No bots in MVP.** Bots are outside the host/player model and would add AI work; they are a Could item.
 - **No chat.** A child-safety decision: players communicate outside the app (voice or video call, in the same room) and the app shows only curated names and game events.
@@ -314,11 +317,11 @@ Status key: **Existing** (verified in repo), **Proposed**. Nothing below current
 | FR-05 | Active player and every player's status are always visible | Proposed | Must | US-007 |
 | FR-06 | Each device receives only its own player's hand and public information; the server never sends hidden cards to other players | Proposed | Must | US-008, US-060 |
 | FR-07 | Player can inspect their hand, select a card, read its effect, and confirm | Proposed | Must | US-009, US-011 |
-| FR-08 | Draw ends the turn; Hop Over ends it without drawing | Proposed | Must | US-012, US-018 |
+| FR-08 | Draw ends the turn; Skip ends it without drawing | Proposed | Must | US-012, US-018 |
 | FR-09 | Deck count and discard pile top card are visible | Proposed | Must | US-010 |
-| FR-10 | Peek shows the top 3 cards privately; Shake Up shuffles | Proposed | Must | US-019, US-020 |
-| FR-11 | Boom Cat with Treat: Treat is used and the Boom Cat is re-inserted at a chosen position | Proposed | Must | US-015, US-016 |
-| FR-12 | Boom Cat without Treat: the player is out; game continues | Proposed | Must | US-017 |
+| FR-10 | See the Future shows the top 3 cards privately; Shuffle shuffles | Proposed | Must | US-019, US-020 |
+| FR-11 | Exploding Kitten with Defuse: Defuse is used and the Exploding Kitten is re-inserted at a chosen position | Proposed | Must | US-015, US-016 |
+| FR-12 | Exploding Kitten without Defuse: the player is out; game continues | Proposed | Must | US-017 |
 | FR-13 | Last remaining player wins; everyone sees the victory screen; the host chooses Play again or closes the room | Proposed | Must | US-025–US-027 |
 | FR-14 | How to Play tour, per-card info, and contextual "what now" prompts | Proposed | Must | US-029–US-031 |
 | FR-15 | Game menu with Rules, Settings, and Leave game; the host also has End game for everyone; confirmation on destructive actions | Proposed | Must | US-028 |
@@ -413,7 +416,7 @@ If the team prefers another stack, the engine/server/client split and every requ
 
 ### H5. Constraints
 
-- All art must be **original or properly licensed**. No Exploding Kittens assets.
+- All art must be **original or properly licensed**. No Exploding Kittens artwork, logos, or card text. Card names follow the Exploding Kittens set by product-owner decision.
 - Fonts must be open-licence and self-hosted.
 - Hidden-information must be enforced **on the server**; a client must never receive other players' cards.
 - A running server is now an operational dependency: hosting, monitoring, cost, and incident handling are required before launch (OQ-20).
@@ -441,7 +444,7 @@ If the team prefers another stack, the engine/server/client split and every requ
 | --- | --- | --- | --- |
 | R1 | Trademark/copyright claims over name, art, or text | Med / High | Original name, art, wording; legal review before launch |
 | R2 | Rules too complex for ages 6–7 | Med / High | Four-card MVP set, tour, per-card help, playtests, tunable counts |
-| R3 | Hidden information leaks (client inspection or a faulty server message) | Med / High | Server-authoritative game; each client gets only its own hand and public data; Peek and re-insert results go only to the acting player; tests assert no hidden data in other players' messages (US-060) |
+| R3 | Hidden information leaks (client inspection or a faulty server message) | Med / High | Server-authoritative game; each client gets only its own hand and public data; See the Future and re-insert results go only to the acting player; tests assert no hidden data in other players' messages (US-060) |
 | R4 | Small cards with 7+ in hand are hard to tap on phones | High / Med | Scrollable snap hand, two-step select/confirm, minimum visible card width |
 | R5 | Elimination upsets young children | Med / Med | "Nap time" framing, spectator panel, short rounds, quick replay |
 | R6 | Scope creep (bots, chat, matchmaking, accounts) delaying MVP | Med / High | Fixed MVP list (D1); Should items staged after core release |
@@ -463,7 +466,7 @@ If the team prefers another stack, the engine/server/client split and every requ
 | OQ-03 | Single device vs multiple devices | **Resolved (product owner):** private online rooms with host and players, each on their own device | Scope, architecture |
 | OQ-04 | Ruleset: simplified "Family Rules v0" vs fuller official-style rules | Family Rules v0, tuned by playtest | US-005, US-011–US-023 |
 | OQ-05 | Elimination style: out-of-round vs soft mode | Out-of-round with "nap time" | US-017, US-025 |
-| OQ-06 | Are Cozy Cats playable? | Not playable in MVP | US-014 |
+| OQ-06 | Are Cat cards playable? | Not playable in MVP | US-014 |
 | OQ-07 | Frontend and server stack and hosting | React + TypeScript client; Node.js + TypeScript WebSocket server sharing the engine; single instance | Stage 0 |
 | OQ-08 | Art source (in-house, commissioned, licensed) | In-house SVG placeholders, upgrade later | Stage 2 |
 | OQ-09 | Sound: include in MVP? | Could; muted by default | US-052 |

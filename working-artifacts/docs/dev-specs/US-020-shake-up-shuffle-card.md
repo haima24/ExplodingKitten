@@ -1,4 +1,4 @@
-# Dev spec — US-020 Shake Up (shuffle) card
+# Dev spec — US-020 Shuffle (shuffle) card
 
 | Item | Value |
 | --- | --- |
@@ -18,7 +18,7 @@ Shuffle the draw pile with the server's random source, keep the turn going, and 
 `PLAY_CARD` with kind `SHAKE_UP`:
 
 - Card → `discardPile`; public `CARD_PLAYED` and `DECK_SHUFFLED { playerId }`.
-- `drawPile = shuffle(drawPile, rng)` (Fisher–Yates with `Rng.nextInt`). Count unchanged; Boom Cat count unchanged (I1, I3 hold).
+- `drawPile = shuffle(drawPile, rng)` (Fisher–Yates with `Rng.nextInt`). Count unchanged; Exploding Kitten count unchanged (I1, I3 hold).
 - The turn continues: the player may play more cards or draw.
 
 ### 2.2 Randomness
@@ -33,22 +33,23 @@ The server's `Rng` is seeded from the platform secure random source. Tests injec
 
 ## 3. Edge cases and errors
 
+- Timing: with profile `mvp+should`, the effect described above resolves after the Nope window (US-062). A stopped card stays in the discard pile and has no effect. Public `EFFECT_APPLIED` marks the moment it takes effect.
 - Pile of 0 or 1 cards: shuffle is a no-op but still valid.
 - Illegal use (not your turn, wrong phase, card not in hand): standard engine errors.
-- A Peek before and after a Shake Up shows different cards (expected).
+- A See the Future before and after a Shuffle shows different cards (expected).
 
 ## 4. Verification
 
 | Check | Level |
 | --- | --- |
 | Order changes for a seeded RNG, reproducibly; multiset unchanged | U |
-| Count unchanged; Boom Cats preserved; turn not ended | U |
+| Count unchanged; Exploding Kittens preserved; turn not ended | U |
 | Toast appears; no animation under reduced motion | C |
 | Two contexts both show the toast | E |
 
 ## 5. Tasks
 
-1. Implement the Shake Up branch and shuffle helper tests.
+1. Implement the Shuffle branch and shuffle helper tests.
 2. Add toast, animation, reduced-motion handling.
 3. Add tests.
 

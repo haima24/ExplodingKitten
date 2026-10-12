@@ -16,7 +16,7 @@ Catch obvious accessibility regressions on every change and record a manual pass
 ### 2.1 Automated scans
 
 - `a11y.spec.ts` uses `axe-core` through Playwright. Helper `expectNoSeriousViolations(page)` runs with WCAG 2.2 A and AA tags and fails on **serious** or **critical** impacts, printing rule, nodes, and a screenshot.
-- Screens and states scanned (one test each): Home (with and without Rejoin banner), Create, Join (with and without errors), Lobby (host and player), Board (my turn, other's turn, card selected, menu open), Boom Cat dialog, re-insert picker, Peek overlay, Nap dialog, Rules tour (each step), Settings, Victory (host and player), connection banner states, error screen.
+- Screens and states scanned (one test each): Home (with and without Rejoin banner), Create, Join (with and without errors), Lobby (host and player), Board (my turn, other's turn, card selected, menu open), Exploding Kitten dialog, re-insert picker, See the Future overlay, Nap dialog, Rules tour (each step), Settings, Victory (host and player), connection banner states, error screen.
 - Scans run at two viewports (390×844 and 1280×800) and with reduced motion on and off.
 - Contrast is also covered by the token unit test (US-037).
 

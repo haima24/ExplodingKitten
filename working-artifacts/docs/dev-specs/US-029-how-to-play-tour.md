@@ -19,8 +19,8 @@ A short illustrated tour (≤ 5 steps) that teaches the game in about two minute
 | --- | --- | --- |
 | 1 | Goal | Be the last player still in the round |
 | 2 | Your turn | Play cards if you want, then draw one |
-| 3 | Boom Cats and Treats | Boom Cats make you nap unless you have a Treat |
-| 4 | Special cards | Hop Over, Peek, Shake Up (and later Pass It On, Ask a Friend) |
+| 3 | Exploding Kittens and Defuse cards | Exploding Kittens make you nap unless you have a Defuse |
+| 4 | Special cards | Skip, See the Future, Shuffle (and later Attack, Favor, Nope) |
 | 5 | Winning | Last player wins; the host can play again |
 
 Text is plain, ≥ 18 px, reading level ≈ age 6–7 (content review, M). Step 4 lists only cards in the current deck profile.

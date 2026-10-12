@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Draft v0.1 — **proposed**, for engineering review |
 | Last updated | 2026-10-12 |
-| Scope | One developer spec per user story (59 specs) plus this shared baseline |
+| Scope | One developer spec per user story (60 specs) plus this shared baseline |
 | Inputs | [User stories](../user-stories/README.md) · [UI/UX specification](../../ui-ux.md) · [Product brief](../../product-brief.md) |
 | Repository baseline | **No application code exists.** Every module, path, message, and command below is a *proposal*. Nothing here describes existing code. |
 
@@ -39,12 +39,12 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 
 - API: `createGame(config, players, rng)`, `applyAction(state, action, rng)`, `viewFor(state, playerId)`, `visibleEvents(events, playerId)`, `checkInvariants(state)`.
 - `Rng` is injected (`nextInt(maxExclusive)`); the engine never calls `Math.random` or `Date`.
-- Card kinds: `BOOM_CAT`, `TREAT`, `HOP_OVER`, `PEEK`, `SHAKE_UP`, `COZY_CAT`, `PASS_IT_ON`, `ASK_A_FRIEND`.
-- Actions (the client **never sends `playerId`**; the server injects it from the connection): `PLAY_CARD {cardId, targetId?}`, `DRAW`, `USE_TREAT`, `REINSERT_BOOM {position: TOP|MIDDLE|BOTTOM|RANDOM}`, `PICK_FAVOR_CARD {cardId}`, plus server-issued `LEAVE`, `REMOVE`, `SKIP_ABSENT`.
-- Phases: `turn`, `decision` (with `pending` = `TREAT_DECISION` | `REINSERT` | `FAVOR_PICK`), `finished`.
+- Card kinds: `BOOM_CAT`, `TREAT`, `HOP_OVER`, `PEEK`, `SHAKE_UP`, `COZY_CAT`, `PASS_IT_ON`, `ASK_A_FRIEND`, `NOPE`.
+- Actions (the client **never sends `playerId`**; the server injects it from the connection): `PLAY_CARD {cardId, targetId?}`, `DRAW`, `USE_TREAT`, `REINSERT_BOOM {position: TOP|MIDDLE|BOTTOM|RANDOM}`, `PICK_FAVOR_CARD {cardId}`, `NOPE`, `PASS_NOPE`, plus server-issued `LEAVE`, `REMOVE`, `SKIP_ABSENT`, `EXPIRE_NOPE` (US-062).
+- Phases: `turn`, `decision` (with `pending` = `TREAT_DECISION` | `REINSERT` | `FAVOR_PICK` | `NOPE_WINDOW`), `finished`.
 - Engine error codes: `GAME_FINISHED`, `NOT_IN_GAME`, `PLAYER_OUT`, `NOT_YOUR_TURN`, `WRONG_PHASE`, `CARD_NOT_IN_HAND`, `NOT_PLAYABLE`, `INVALID_TARGET`, `INVALID_POSITION`, `INVALID_CONFIG`.
-- Events: public `CARD_PLAYED`, `CARD_DRAWN`, `PEEKED`, `DECK_SHUFFLED`, `TREAT_USED`, `BOOM_TUCKED`, `PLAYER_OUT`, `FAVOR_REQUESTED`, `FAVOR_GIVEN`, `TURN_STARTED`, `GAME_FINISHED`; private `DRAWN_CARD`, `PEEK_RESULT`, `BOOM_DRAWN {hasTreat}`, `FAVOR_RECEIVED`.
-- Invariants I1–I8 (US-051): boom count = active players − 1; draw pile never empty of Boom Cats while ≥ 2 players are active; card conservation; current player is active; `pendingTurns ≥ 1`; out players hold no cards; `phase = decision` iff `pending`; unique card ids.
+- Events: public `CARD_PLAYED`, `CARD_DRAWN`, `PEEKED`, `DECK_SHUFFLED`, `TREAT_USED`, `BOOM_TUCKED`, `PLAYER_OUT`, `FAVOR_REQUESTED`, `FAVOR_GIVEN`, `TURN_STARTED`, `GAME_FINISHED`, `NOPE_PLAYED`, `EFFECT_APPLIED` (a played card takes effect), `NOPE_RESOLVED`; private `DRAWN_CARD`, `PEEK_RESULT`, `BOOM_DRAWN {hasTreat}`, `FAVOR_RECEIVED`.
+- Invariants I1–I8 (US-051): boom count = active players − 1; draw pile never empty of Exploding Kittens while ≥ 2 players are active; card conservation; current player is active; `pendingTurns ≥ 1`; out players hold no cards; `phase = decision` iff `pending`; unique card ids.
 
 ### 2.3 Protocol contract (`packages/protocol`, spec in US-060)
 
@@ -108,14 +108,15 @@ Dependency rules: `engine` imports nothing; `protocol` may import `engine` types
 | US-012 | [Draw a card](US-012-draw-a-card-to-end-the-turn.md) | engine, client |
 | US-013 | [Recent-action log](US-013-recent-action-message-log.md) | client |
 | US-014 | [Build the deck](US-014-build-the-deck-by-player-count.md) | engine |
-| US-015 | [Boom Cat with a Treat](US-015-draw-a-boom-cat-and-use-a-treat.md) | engine, client |
-| US-016 | [Tuck the Boom Cat back](US-016-tuck-the-boom-cat-back-into-the-deck.md) | engine, client |
-| US-017 | [Boom Cat without a Treat](US-017-draw-a-boom-cat-without-a-treat-player-is-out.md) | engine, client |
-| US-018 | [Hop Over](US-018-hop-over-skip-card.md) | engine |
-| US-019 | [Peek](US-019-peek-look-at-the-top-3-cards.md) | engine, client |
-| US-020 | [Shake Up](US-020-shake-up-shuffle-card.md) | engine |
-| US-021 | [Pass It On](US-021-pass-it-on-extra-turn-attack-card.md) | engine |
-| US-022 | [Ask a Friend](US-022-ask-a-friend-favour-card.md) | engine, client |
+| US-015 | [Exploding Kitten with a Defuse](US-015-draw-a-boom-cat-and-use-a-treat.md) | engine, client |
+| US-016 | [Tuck the Exploding Kitten back](US-016-tuck-the-boom-cat-back-into-the-deck.md) | engine, client |
+| US-017 | [Exploding Kitten without a Defuse](US-017-draw-a-boom-cat-without-a-treat-player-is-out.md) | engine, client |
+| US-018 | [Skip](US-018-hop-over-skip-card.md) | engine |
+| US-019 | [See the Future](US-019-peek-look-at-the-top-3-cards.md) | engine, client |
+| US-020 | [Shuffle](US-020-shake-up-shuffle-card.md) | engine |
+| US-021 | [Attack](US-021-pass-it-on-extra-turn-attack-card.md) | engine |
+| US-022 | [Favor](US-022-ask-a-friend-favour-card.md) | engine, client |
+| US-062 | [Nope card](US-062-nope-card.md) | engine, server, client |
 | US-023 | [Bot Buddies](US-023-bot-buddies-fill-empty-seats.md) | server |
 | US-025 | [Victory screen](US-025-victory-screen.md) | client, server |
 | US-026 | [Host starts a rematch](US-026-host-starts-a-rematch.md) | server, client |
@@ -163,5 +164,5 @@ Foundation first, then the playable core, then hardening (see [brief §J](../../
 1. **Stage 0:** US-050 → US-051 → US-060 (+ US-014 deck, US-046 started).
 2. **Stage 1:** US-003, US-004, US-006, US-054, US-055 → US-005 → US-007 – US-012, US-015 – US-020 → US-025 – US-027, US-001, US-002.
 3. **Stage 2:** US-028 – US-031, US-033 – US-043, US-056, US-058, US-059, US-061, US-040 – US-042, US-047.
-4. **Stage 3 (Should):** US-013, US-021, US-022, US-032, US-039, US-044, US-048, US-049.
+4. **Stage 3 (Should):** US-013, US-021, US-022, US-062, US-032, US-039, US-044, US-048, US-049.
 5. **Could:** US-023, US-045, US-052, US-053.

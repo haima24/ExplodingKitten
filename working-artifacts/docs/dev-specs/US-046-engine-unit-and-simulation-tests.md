@@ -19,9 +19,9 @@ Automated proof that every rule works, illegal actions change nothing, invariant
 | --- | --- |
 | `packages/engine/test/deal.test.ts` | Deal and deck counts for 2, 3, 4 players (US-014) |
 | `.../cards/*.test.ts` | One file per card (US-018 – US-022): happy paths and negatives |
-| `.../boom.test.ts` | Treat decision, re-insert, elimination, two Treats, last two players (US-015 – US-017) |
-| `.../turns.test.ts` | Turn units, Pass It On chains, elimination of the current player |
-| `.../illegal.test.ts` | Table-driven illegal actions: wrong player, missing card, Cozy Cat, Treat, out player, wrong phase, bad target |
+| `.../boom.test.ts` | Defuse decision, re-insert, elimination, two Defuse cards, last two players (US-015 – US-017) |
+| `.../turns.test.ts` | Turn units, Attack chains, elimination of the current player |
+| `.../illegal.test.ts` | Table-driven illegal actions: wrong player, missing card, Cat card, Defuse, out player, wrong phase, bad target |
 | `.../determinism.test.ts` | Same seed and actions give identical states and events |
 | `.../immutability.test.ts` | Deep-frozen inputs; no mutation |
 | `.../projection.test.ts` | `viewFor` and `visibleEvents` leak scans (US-008) |
@@ -34,7 +34,7 @@ Automated proof that every rule works, illegal actions change nothing, invariant
 - After every action assert invariants I1–I8 (`checkInvariants`) and run the leak scanner on every `PlayerView` and `visibleEvents` result.
 - Each game must terminate within a bounded number of actions (guard against infinite loops).
 - Run 10,000 seeds in CI (target under about 60 s); a nightly job may run 100,000. A failing seed is printed so the case is reproducible.
-- Output summary statistics (turns per game, Boom Cats defused) to inform balance (not asserted).
+- Output summary statistics (turns per game, Exploding Kittens defused) to inform balance (not asserted).
 
 ### 2.3 Server leak test
 

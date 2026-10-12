@@ -5,7 +5,14 @@ import { useStore } from '../../net/context';
 import { ActionBar } from './ActionBar';
 import { LogPanel } from './ActionLog';
 import { CoachMark } from './CoachMark';
-import { BoomDialog, FavorPickDialog, NapDialog, PeekOverlay, ReinsertPicker } from './GameDialogs';
+import {
+  BoomDialog,
+  FavorPickDialog,
+  NapDialog,
+  NopeDialog,
+  PeekOverlay,
+  ReinsertPicker,
+} from './GameDialogs';
 import { GameMenu } from './GameMenu';
 import { Hand } from './Hand';
 import { PlayerChips } from './PlayerChips';
@@ -72,7 +79,7 @@ export function GameBoard(): JSX.Element | null {
     return () => document.removeEventListener('pointerdown', onPointer);
   }, [selectedCardId, dispatch]);
 
-  // Short shuffle animation on the deck when anyone plays Shake Up.
+  // Short shuffle animation on the deck when anyone plays Shuffle.
   const lastShuffle = useRef<string | null>(null);
   useEffect(() => {
     const top = state.game.log[0];
@@ -118,6 +125,7 @@ export function GameBoard(): JSX.Element | null {
       {decisionKind === 'TREAT_DECISION' ? <BoomDialog /> : null}
       {decisionKind === 'REINSERT' ? <ReinsertPicker /> : null}
       {decisionKind === 'FAVOR_PICK' ? <FavorPickDialog /> : null}
+      {decisionKind === 'NOPE_WINDOW' ? <NopeDialog /> : null}
       {nap ? <NapDialog /> : null}
       {peek ? <PeekOverlay cards={peek} /> : null}
     </div>

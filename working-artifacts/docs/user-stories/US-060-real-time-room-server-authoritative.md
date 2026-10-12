@@ -11,7 +11,7 @@
   - Given a state change, then the server sends each connected client **its own** `viewFor` projection within 300 ms (p95) on a local test network.
   - Given a message from a player who is not the sender of record, who is not in the room, or who acts out of turn, then it is rejected with an error code and no state changes.
   - Given duplicate or out-of-order messages (retries after reconnect), then they are ignored safely (idempotent action ids).
-  - Given an automated test inspecting every outbound message for each client, then no message contains another player's cards, the draw-pile order, or another player's Peek result.
+  - Given an automated test inspecting every outbound message for each client, then no message contains another player's cards, the draw-pile order, or another player's See the Future result.
   - Given a malformed or oversized message, then the connection is not crashed; the sender gets a generic error.
   - Given the server restarts, then clients receive a "room ended" result when they reconnect (acceptable for MVP).
   - Negative: Given a client tries to set its own role to host or change another player's hand, then the server rejects it.

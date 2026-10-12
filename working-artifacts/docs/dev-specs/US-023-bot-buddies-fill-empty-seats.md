@@ -23,8 +23,8 @@ The host can add computer players to the lobby. Bots play legal, simple turns an
 
 - Pure function `chooseAction(view: PlayerView, rng): Action | null`. **It receives only the bot's own `PlayerView`**, so it cannot cheat by construction.
 - Rules (one gentle difficulty):
-  1. `decision = TREAT_DECISION` → `USE_TREAT`; `REINSERT` → `REINSERT_BOOM` with `RANDOM`; `FAVOR_PICK` → give a random card.
-  2. On its turn: with probability 0.3 (`rng`) play Hop Over if held; otherwise play nothing else (Peek and Shake Up are optional: play Shake Up with probability 0.2 if held).
+  1. `decision = TREAT_DECISION` → `USE_TREAT`; `REINSERT` → `REINSERT_BOOM` with `RANDOM`; `FAVOR_PICK` → give a random card; `NOPE_WINDOW` → `NOPE` with probability 0.25 when no Nope has been played yet, otherwise `PASS_NOPE` (bots never chain Nopes).
+  2. On its turn: with probability 0.3 (`rng`) play Skip if held; otherwise play nothing else (See the Future and Shuffle are optional: play Shuffle with probability 0.2 if held).
   3. Otherwise `DRAW`.
   4. If only unplayable cards are held, `DRAW`.
 

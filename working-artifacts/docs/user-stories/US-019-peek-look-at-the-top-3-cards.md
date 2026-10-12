@@ -1,4 +1,4 @@
-# US-019 — Peek (look at the top 3 cards)
+# US-019 — See the Future (look at the top 3 cards)
 
 [Back to story index](README.md) | Source: [user-stories.md](../../user-stories.md)
 
@@ -7,7 +7,7 @@
 - **User story:** As a player, I want to privately look at the top three cards of the deck, so that I can decide what to do next.
 - **Context:** F-06, DAC-13.
 - **Acceptance criteria:**
-  - Given I play Peek, then an overlay appears **on my device only**, showing the top 3 cards of the draw pile in order, titled "Your secret peek!".
+  - Given I play See the Future, then an overlay appears **on my device only**, showing the top 3 cards of the draw pile in order, titled "Your secret peek!".
   - Given the draw pile has fewer than 3 cards, then only the existing cards are shown.
   - Given I press **Got it — hide**, then the overlay closes, the cards are not kept on my device, and the draw pile order is unchanged.
   - Given I peek, then it does not end my turn.

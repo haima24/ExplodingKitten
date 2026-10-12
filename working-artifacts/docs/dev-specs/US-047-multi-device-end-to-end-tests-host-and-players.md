@@ -38,7 +38,7 @@ Rules from the repo's testing instructions: Page Object Model; fixtures create p
 
 | Spec | Covers |
 | --- | --- |
-| `journey` | Host creates room, copies link, players open link and join, host starts, scripted game covering Peek, Hop Over, Shake Up, Boom Cat defused, Boom Cat elimination, menu, Leave game, win, rematch |
+| `journey` | Host creates room, copies link, players open link and join, host starts, scripted game covering See the Future, Skip, Shuffle, Exploding Kitten defused, Exploding Kitten elimination, menu, Leave game, win, rematch |
 | `errors` | Wrong code, full room, started game, closed room, rate limit message |
 | `reconnect` | Context goes offline 20 s and returns with the same hand; 70 s on that player's turn shows the host's **Skip** (use test timers); host transfer |
 | `keyboard` | One player completes the journey keyboard-only (US-035) |

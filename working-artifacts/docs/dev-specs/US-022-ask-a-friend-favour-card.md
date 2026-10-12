@@ -1,4 +1,4 @@
-# Dev spec — US-022 Ask a Friend (favour) card
+# Dev spec — US-022 Favor (favour) card
 
 | Item | Value |
 | --- | --- |
@@ -20,7 +20,7 @@ The player picks another active player, who privately chooses one of their cards
   - Card → `discardPile`; public `CARD_PLAYED` and `FAVOR_REQUESTED { requesterId, targetId }`.
   - `pending = { kind: 'FAVOR_PICK', playerId: targetId, requesterId }`; `phase = 'decision'`. The requester's turn is **not** ended.
 - `PICK_FAVOR_CARD { cardId }` by the target: card moves to the requester's hand; public `FAVOR_GIVEN { fromId, toId }` (no card); private `FAVOR_RECEIVED { card }` to the requester; `pending = null`, `phase = 'turn'`. The requester continues their turn.
-- The target may give a Treat (no protection).
+- The target may give a Defuse (no protection).
 
 ### 2.2 Server
 
@@ -34,6 +34,7 @@ The player picks another active player, who privately chooses one of their cards
 
 ## 3. Edge cases and errors
 
+- Timing: with profile `mvp+should`, the effect described above resolves after the Nope window (US-062). A stopped card stays in the discard pile and has no effect. Public `EFFECT_APPLIED` marks the moment it takes effect.
 - Target eliminated, leaves, or is skipped during the pick: favour cancelled, requester continues.
 - Requester eliminated during the pick: favour dropped.
 - Out players are not selectable.

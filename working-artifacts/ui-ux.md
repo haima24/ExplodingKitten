@@ -7,7 +7,7 @@
 | Related documents | [Product brief](product-brief.md) · [User stories](user-stories.md) |
 | Repository baseline | **No UI exists** in the repository (no components, styles, or assets). All items below are *Proposed*. See [product brief §H](product-brief.md#h-technical-context). |
 
-Terminology follows the brief: **Boom Cat** (exploding card), **Treat** (defuse), **Hop Over** (skip), **Peek** (see the future), **Shake Up** (shuffle), **Cozy Cat** (no-effect card), **Pass It On** (attack, Should), **Ask a Friend** (favor, Should). The ruleset is a product decision (OQ-04); this document never asserts it is official.
+Terminology follows the brief: **Exploding Kitten** (exploding card), **Defuse** (defuse), **Skip** (skip), **See the Future** (see the future), **Shuffle** (shuffle), **Cat card** (no-effect card), **Attack** (attack, Should), **Favor** (favor, Should), **Nope** (nope, Should). The ruleset is a product decision (OQ-04); this document never asserts it is official.
 
 Priority tags: **[M]** MVP Must, **[S]** Should, **[C]** Could, **[F]** Future / out of MVP.
 
@@ -37,9 +37,9 @@ Priority tags: **[M]** MVP Must, **[S]** Should, **[C]** Could, **[F]** Future /
 
 ### A3. Original assets and illustration direction
 
-- **Do not** copy, trace, or imitate Exploding Kittens' illustrations, typography, card layouts, colours, logo, or card names.
+- **Do not** copy, trace, or imitate Exploding Kittens' illustrations, typography, card layouts, colours, or logo. Card **names** are the Exploding Kittens names by product-owner decision.
 - Characters: an original cast of **four round animal friends** (placeholder names: Biscuit the tabby, Pip the grey kitten, Marmalade the orange cat, Mochi the white cat) used as player avatars. Style: simple geometric shapes, 2–3 flat colours each, 3 px ink outline.
-- The **Boom Cat** is a surprised, *cute* cat in a puff of confetti and glitter, not a bomb, flames, or anything frightening.
+- The **Exploding Kitten** is a surprised, *cute* cat in a puff of confetti and glitter, not a bomb, flames, or anything frightening.
 - All card art is **SVG** (small, crisp at any size). Each card type has a distinct **icon silhouette**, so cards are identifiable without colour.
 - Source of art: OQ-08 (default: in-house SVG placeholders). Record the licence of every asset in an `assets/LICENSES.md`.
 
@@ -68,10 +68,10 @@ All values are **Proposed** starting tokens (no existing design system in the re
 | `--color-ink-soft` | Secondary text | `#4A4468` | ≈ 8:1 on bg |
 | `--color-primary` | Main buttons, active-player highlight | `#5B3FD9` | White text ≈ 6.6:1 |
 | `--color-primary-pressed` | Pressed primary | `#4A31B8` | |
-| `--color-accent` | Highlights, "your turn" glow, Treat | `#FFC83D` | Ink text ≈ 10:1 |
-| `--color-boom` | Boom Cat, danger-ish emphasis | `#C93217` | White text ≈ 5.3:1 |
+| `--color-accent` | Highlights, "your turn" glow, Defuse | `#FFC83D` | Ink text ≈ 10:1 |
+| `--color-boom` | Exploding Kitten, danger-ish emphasis | `#C93217` | White text ≈ 5.3:1 |
 | `--color-success` | Success, "safe" | `#17784A` | White text ≈ 5.5:1 |
-| `--color-info` | Info, Peek | `#0F6E8C` | White text ≈ 5.8:1 |
+| `--color-info` | Info, See the Future | `#0F6E8C` | White text ≈ 5.8:1 |
 | `--color-border` | Component borders | `#8A84A8` | ≈ 3.5:1 on white (UI component minimum 3:1) |
 | `--color-focus` | Focus ring | `#1F1A3D` + 2 px white halo | Visible on every background |
 | `--color-disabled-bg` / `-text` | Disabled controls | `#E6E2F0` / `#5E5880` | Disabled text still ≥ 4.5:1 on the disabled background |
@@ -80,14 +80,15 @@ Per-card-type colours are **decorative**; identity is always conveyed by icon + 
 
 | Card | Fill | Icon (silhouette) |
 | --- | --- | --- |
-| Boom Cat | `--color-boom` tint | Surprised cat head with confetti puff |
-| Treat | `--color-accent` tint | Fish-shaped treat |
-| Hop Over | `--color-info` tint | Hopping paw arc |
-| Peek | `--color-primary` tint | Eye with magnifier |
-| Shake Up | `--color-success` tint | Two circular arrows |
-| Cozy Cat | `--color-surface-alt` | Sleeping cat on a cushion |
-| Pass It On *(S)* | orange tint | Arrow handing off a paw |
-| Ask a Friend *(S)* | teal tint | Speech bubble with a paw |
+| Exploding Kitten | `--color-boom` tint | Surprised cat head with confetti puff |
+| Defuse | `--color-accent` tint | Fish-shaped treat |
+| Skip | `--color-info` tint | Hopping paw arc |
+| See the Future | `--color-primary` tint | Eye with magnifier |
+| Shuffle | `--color-success` tint | Two circular arrows |
+| Cat card | `--color-surface-alt` | Sleeping cat on a cushion |
+| Attack *(S)* | orange tint | Arrow handing off a paw |
+| Favor *(S)* | teal tint | Speech bubble with a paw |
+| Nope *(S)* | red tint | Stop sign with a crossed-out paw |
 
 ### B2. Typography
 
@@ -166,7 +167,7 @@ Single SVG icon set, 2 px stroke, rounded caps, 24/32/48 px sizes, `currentColor
 | **Toast / action message** | Bottom-centre (above hand), 4 s minimum, dismissible, does not steal focus. Replaced by the **action log** in the game menu / log panel **[S]**. |
 | **Connection banner** | Top of the screen, below the header, `role="status"`. States: "Connecting…", "Reconnecting… your cards are safe", "Back online" (auto-dismisses after 3 s). Never blocks the board. A text label is always shown with the icon. |
 | **Absent-player banner** | Shown to everyone when the player whose turn it is has lost connection: "Waiting for Pip to come back…" with a 60 s countdown shown as text. After 60 s the **host** also sees **Keep waiting** and **Skip Pip**. |
-| **Inline error** (invalid action) | Appears next to the attempted control, friendly wording, icon + text, `role="status"`. Example: "Cozy Cats just like to cuddle. Pick another card!" Never red-only. |
+| **Inline error** (invalid action) | Appears next to the attempted control, friendly wording, icon + text, `role="status"`. Example: "Cat cards just like to cuddle. Pick another card!" Never red-only. |
 | **Info popover** (card help) | Opens on tap/Enter (not hover). Closes with Escape, outside tap, or close button. |
 | **Modal dialog** | `role="dialog"` with `aria-modal`, labelled title, focus trapped and returned to the invoking control on close, Escape closes (except forced-choice dialogs), scrim `--scrim`. Max width 560 px; becomes a bottom sheet on phones. |
 | **Confirmation dialog** | Title states the consequence; the safe action is the primary, auto-focused button; destructive action is a separate danger button on the other side. |
@@ -229,10 +230,10 @@ Use `100dvh` (with fallback) so mobile browser toolbars never hide the hand. Res
 │   │ 12  │        │CARD │     │  <- draw pile (tappable), discard pile
 │   └─────┘        └─────┘     │
 ├──────────────────────────────┤
-│ ◄ [Hop][Peek][Cozy][Treat] ► │  <- scroll-snap hand, 7 cards
-│        (selected: Peek ✓)    │
+│ ◄ [Hop][See the Future][Cozy][Defuse] ► │  <- scroll-snap hand, 7 cards
+│        (selected: See the Future ✓)    │
 ├──────────────────────────────┤
-│ [   Play “Peek”  ]  [ Draw ] │  <- primary action bar (56 px)
+│ [   Play “See the Future”  ]  [ Draw ] │  <- primary action bar (56 px)
 └──────────────────────────────┘
 ```
 
@@ -249,10 +250,10 @@ Use `100dvh` (with fallback) so mobile browser toolbars never hide the hand. Res
 │            ┌──────┐   ┌──────┐                       ┌───────────┐ │
 │            │ DECK │   │ DISC.│                       │ Last move │ │
 │            │  12  │   │ Hop  │                       │ Pip played│ │
-│            └──────┘   └──────┘                       │ Shake Up  │ │
+│            └──────┘   └──────┘                       │ Shuffle  │ │
 │                                                      └───────────┘ │
-│  [Hop] [Peek✓] [Shake] [Cozy] [Cozy] [Treat] [Skip]                │
-│  [ Play “Peek” ]  [ Draw a card ]                                  │
+│  [Hop] [See the Future✓] [Shake] [Cozy] [Cozy] [Defuse] [Skip]                │
+│  [ Play “See the Future” ]  [ Draw a card ]                                  │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -287,7 +288,7 @@ Player view of the lobby: the same page without Remove, Start, and Close room; t
 
 ## D. Screen Specifications
 
-Routes (Proposed, path based, so that browser Back and shared links work): `/` Home, `/create` (host identity), `/join` (enter code), `/join/:code` (code prefilled from a share link), `/room/:code` (lobby and game states), `/rules`, `/settings`. Game states (board, Peek, Boom, victory) are **states** of `/room/:code`. A room code in the URL is never used as proof of membership; membership is held by the rejoin token (see US-043).
+Routes (Proposed, path based, so that browser Back and shared links work): `/` Home, `/create` (host identity), `/join` (enter code), `/join/:code` (code prefilled from a share link), `/room/:code` (lobby and game states), `/rules`, `/settings`. Game states (board, See the Future, Boom, victory) are **states** of `/room/:code`. A room code in the URL is never used as proof of membership; membership is held by the rejoin token (see US-043).
 
 ### D1. Landing / home screen — **[M]** (US-001, US-002)
 
@@ -338,7 +339,7 @@ Two entry paths share one **identity step**: pick a nickname and avatar.
 | Components | MenuButton, HelpButton, ConnectionIndicator, PlayerSeat/Chip ×N, TurnBanner, DeckPile, DiscardPile, Hand, Card, ActionBar, ToastRegion, ConnectionBanner, AbsentPlayerBanner, (Log panel **[S]**) |
 | States | See G (state catalogue). Off-turn: hand stays visible and cards can be inspected, but Play and Draw are inert and labelled "Wait for Pip". |
 | Mobile | See C1 |
-| Accessibility | Landmarks: `header` (controls), `main` (board), `region` labelled "Your hand" (list of buttons). Tab order: Menu, Help, opponents (info only, non-focusable unless interactive), Deck, Hand, Action bar. Arrow keys move within the hand (roving tabindex). Live region announces turn changes and other players' public actions ("Pip played Shake Up"). |
+| Accessibility | Landmarks: `header` (controls), `main` (board), `region` labelled "Your hand" (list of buttons). Tab order: Menu, Help, opponents (info only, non-focusable unless interactive), Deck, Hand, Action bar. Arrow keys move within the hand (roving tabindex). Live region announces turn changes and other players' public actions ("Pip played Shuffle"). |
 
 ### D5. Card selection and card action interactions — **[M]** (US-011, US-018, US-019, US-020, US-040)
 
@@ -346,23 +347,23 @@ Two entry paths share one **identity step**: pick a nickname and avatar.
 | --- | --- |
 | Purpose | Let a player understand and commit to an action card |
 | Primary action | **Play "[Card]"** |
-| Flow | 1) Tap/click/Enter a card → it raises, check badge appears, a **card detail panel** shows name, art, one-sentence effect, and whether it is playable. 2) Primary button reads **Play "Peek"** (disabled with explanation if unplayable). 3) Confirm → card animates to the discard pile → effect resolves. 4) Tap the selected card again, press Escape, or tap elsewhere → deselect. |
-| Effect-specific sub-flows | **Hop Over:** immediate, turn ends, banner for everyone "Mia hopped over her draw!", then the next player's turn begins. **Peek:** Peek overlay on the actor's device only (D5a); others see "Mia peeked". **Shake Up:** brief shuffle animation, toast for everyone "Deck shuffled!", player continues the turn. **Pass It On** **[S]**: next player takes 2 turns, banner shows "×2". **Ask a Friend** **[S]**: choose a player (large avatar buttons); the chosen player's device shows "Mia asks you for a card. Pick one to give" with their hand; when they choose, the card moves privately to Mia. If the friend is absent, the absent-player rule applies (US-058). |
+| Flow | 1) Tap/click/Enter a card → it raises, check badge appears, a **card detail panel** shows name, art, one-sentence effect, and whether it is playable. 2) Primary button reads **Play "See the Future"** (disabled with explanation if unplayable). 3) Confirm → card animates to the discard pile → effect resolves. 4) Tap the selected card again, press Escape, or tap elsewhere → deselect. |
+| Effect-specific sub-flows | **Skip:** immediate, turn ends, banner for everyone "Mia hopped over her draw!", then the next player's turn begins. **See the Future:** See the Future overlay on the actor's device only (D5a); others see "Mia peeked". **Shuffle:** brief shuffle animation, toast for everyone "Deck shuffled!", player continues the turn. **Attack** **[S]**: next player takes 2 turns, banner shows "×2". **Favor** **[S]**: choose a player (large avatar buttons); the chosen player's device shows "Mia asks you for a card. Pick one to give" with their hand; when they choose, the card moves privately to Mia. If the friend is absent, the absent-player rule applies (US-058). **Nope** **[S]**: after an action card is played, players holding a Nope see a "Nope it?" dialog (who played what, **Nope!** and **Let it go**, a seconds countdown); everyone else sees "Waiting to see if anyone plays a Nope". The result is announced ("Pip played Nope!", "Mia's Skip was stopped!"). Escape means Let it go. |
 | States | Unselected / selected / unplayable / **sent, waiting for the server** (controls inert; typically ≤ 300 ms, a spinner appears after 1 s) / resolved / rejected by the server (message shown and the card stays in the hand) |
 | Mobile | Detail panel is a compact strip above the action bar (so the hand stays visible); long text collapses with "More" |
-| Accessibility | Each card is a `button` with accessible name "Peek, action card, look at the top 3 cards. Selected." Selection state exposed via `aria-pressed` or `aria-selected` in a listbox pattern. Result announced via live region. |
+| Accessibility | Each card is a `button` with accessible name "See the Future, action card, look at the top 3 cards. Selected." Selection state exposed via `aria-pressed` or `aria-selected` in a listbox pattern. Result announced via live region. |
 
-**D5a. Peek overlay (private).** A modal on the **acting player's device only**, showing the top 3 cards face-up (left = top). Title "Your secret peek!". Primary: **"Got it — hide"**. Other players see only "Mia peeked". Closing returns to the board. Under screen readers, card names are read in order. The cards are sent to this device only when Peek is played and are not kept after the overlay closes.
+**D5a. See the Future overlay (private).** A modal on the **acting player's device only**, showing the top 3 cards face-up (left = top). Title "Your secret peek!". Primary: **"Got it — hide"**. Other players see only "Mia peeked". Closing returns to the board. Under screen readers, card names are read in order. The cards are sent to this device only when See the Future is played and are not kept after the overlay closes.
 
 ### D6. Draw interaction and Boom resolution — **[M]** (US-012, US-015, US-016, US-017)
 
 | Aspect | Specification |
 | --- | --- |
-| Purpose | Resolve the draw, including the dramatic Boom Cat moment |
+| Purpose | Resolve the draw, including the dramatic Exploding Kitten moment |
 | Primary action | Tap the deck / **Draw a card** |
-| Normal draw | Top card flips and slides into the hand with a short animation; toast to the drawer "You got Cozy Cat"; everyone else sees "Mia drew a card" (card not shown); the turn passes to the next player |
-| **Boom Cat with Treat** | The drawer sees a dialog "Uh-oh, a Boom Cat!" with the Boom Cat illustration and "Use your Treat to calm it down!" → primary **Use Treat**. Next: **Hide the Boom Cat** with a position picker (Top / Middle / Bottom / Random, big labelled buttons, default Random; "Pick where to tuck it in, secretly!"). The picker choice goes only to the server and is never shown to others. Everyone else sees a banner "Mia found a Boom Cat and used a Treat!" then "Boom Cat tucked back in!". The turn then passes. |
-| **Boom Cat, no Treat** | The drawer sees a dialog "Oh no, a Boom Cat popped!" with a gentle confetti puff illustration, "[Name] is out of this round and gets a nap. Cheer the others on!" (with a sleeping-cat illustration). Primary **OK**. The avatar becomes sleeping. Everyone else sees a banner "Mia is taking a nap". Not a "game over" or "you lost" phrase. |
+| Normal draw | Top card flips and slides into the hand with a short animation; toast to the drawer "You got Cat card"; everyone else sees "Mia drew a card" (card not shown); the turn passes to the next player |
+| **Exploding Kitten with Defuse** | The drawer sees a dialog "Uh-oh, an Exploding Kitten!" with the Exploding Kitten illustration and "Use your Defuse to calm it down!" → primary **Use Defuse**. Next: **Hide the Exploding Kitten** with a position picker (Top / Middle / Bottom / Random, big labelled buttons, default Random; "Pick where to tuck it in, secretly!"). The picker choice goes only to the server and is never shown to others. Everyone else sees a banner "Mia found an Exploding Kitten and used a Defuse!" then "Exploding Kitten tucked back in!". The turn then passes. |
+| **Exploding Kitten, no Defuse** | The drawer sees a dialog "Oh no, an Exploding Kitten popped!" with a gentle confetti puff illustration, "[Name] is out of this round and gets a nap. Cheer the others on!" (with a sleeping-cat illustration). Primary **OK**. The avatar becomes sleeping. Everyone else sees a banner "Mia is taking a nap". Not a "game over" or "you lost" phrase. |
 | States | Drawing / boom-with-treat / reinserting / boom-no-treat / eliminated |
 | Accessibility | Dialog with assertive announcement; focus on primary; position picker is a radio group with descriptions |
 
@@ -372,7 +373,7 @@ Two entry paths share one **identity step**: pick a nickname and avatar.
 | --- | --- |
 | Purpose | Teach the game in under two minutes and answer "what does this card do?" |
 | Primary action | **Next** (tour) / **Back to game** |
-| Layout | **How to Play tour**: 4–5 swipeable steps with illustrations ("1 Goal", "2 Your turn", "3 Boom Cats and Treats", "4 Special cards", "5 Winning"); progress dots with text "Step 2 of 5"; Skip and Done. **Card guide**: a list of all card types with art and one-sentence effect. **Contextual help**: "?" in the game header opens the same content in a dialog (bottom sheet on mobile) without losing game state. **Turn hint line** inside the turn banner. |
+| Layout | **How to Play tour**: 4–5 swipeable steps with illustrations ("1 Goal", "2 Your turn", "3 Exploding Kittens and Defuse cards", "4 Special cards", "5 Winning"); progress dots with text "Step 2 of 5"; Skip and Done. **Card guide**: a list of all card types with art and one-sentence effect. **Contextual help**: "?" in the game header opens the same content in a dialog (bottom sheet on mobile) without losing game state. **Turn hint line** inside the turn banner. |
 | States | Opened from Home; opened mid-game (the game **keeps running** for everyone; the dialog covers only this player's screen, and a small "Your turn!" indicator stays visible if it becomes their turn); first-play coach marks **[S]** (sequence of ≤ 4 dismissible tips, never repeated once dismissed; remembered locally) |
 | Mobile | Swipe, plus visible Next/Previous buttons (no swipe-only) |
 | Accessibility | Step content is a normal reading order; no auto-advance; Escape closes the dialog; no hover tooltips; text ≥ 18 px |
@@ -398,7 +399,7 @@ In an online game **nobody can pause for everyone**, so the menu opens over this
 | --- | --- |
 | Purpose | Celebrate and decide what's next |
 | Primary action | Host: **Play again**. Players: wait for the host, or **Leave room**. |
-| Layout | Winner avatar large with a celebration; headline "Mia wins the round!"; short, kind recap ("Pip and Sam took naps"); stats: turns played, Boom Cats defused (simple, fun). **Host:** **Play again** (primary) and **Close room**. **Players:** the text "Waiting for [Host] to play again" and **Leave room**. |
+| Layout | Winner avatar large with a celebration; headline "Mia wins the round!"; short, kind recap ("Pip and Sam took naps"); stats: turns played, Exploding Kittens defused (simple, fun). **Host:** **Play again** (primary) and **Close room**. **Players:** the text "Waiting for [Host] to play again" and **Leave room**. |
 | States | Default; reduced motion (static starburst); 2-player vs multi-player copy; host disconnected (see US-059); a player left (list updates) |
 | Mobile | Stack vertically; buttons full width |
 | Accessibility | Heading announced on arrival; focus lands on the heading then Play again; no sound-only cues |
@@ -435,20 +436,20 @@ Single-device pass-and-play (with a handoff screen), Bot Buddies seat selector *
 
 ### E2. Card selection and play
 
-See D5. Rules: one selected card at a time; selection never changes game state; only **Play** does. Playing a card that has a free, immediate effect (Hop Over) still needs the Play confirmation, as a deliberate two-step, to protect children from accidental taps. Cards for which playing would be pointless are not blocked unless illegal (see E6).
+See D5. Rules: one selected card at a time; selection never changes game state; only **Play** does. Playing a card that has a free, immediate effect (Skip) still needs the Play confirmation, as a deliberate two-step, to protect children from accidental taps. Cards for which playing would be pointless are not blocked unless illegal (see E6).
 
 ### E3. Draw interaction
 
 The deck is both a large tappable target and the **Draw a card** button in the action bar (same action, two ways). It is enabled only for the active player. After the draw the turn is over and the next player's device becomes active; there is no handoff screen.
 
-### E4. Boom Cat and Treat feedback
+### E4. Exploding Kitten and Defuse feedback
 
-See D6. Principles: **surprise, not scare**; **always a clear next step**; **names the cause** ("a Boom Cat popped"); **never uses "you lose"**; spectators see a short, friendly recap.
+See D6. Principles: **surprise, not scare**; **always a clear next step**; **names the cause** ("an Exploding Kitten popped"); **never uses "you lose"**; spectators see a short, friendly recap.
 
 ### E5. Card explanations and confirmation
 
 - First tap = **explain** (detail panel), second step = **confirm** (Play).
-- Every card's effect text is ≤ 12 words, e.g. "Hop Over: skip your draw and end your turn." / "Treat: calms a Boom Cat so you can stay in."
+- Every card's effect text is ≤ 12 words, e.g. "Skip: skip your draw and end your turn." / "Defuse: calms an Exploding Kitten so you can stay in."
 - Confirmation dialogs are used **only** for destructive or irreversible out-of-game choices (leave game, end game, remove player, close room). In-game plays use the select → Play pattern, not an extra "Are you sure?".
 
 ### E6. Invalid actions and error recovery
@@ -456,12 +457,12 @@ See D6. Principles: **surprise, not scare**; **always a clear next step**; **nam
 | Situation | Behaviour | Message (friendly) |
 | --- | --- | --- |
 | Tap Play while no card selected | Play disabled; hint reads "Pick a card first" | "Pick a card to play, or draw." |
-| Select Cozy Cat and press Play | Not allowed | "Cozy Cats just like to cuddle. Pick another card!" |
+| Select Cat card and press Play | Not allowed | "Cat cards just like to cuddle. Pick another card!" |
 | Tap Draw / Play when it is another player's turn | Controls inert | "Wait for Pip's turn." |
 | Server rejects an action (for example a stale tap just after the turn changed) | State unchanged; the card stays in the hand | "Oops, that was too late. It's Pip's turn now." |
 | Connection is down when tapping Draw / Play | Controls inert until reconnected | "Reconnecting… try again in a moment." |
-| Tap Treat directly in hand | Not playable (used only when a Boom Cat is drawn) | "Treats save you automatically when a Boom Cat shows up." |
-| Ask a Friend with no valid target **[S]** | Blocked | "Nobody has a card to share." |
+| Tap Defuse directly in hand | Not playable (used only when an Exploding Kitten is drawn) | "Defuse cards save you automatically when an Exploding Kitten shows up." |
+| Favor with no valid target **[S]** | Blocked | "Nobody has a card to share." |
 | Engine receives an illegal action (bug) | State unchanged, error logged to console only | Generic "That move didn't work. Try something else." |
 | Unexpected exception | Error boundary screen (D11) | "Oops, something went wrong." |
 
@@ -473,8 +474,8 @@ Rules: no state change on invalid input; message appears next to the source cont
 
 ### E8. Multi-device events and private information (proposal)
 
-- **Public events** are shown to everyone in a banner or toast and announced politely: whose turn it is, a card played (name visible), a card drawn (card hidden), a Treat used, a player out, a player disconnected, reconnected, or removed, and the winner.
-- **Private events** go only to the player concerned: their own hand, Peek results, the Boom Cat dialog and position picker, and Ask a Friend prompts.
+- **Public events** are shown to everyone in a banner or toast and announced politely: whose turn it is, a card played (name visible), a card drawn (card hidden), a Defuse used, a player out, a player disconnected, reconnected, or removed, and the winner.
+- **Private events** go only to the player concerned: their own hand, See the Future results, the Exploding Kitten dialog and position picker, and Favor prompts.
 - Public banners queue so that two events never overlap; each stays ≥ 2 s and is skippable by tap.
 - If a player is absent when it is their turn, everyone sees the absent-player banner (B8) and the host gets **Keep waiting** and **Skip [Name]** after 60 s.
 
@@ -505,10 +506,10 @@ All functionality keyboard-operable. Visible focus indicator (≥ 3:1, ≥ 2 px,
 ### F7. Screen-reader support
 - Landmarks and headings per screen; `lang="en"`.
 - Hand = labelled list of buttons; card names include type and effect.
-- A single polite **live region** announces: turn changes, other players' public actions, cards drawn/played, Boom events, eliminations, joins and leaves, connection changes, victory. Assertive only for Boom Cat dialogs.
+- A single polite **live region** announces: turn changes, other players' public actions, cards drawn/played, Boom events, eliminations, joins and leaves, connection changes, victory. Assertive only for Exploding Kitten dialogs.
 - The game menu removes hidden hand content from the accessibility tree (`inert`/not rendered); other players' hands are never sent to the device, so they cannot be read by assistive technology.
 - The room code is read letter by letter; copy results are announced.
-- Peek overlay reads the three cards in order.
+- See the Future overlay reads the three cards in order.
 - Dragging is never the only way to act (WCAG 2.5.7).
 
 ### F8. Reduced motion and sensory safety
@@ -541,9 +542,9 @@ Honour `prefers-reduced-motion` and the in-app toggle (US-038). No flashing more
 | S7 | **Card selected** | Hand | Raised card, check badge, detail panel, Play enabled (if playable) | US-011 |
 | S8 | **Card unplayable selected** | Hand | Detail panel explains why; Play disabled | US-040 |
 | S9 | **Action in progress** | Sent to the server, waiting for confirmation, then animation | Controls inert, `aria-busy`; ≤ 300 ms typical; spinner after 1 s; animation ≤ 600 ms and skippable | US-011 |
-| S10 | **Peek viewing** | Peek overlay | Modal with 3 cards, "Got it — hide" | US-019 |
-| S11 | **Boom Cat drawn (has Treat)** | Dialog | Use Treat → position picker | US-015, US-016 |
-| S12 | **Boom Cat drawn (no Treat) / player out** | Dialog → spectator state | Out marker, "nap time", game continues | US-017 |
+| S10 | **See the Future viewing** | See the Future overlay | Modal with 3 cards, "Got it — hide" | US-019 |
+| S11 | **Exploding Kitten drawn (has Defuse)** | Dialog | Use Defuse → position picker | US-015, US-016 |
+| S12 | **Exploding Kitten drawn (no Defuse) / player out** | Dialog → spectator state | Out marker, "nap time", game continues | US-017 |
 | S13 | **Invalid action** | Inline message | Friendly text + icon, no state change | US-040 |
 | S14 | **Game menu open** | Menu dialog | Hand hidden on this device only; the game continues for everyone; "Your turn" indicator if it becomes your turn | US-028 |
 | S15 | **Leave / end game / remove confirmation** | Confirmation dialog | Safe action default | US-028 |
@@ -572,7 +573,7 @@ Honour `prefers-reduced-motion` and the in-app toggle (US-038). No flashing more
 | **AppShell** | Page frame, routing, skip link, live-region host | Safe areas, `100dvh`; skip link | US-002, US-050 |
 | **Button** | Primary / secondary / danger variants with states | ≥ 48 px, full width on mobile, visible focus | all |
 | **IconButton** | Menu, Help, Settings, Copy | 48 px, accessible name, tooltip on focus/tap | US-028, US-054 |
-| **Dialog** (modal / bottom sheet) | Game menu, confirmations, Boom, Peek, help | Focus trap and return, Esc, `aria-modal`; sheet on phones | US-028, US-029 |
+| **Dialog** (modal / bottom sheet) | Game menu, confirmations, Boom, See the Future, help | Focus trap and return, Esc, `aria-modal`; sheet on phones | US-028, US-029 |
 | **ToastRegion / Announcer** | Visual messages + live-region announcements | Polite, not focus-stealing, ≥ 4 s | US-007, US-040 |
 | **Logo / Illustration** | Branding and art (SVG) | Decorative `aria-hidden`; scales | US-001 |
 | **CodeInput** | Enter or paste a room code | One field or 6 boxes, uppercase, rejects look-alike characters, error text; announces errors | US-006 |
@@ -589,11 +590,12 @@ Honour `prefers-reduced-motion` and the in-app toggle (US-038). No flashing more
 | **Hand** | Scroll-snap row of cards with roving tabindex | Arrow-key nav; ≥ 56 px visible width; scroll hints | US-009 |
 | **CardDetailPanel** | Name, art, effect, playable status | Collapsible on mobile; read by SR | US-011, US-030 |
 | **DeckPile** | Draw pile with count; tappable | Same action as Draw button; label "Draw pile, 12 cards" | US-010, US-012 |
-| **DiscardPile** | Top discarded card; empty state | Label "Discard pile, top card Peek" | US-010 |
+| **DiscardPile** | Top discarded card; empty state | Label "Discard pile, top card See the Future" | US-010 |
 | **ActionBar** | Play selected / Draw | Fixed bottom on phones; 56 px | US-011, US-012 |
+| **NopeDialog** | Response prompt shown only to players who hold a Nope while a card is waiting | Modal with countdown; Escape = Let it go | US-062 |
 | **PeekOverlay** | Private view of top 3 cards on the actor's device | Modal; removes content on close | US-019 |
-| **BoomDialog** | Boom Cat with/without Treat | Assertive announcement; focus on primary | US-015, US-017 |
-| **ReinsertPicker** | Choose where to put the Boom Cat | Radio group with descriptions | US-016 |
+| **BoomDialog** | Exploding Kitten with/without Defuse | Assertive announcement; focus on primary | US-015, US-017 |
+| **ReinsertPicker** | Choose where to put the Exploding Kitten | Radio group with descriptions | US-016 |
 | **GameMenu** | Back to game / Rules / Settings / Leave game; host: End game, Remove player | Hides own hand; game continues; Esc closes | US-028 |
 | **ConfirmDialog** | Destructive confirmations | Safe default focus | US-028 |
 | **RulesTour** | Step-based How to Play | Buttons + swipe; progress text | US-029 |
@@ -620,16 +622,16 @@ Observable criteria for developers and testers. Each maps to one or more stories
 | DAC-01 | Home shows **Create a room**, **Join a room**, **How to Play**, and **Settings**, with Create visually dominant and reachable within 1 tap or Enter key from page load | US-001 |
 | DAC-02 | Every screen has Menu/Help (in-game) or Back/Home in a consistent position; browser Back during a game opens the game menu rather than leaving silently | US-002, US-028 |
 | DAC-03 | The host can create a room after picking a curated name and an avatar; a player can join from the same identity step; avatars are unique within a room; no free-text name field exists | US-003, US-004, US-006 |
-| DAC-04 | After Start, each player holds 1 Treat plus 4 other cards; the draw pile count matches the deck definition | US-005, US-014 |
+| DAC-04 | After Start, each player holds 1 Defuse plus 4 other cards; the draw pile count matches the deck definition | US-005, US-014 |
 | DAC-05 | The active player's name and a one-line hint are visible in the turn banner on every board state, and changes are announced to screen readers | US-007, US-031 |
 | DAC-06 | A device never receives or renders another player's hand; the player's own hand is hidden only while the game menu is open; the accessibility tree contains no other player's cards | US-008, US-060 |
 | DAC-07 | Selecting a card does not change game state; only **Play** does; selection is shown by raise + check badge + outline (not colour only) | US-011 |
 | DAC-08 | Drawing ends the turn; the draw is possible by tapping the deck or pressing **Draw** | US-012 |
 | DAC-09 | Deck count and discard top card are visible and update after every action | US-010 |
-| DAC-10 | Boom Cat with a Treat: Treat is consumed, the Boom Cat can be placed at Top/Middle/Bottom/Random, and the player stays in | US-015, US-016 |
-| DAC-11 | Boom Cat without a Treat: the dialog says the player is out of this round ("nap time"), the seat shows an out marker, and play continues with the remaining players | US-017 |
-| DAC-12 | Cozy Cat shows a clear reason on Play attempt and does not change state | US-040 |
-| DAC-13 | Peek shows exactly the top 3 cards (or fewer if the pile is smaller), only after Peek is played, and hides them on close | US-019 |
+| DAC-10 | Exploding Kitten with a Defuse: Defuse is consumed, the Exploding Kitten can be placed at Top/Middle/Bottom/Random, and the player stays in | US-015, US-016 |
+| DAC-11 | Exploding Kitten without a Defuse: the dialog says the player is out of this round ("nap time"), the seat shows an out marker, and play continues with the remaining players | US-017 |
+| DAC-12 | Cat card shows a clear reason on Play attempt and does not change state | US-040 |
+| DAC-13 | See the Future shows exactly the top 3 cards (or fewer if the pile is smaller), only after See the Future is played, and hides them on close | US-019 |
 | DAC-14 | Last player standing triggers the victory screen on every device; the host sees **Play again** and **Close room**; players see "Waiting for [Host]" and **Leave room**; Play again returns everyone to the lobby with names and avatars kept | US-025–US-027 |
 | DAC-15 | The How to Play tour has ≤ 5 steps, is reachable from Home and in-game, and returning from it keeps the game state | US-029, US-031 |
 | DAC-16 | Each card type has an info view with ≤ 12 words of effect text, available by tap/keyboard (no hover-only) | US-030 |
@@ -646,14 +648,14 @@ Observable criteria for developers and testers. Each maps to one or more stories
 | DAC-27 | First load makes zero third-party requests and sets no cookies; the only data sent to the server is the room code, the curated nickname, the avatar id, and game actions; no personal data is requested | US-042 |
 | DAC-28 | LCP ≤ 2.5 s and Lighthouse Performance ≥ 90 on home (proposed budget) | US-049 |
 | DAC-29 | After a reload or a short connection loss (≤ 60 s) the same device returns to the same seat with the same hand; a **Rejoin** banner appears on Home when applicable; actions are inert while offline | US-043 |
-| DAC-30 | Original art only: no Exploding Kittens names, logos, or artwork appear in the UI or assets | US-050 |
+| DAC-30 | Original art only: no Exploding Kittens logos, artwork, or card text appear in the UI or assets. Card names are the permitted exception | US-050 |
 | DAC-31 | The host sees the room code as text with **Copy code**, **Copy link**, and (where supported) **Share…**; each copy action is announced; opening the copied link shows Join with the code prefilled | US-054, US-006 |
 | DAC-32 | The lobby lists every joined player with a Host badge and connection status text; **Start game** is enabled only for the host with 2–4 players; **Remove** needs confirmation and the removed player is told | US-055 |
 | DAC-33 | Room not found, room full, game already started, room closed, and too many attempts each show a distinct plain-language message and a way back | US-006, US-061 |
 | DAC-34 | If it is an absent player's turn, every device shows the absent-player banner with a countdown; after 60 s only the host sees **Keep waiting** and **Skip [Name]** | US-058 |
 | DAC-35 | When the host leaves or is gone beyond the window, everyone sees either "[Name] is the new host" or "The host left, so the room has closed" | US-059 |
 | DAC-36 | An expired or closed room shows "This room has ended" with a reason and a Home button on every device | US-056 |
-| DAC-37 | Peek results and the Boom Cat re-insert position are visible only on the acting player's device | US-016, US-019, US-060 |
+| DAC-37 | See the Future results and the Exploding Kitten re-insert position are visible only on the acting player's device | US-016, US-019, US-060 |
 | DAC-38 | A public action on one device (card played, draw, elimination) is visible on all other devices within 300 ms (p95) on a typical connection | US-049 |
 
 ---
