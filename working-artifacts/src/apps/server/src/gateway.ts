@@ -20,6 +20,7 @@ const MIME: Record<string, string> = {
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
+  '.mp3': 'audio/mpeg',
   '.txt': 'text/plain; charset=utf-8',
   '.webmanifest': 'application/manifest+json',
 };
@@ -56,6 +57,7 @@ function securityHeaders(req: IncomingMessage, hub: Hub): Record<string, string>
     "style-src 'self'",
     "img-src 'self' data:",
     "font-src 'self'",
+    "media-src 'self' blob:",
     `connect-src 'self' wss://${host} ws://${host}`,
     "object-src 'none'",
     "base-uri 'none'",

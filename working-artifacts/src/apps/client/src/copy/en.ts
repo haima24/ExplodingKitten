@@ -440,6 +440,7 @@ export const en = {
   'settings.voice.off': 'Voice off',
   'settings.voiceVolume': 'Voice volume',
   'settings.voice.note': 'Short spoken lines in the language you picked. Everything is also shown as text.',
+  'settings.voice.using': 'Voice used: {name}',
   'settings.voice.unavailable': "This device has no voice for the chosen language, so you may hear nothing. The text still shows.",
 
   // Spoken lines (no names, no cards in hands)

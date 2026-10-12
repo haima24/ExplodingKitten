@@ -31,7 +31,7 @@ No cookies, no analytics, no third-party scripts, fonts, images, or iframes.
 | Control | Spec |
 | --- | --- |
 | Requests | `connect-src 'self'` plus the server's `wss://` origin only |
-| CSP | `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' wss://<server-origin>; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'` |
+| CSP | `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; media-src 'self' blob:; connect-src 'self' wss://<server-origin>; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'` |
 | Other headers | `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` (the share link path contains the room code), `Permissions-Policy` denying camera, microphone, geolocation, `Cross-Origin-Opener-Policy: same-origin` |
 | Indexing | `noindex` for `/join/*` and `/room/*` (meta robots and `robots.txt`) |
 | Permissions | The app never calls camera, microphone, geolocation, or notification APIs |

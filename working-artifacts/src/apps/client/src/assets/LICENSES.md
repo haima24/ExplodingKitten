@@ -10,7 +10,7 @@ Every asset shipped with the client must be listed here with its origin and lice
 | Card icons, cat and robot avatars, logo | Original inline SVG drawn for this project (`features/game/art/CardIcon.tsx`, `AvatarArt.tsx`, `components/common/Logo.tsx`). Simple flat shapes; replace with commissioned illustrations later (UI/UX section A3) | Project original |
 | Confetti and a few decorative glyphs | Unicode emoji rendered by the visitor's system font (no files shipped) | n/a |
 | Sound effects (one per card, warning, timeout) | Generated at runtime with the Web Audio API (no audio files) | Project original |
-| Spoken lines (English and Vietnamese) | Read aloud by the visitor's browser speech engine (no audio files). Vietnamese wording is a draft for native review | Project original text |
+| Spoken lines (English and Vietnamese), `public/voice/` | 40 small MP3 files rendered by `scripts/generate-voice.py` with Microsoft neural voices (`en-US-JennyNeural`, `vi-VN-HoaiMyNeural`) through the `edge-tts` package. Text is project original; Vietnamese wording is a draft for native review | **Check Microsoft's terms before a commercial release**, or replace the files with recordings or licensed audio (same file names) |
 | `qrcode-generator` | npm package, loaded lazily when the host shows a QR code | MIT |
 
 No asset is loaded from a third-party origin.

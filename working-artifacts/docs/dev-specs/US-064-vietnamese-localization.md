@@ -16,7 +16,7 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 
 | Q | Question | Implemented |
 | --- | --- | --- |
-| Q2 | Pre-recorded or text-to-speech | The story recommends pre-recorded, name-free lines. **No recordings exist yet**, so the browser's speech engine reads the lines. The line catalog is name-free and goes through one module (`lib/voice.ts`), so recorded files can replace it later. Vietnamese voices are not guaranteed on every device; Settings says so |
+| Q2 | Pre-recorded or text-to-speech | **Pre-rendered files**, as the story recommends. The browser's speech engine gave a wrong or missing Vietnamese voice on Chrome and Firefox (Windows), so every line is a small MP3 (`public/voice/<lang>/<id>.mp3`, about 12 KB each, 40 files) made by `apps/client/scripts/generate-voice.py` from the catalog with Microsoft neural voices (Jenny for English, HoaiMy for Vietnamese). They sound the same in every browser. The browser's speech engine is only a fallback if a file cannot be played. Licence of the generated audio must be checked before a commercial release; recordings can replace the files (same names) |
 | Q3 | "Vả" or "Tấn Công" | Card name "Vả" |
 | Q4 | V01 wording | "Đến lượt bạn rút." (team's wording) |
 | Q5 | Player names | Shown as created, never translated |
@@ -70,7 +70,7 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 
 ### 3.5 Voice-over
 
-- `Settings.voice` (default off) and `voiceVolume` (default 100). `lib/voice.ts` is a lazy chunk (about 1.7 KB) loaded only after the player turns voice on.
+- `Settings.voice` (default off) and `voiceVolume` (default 100). `lib/voice.ts` is a lazy chunk loaded only after the player turns voice on; the audio files are fetched only then (all 20 lines of the chosen language are preloaded, about 250 KB).
 - Lines live in the catalog as `voice.V01` … `voice.V18` (and `V05b`), in both languages. **They never contain a player name or a card in a hand.**
 - `processGameUpdate` returns `voice: { id, priority }[]` computed for **this player** from the events they receive:
 
@@ -95,7 +95,9 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 - Because these use the same events as the log, a voice line can never reveal more than the log or the player's private events already show. Attack, Skip and the Nope result use `EFFECT_APPLIED` / `NOPE_RESOLVED`, so a stopped card is not voiced as if it happened.
 - Playback (`enqueueVoice`): one line at a time, highest priority first, lines older than 3 s are dropped, a priority-2 line cuts off a low-priority line, nothing speaks while the tab is hidden, and nothing is replayed after a reconnect (snapshots carry no events). A sound effect plays first (the voice starts after it, up to 1.5 s).
 - Controls: Settings radio and slider; a "Replay last line" button in the game banner; a note when the device has no voice for the language; turning voice on speaks a short sample.
-- Errors: any failure to speak is ignored; the text is always shown.
+- Files: each line is fetched once and kept as a local blob (plain `fetch`, so it works in every browser without range requests), then played with an audio element at the voice volume. The server serves `.mp3` as `audio/mpeg` and the content-security policy gains `media-src 'self' blob:` (see US-042). If a file is missing, blocked or refused, the browser's speech engine reads the line instead.
+- Regenerating: change a line in `en.ts` / `vi.ts`, then run `python apps/client/scripts/generate-voice.py` (needs `pip install edge-tts` and internet). `pnpm lint` fails if any voice line lacks a file in either language.
+- Errors: any failure to play is ignored; the text is always shown.
 
 ## 4. Edge cases and errors
 
@@ -122,6 +124,8 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 | Vietnamese font subsets are fetched | E (done) |
 | Reload keeps Vietnamese and shows the correct countdown | E (done) |
 | Voice lines reach only the right player; no card or name is spoken | E (done, spy on `speechSynthesis`) |
+| Lines play from the MP3 files in a full game, the speech engine is not used, no console or content-security errors | E (done, headless Chrome) |
+| Same voice in Chrome, Firefox and Edge on Windows | M (**to confirm on each**) |
 | Text expansion at 320 px and 150 % text size; tone marks on capitals not clipped | M (screenshots at 390 px reviewed; 320 px open) |
 | Native speaker approves all Vietnamese text, card names and lines | M (**required before release**) |
 | Screen reader reads Vietnamese correctly; voice and announcements do not clash | A, M |
@@ -139,5 +143,6 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 
 - Depends on US-063 (audio settings, timer lines), US-038, US-039, US-036, US-040, US-029 to US-032, US-042.
 - Risk: draft wording. Mitigation: all Vietnamese text is in `vi.ts` and `viCards`; review before release.
-- Risk: browser speech quality and Vietnamese voice availability vary by device. Mitigation: off by default, clear note, recorded files possible behind `lib/voice.ts`.
+- Risk: the generated voice files use Microsoft's service. Mitigation: licence check before a commercial release; files are replaceable by recordings with the same names.
+- Risk: pronunciation of a line may still be off. Mitigation: native-speaker review; fix by changing the line's spelling and regenerating.
 - Risk: legal text translated without review. Mitigation: visible notice (US-042 launch gate).

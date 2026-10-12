@@ -441,6 +441,7 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'settings.voice.off': 'Tắt giọng đọc',
   'settings.voiceVolume': 'Âm lượng giọng đọc',
   'settings.voice.note': 'Những câu nói ngắn bằng ngôn ngữ bạn chọn. Mọi thứ cũng hiện dưới dạng chữ.',
+  'settings.voice.using': 'Giọng đang dùng: {name}',
   'settings.voice.unavailable':
     'Thiết bị này chưa có giọng đọc cho ngôn ngữ đã chọn nên có thể bạn không nghe thấy gì. Chữ vẫn hiện bình thường.',
 

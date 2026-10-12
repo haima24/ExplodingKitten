@@ -43,26 +43,24 @@ export function SettingsPanel(): JSX.Element {
   };
 
   const [noVoice, setNoVoice] = useState(false);
+  const [voiceName, setVoiceName] = useState<string | null>(null);
   // Voices can load a moment after the page; look again when the list changes.
   useEffect(() => {
     if (!settings.voice) {
       setNoVoice(false);
       return undefined;
     }
-    let stop: (() => void) | undefined;
     let cancelled = false;
     const check = (): void => {
       void import('../../lib/voice').then((speech) => {
-        if (!cancelled) setNoVoice(!speech.voiceSupported() || !speech.hasVoiceFor(speechTag(settings.language)));
+        if (cancelled) return;
+        setNoVoice(!speech.voiceSupported());
+        setVoiceName(speech.voiceLabelFor(speechTag(settings.language)));
       });
     };
     check();
-    void import('../../lib/voice').then((speech) => {
-      if (!cancelled) stop = speech.onVoicesChanged(check);
-    });
     return () => {
       cancelled = true;
-      stop?.();
     };
   }, [settings.voice, settings.language]);
 
@@ -177,6 +175,9 @@ export function SettingsPanel(): JSX.Element {
           />
         </label>
         <p className={f['help']}>{t('settings.voice.note')}</p>
+        {settings.voice && voiceName ? (
+          <p className={f['help']}>{t('settings.voice.using', { name: voiceName })}</p>
+        ) : null}
         {noVoice ? (
           <p className={f['help']} role="status">
             {t('settings.voice.unavailable')}
