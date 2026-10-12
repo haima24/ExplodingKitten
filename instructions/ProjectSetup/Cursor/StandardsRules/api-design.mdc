@@ -1,0 +1,586 @@
+---
+description: API design standards and documentation guidelines for building professional REST APIs.
+---
+
+# API Design Rule
+
+You are designing REST API endpoints following established patterns and industry best practices.
+
+## Project API Context
+- **Framework**: [Specify your API framework, e.g., Express, FastAPI, ASP.NET Core, Spring Boot]
+- **Documentation**: [Specify tool, e.g., Swagger/OpenAPI, API Blueprint, RAML]
+- **Architecture**: [Specify pattern, e.g., RESTful, GraphQL, gRPC]
+- **Response Format**: [Specify format, e.g., JSON, XML, Protocol Buffers]
+- **Authentication**: [Specify method, e.g., JWT, OAuth2, API Keys]
+
+## RESTful API Design Principles
+
+### 1. Resource-Based URL Design
+
+**✅ Good Examples:**
+```
+GET    /api/users                     # List users
+GET    /api/users/{id}                # Get specific user
+POST   /api/users                     # Create new user
+PUT    /api/users/{id}                # Update entire user
+PATCH  /api/users/{id}                # Partial update user
+DELETE /api/users/{id}                # Delete user
+
+GET    /api/users/{id}/posts          # Get user's posts
+POST   /api/users/{id}/posts          # Create post for user
+GET    /api/posts/{id}/comments       # Get post's comments
+```
+
+**❌ Avoid:**
+```
+GET    /api/getUser/{id}              # Don't use verbs in URLs
+POST   /api/users/create              # POST implies creation
+GET    /api/user-by-id/{id}           # Use resource names, not descriptions
+POST   /api/deleteUser                # Use DELETE method, not POST with verb
+GET    /api/users/list                # GET /api/users is sufficient
+```
+
+### 2. HTTP Methods Usage
+
+| Method | Purpose | Idempotent | Safe | Request Body | Response Body |
+|--------|---------|-----------|------|--------------|---------------|
+| GET | Retrieve resources | Yes | Yes | No | Yes |
+| POST | Create resource | No | No | Yes | Yes |
+| PUT | Replace resource | Yes | No | Yes | Yes |
+| PATCH | Update resource partially | No | No | Yes | Yes |
+| DELETE | Remove resource | Yes | No | Optional | Optional |
+| HEAD | GET without body | Yes | Yes | No | No |
+| OPTIONS | Get allowed methods | Yes | Yes | No | Yes |
+
+### 3. HTTP Status Code Usage
+
+**Success Responses:**
+```
+200 OK              - Successful GET, PUT, PATCH, or DELETE
+201 Created         - Successful POST that creates a resource
+202 Accepted        - Request accepted but processing not complete
+204 No Content      - Successful DELETE or PUT with no response body
+```
+
+**Client Error Responses:**
+```
+400 Bad Request     - Invalid request syntax or validation error
+401 Unauthorized    - Authentication required or failed
+403 Forbidden       - Authenticated but not authorized
+404 Not Found       - Resource doesn't exist
+405 Method Not Allowed - HTTP method not supported for this endpoint
+409 Conflict        - Request conflicts with current state (e.g., duplicate)
+422 Unprocessable Entity - Validation errors (business rules)
+429 Too Many Requests - Rate limit exceeded
+```
+
+**Server Error Responses:**
+```
+500 Internal Server Error - Generic server error
+502 Bad Gateway     - Invalid response from upstream server
+503 Service Unavailable - Temporary overload or maintenance
+504 Gateway Timeout - Upstream server timeout
+```
+
+## Request and Response Design
+
+### 1. Request Structure
+
+**Query Parameters** (for filtering, sorting, pagination):
+```
+GET /api/users?status=active&sort=created_at&order=desc&page=1&limit=20
+```
+
+**Path Parameters** (for resource identification):
+```
+GET /api/users/{userId}/posts/{postId}
+```
+
+**Request Body** (for creating/updating):
+```json
+POST /api/users
+{
+  "email": "user@example.com",
+  "fullName": "John Doe",
+  "age": 30,
+  "preferences": {
+    "newsletter": true,
+    "notifications": false
+  }
+}
+```
+
+### 2. Response Structure
+
+**Single Resource:**
+```json
+{
+  "id": "123",
+  "email": "user@example.com",
+  "fullName": "John Doe",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-20T14:45:00Z"
+}
+```
+
+**Collection Response:**
+```json
+{
+  "data": [
+    { "id": "1", "name": "Item 1" },
+    { "id": "2", "name": "Item 2" }
+  ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 20,
+    "totalItems": 150,
+    "totalPages": 8
+  },
+  "links": {
+    "self": "/api/users?page=1",
+    "next": "/api/users?page=2",
+    "last": "/api/users?page=8"
+  }
+}
+```
+
+**Error Response:**
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "details": [
+      {
+        "field": "email",
+        "message": "Email format is invalid"
+      },
+      {
+        "field": "age",
+        "message": "Age must be between 18 and 120"
+      }
+    ]
+  },
+  "timestamp": "2024-01-15T10:30:00Z",
+  "path": "/api/users",
+  "requestId": "abc-123-def-456"
+}
+```
+
+## Input Validation
+
+### 1. Validation Levels
+
+**Format Validation:**
+- Data types (string, number, boolean, date)
+- String length constraints
+- Number ranges
+- Date formats
+- Regular expression patterns
+- Email addresses
+- URLs
+
+**Business Rule Validation:**
+- Unique constraints (e.g., email must be unique)
+- Cross-field validation (e.g., end date must be after start date)
+- Status transitions (e.g., can't cancel completed order)
+- Resource existence (e.g., referenced user must exist)
+- Permissions and authorization
+
+### 2. Validation Response Pattern
+
+```json
+HTTP/1.1 400 Bad Request
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "details": [
+      {
+        "field": "email",
+        "value": "invalid-email",
+        "message": "Must be a valid email address",
+        "code": "INVALID_FORMAT"
+      }
+    ]
+  }
+}
+```
+
+## API Documentation Standards
+
+### 1. Endpoint Documentation Template
+
+```markdown
+### [Endpoint Name]
+
+**Endpoint:** `[METHOD] /api/[resource]/[action]`
+
+**Description:** [What this endpoint does and when to use it]
+
+**Authentication:** [Required/Optional, method]
+
+**Request Headers:**
+- `Authorization`: Bearer {token}
+- `Content-Type`: application/json
+
+**Path Parameters:**
+- `id` (string, required): Resource identifier
+
+**Query Parameters:**
+- `filter` (string, optional): Filter criteria
+- `page` (integer, optional): Page number (default: 1)
+- `limit` (integer, optional): Items per page (default: 20, max: 100)
+
+**Request Body:**
+```json
+{
+  "field1": "string (required): Description",
+  "field2": "number (optional): Description"
+}
+```
+
+**Success Response (200 OK):**
+```json
+{
+  "id": "123",
+  "field1": "value"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: Invalid input or validation error
+- `401 Unauthorized`: Missing or invalid authentication
+- `404 Not Found`: Resource not found
+- `500 Internal Server Error`: Server error
+
+**Example Request:**
+```bash
+curl -X POST https://api.example.com/api/users \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "name": "John Doe"}'
+```
+
+**Example Response:**
+```json
+{
+  "id": "user_123",
+  "email": "user@example.com",
+  "name": "John Doe",
+  "createdAt": "2024-01-15T10:30:00Z"
+}
+```
+```
+
+### 2. OpenAPI/Swagger Documentation
+
+Use OpenAPI specification for machine-readable documentation:
+- Define all endpoints, parameters, and responses
+- Include examples for requests and responses
+- Document authentication requirements
+- Provide schema definitions for complex objects
+- Generate interactive API documentation
+
+## Error Handling Best Practices
+
+### 1. Consistent Error Format
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message",
+    "details": [/* Additional context */],
+    "documentation_url": "https://docs.api.com/errors/ERROR_CODE"
+  },
+  "requestId": "unique-request-id",
+  "timestamp": "2024-01-15T10:30:00Z"
+}
+```
+
+### 2. Error Categories
+
+**Validation Errors (400):**
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "One or more fields are invalid",
+    "details": [
+      {"field": "email", "message": "Invalid email format"},
+      {"field": "age", "message": "Must be at least 18"}
+    ]
+  }
+}
+```
+
+**Authentication Errors (401):**
+```json
+{
+  "error": {
+    "code": "AUTHENTICATION_REQUIRED",
+    "message": "Authentication token is missing or invalid"
+  }
+}
+```
+
+**Authorization Errors (403):**
+```json
+{
+  "error": {
+    "code": "INSUFFICIENT_PERMISSIONS",
+    "message": "You don't have permission to perform this action"
+  }
+}
+```
+
+**Not Found Errors (404):**
+```json
+{
+  "error": {
+    "code": "RESOURCE_NOT_FOUND",
+    "message": "User with ID '123' not found"
+  }
+}
+```
+
+**Server Errors (500):**
+```json
+{
+  "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "An unexpected error occurred. Please try again later.",
+    "requestId": "abc-123" // For support tracking
+  }
+}
+```
+
+## File Upload Handling
+
+### 1. File Upload Endpoint Design
+
+```
+POST /api/documents/upload
+Content-Type: multipart/form-data
+
+Fields:
+- file: binary file data
+- metadata: JSON string with file metadata
+```
+
+### 2. File Upload Security
+
+**Validation Checklist:**
+- [ ] Validate file size (enforce maximum)
+- [ ] Validate file type (MIME type and extension)
+- [ ] Scan file content headers (not just extension)
+- [ ] Sanitize filename
+- [ ] Use virus scanning (if applicable)
+- [ ] Store files outside web root
+- [ ] Generate unique filenames
+- [ ] Implement rate limiting
+
+**Example Response:**
+```json
+{
+  "id": "file_123",
+  "filename": "document.pdf",
+  "size": 1048576,
+  "mimeType": "application/pdf",
+  "url": "https://cdn.example.com/files/abc123.pdf",
+  "uploadedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+## API Versioning Strategies
+
+### 1. URL Path Versioning (Recommended)
+```
+GET /api/v1/users
+GET /api/v2/users
+```
+
+**Pros:** Clear, easy to route, supports breaking changes  
+**Cons:** Can lead to URL proliferation
+
+### 2. Header Versioning
+```
+GET /api/users
+Accept: application/vnd.api.v2+json
+```
+
+**Pros:** Clean URLs  
+**Cons:** Less visible, harder to test in browser
+
+### 3. Query Parameter Versioning
+```
+GET /api/users?version=2
+```
+
+**Pros:** Simple, backwards compatible  
+**Cons:** Can be overlooked, clutters query params
+
+## Pagination
+
+### 1. Offset-Based Pagination
+```
+GET /api/users?page=2&limit=20
+
+Response:
+{
+  "data": [...],
+  "pagination": {
+    "page": 2,
+    "pageSize": 20,
+    "totalItems": 150,
+    "totalPages": 8
+  }
+}
+```
+
+### 2. Cursor-Based Pagination (for large datasets)
+```
+GET /api/users?cursor=eyJpZCI6MTAwfQ==&limit=20
+
+Response:
+{
+  "data": [...],
+  "pagination": {
+    "nextCursor": "eyJpZCI6MTIwfQ==",
+    "hasMore": true
+  }
+}
+```
+
+## Filtering, Sorting, and Searching
+
+### 1. Filtering
+```
+GET /api/users?status=active&role=admin&created_after=2024-01-01
+```
+
+### 2. Sorting
+```
+GET /api/users?sort=created_at&order=desc
+GET /api/users?sort=-created_at  # Minus for descending
+```
+
+### 3. Searching
+```
+GET /api/users?q=john&search_fields=name,email
+```
+
+### 4. Field Selection (Sparse Fields)
+```
+GET /api/users?fields=id,name,email
+```
+
+## Rate Limiting
+
+### 1. Rate Limit Headers
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1705320600
+Retry-After: 3600
+```
+
+### 2. Rate Limit Exceeded Response
+```
+HTTP/1.1 429 Too Many Requests
+{
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "API rate limit exceeded. Please try again in 1 hour.",
+    "retryAfter": 3600
+  }
+}
+```
+
+## Security Best Practices
+
+### 1. Authentication
+- Use industry-standard methods (OAuth 2.0, JWT)
+- Implement token expiration and refresh
+- Use HTTPS for all API calls
+- Store tokens securely
+- Implement logout/revocation
+
+### 2. Authorization
+- Implement role-based access control (RBAC)
+- Validate permissions on every request
+- Use least privilege principle
+- Don't trust client-provided user IDs
+
+### 3. Input Security
+- Validate all inputs
+- Sanitize user-provided data
+- Use parameterized queries
+- Implement CSRF protection
+- Validate content-type headers
+
+### 4. Rate Limiting and Throttling
+- Implement per-user rate limits
+- Use stricter limits for expensive operations
+- Implement DDoS protection
+- Monitor for abuse patterns
+
+## API Testing Considerations
+
+### 1. Test Scenarios
+- Happy path tests (valid inputs)
+- Invalid input tests (validation)
+- Authentication/authorization tests
+- Rate limiting tests
+- Error handling tests
+- Performance/load tests
+
+### 2. Test Documentation
+- Provide example requests and responses
+- Document test data requirements
+- Include authentication setup
+- Provide test environment details
+
+## Common Anti-Patterns to Avoid
+
+### ❌ Don't Do This:
+1. Exposing internal implementation details in URLs
+2. Using different response structures for same resource
+3. Ignoring HTTP methods and status codes
+4. Returning 200 OK for errors
+5. Including sensitive data in error messages
+6. Not implementing proper pagination
+7. Inconsistent naming conventions
+8. Missing or poor error messages
+9. No API versioning strategy
+10. Ignoring security headers
+
+### ✅ Do This Instead:
+1. Use resource-based URLs
+2. Maintain consistent response structure
+3. Use appropriate HTTP methods and status codes
+4. Return correct status codes for errors
+5. Sanitize error messages for production
+6. Implement pagination for all list endpoints
+7. Follow consistent naming (camelCase or snake_case)
+8. Provide clear, actionable error messages
+9. Plan versioning from day one
+10. Implement security best practices
+
+## API Documentation Checklist
+
+- [ ] All endpoints documented
+- [ ] Request/response examples provided
+- [ ] Authentication requirements specified
+- [ ] Error responses documented
+- [ ] Rate limits documented
+- [ ] Versioning strategy explained
+- [ ] Example code provided (curl, SDK)
+- [ ] Change log maintained
+- [ ] Migration guides for breaking changes
+- [ ] Interactive API explorer (Swagger UI, etc.)
+
+---
+
+**Remember**: A well-designed API is intuitive, consistent, well-documented, and follows RESTful principles. Think from the API consumer's perspective.

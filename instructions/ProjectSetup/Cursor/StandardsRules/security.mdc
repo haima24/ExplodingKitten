@@ -1,0 +1,655 @@
+---
+description: Security best practices and implementation guidelines for building secure applications.
+---
+
+# Security Rule
+
+You are implementing security measures following industry best practices and compliance requirements.
+
+## Project Security Context
+- **Framework**: [Specify your framework and version]
+- **Data Sensitivity**: [Specify types of sensitive data handled, e.g., PII, financial, health]
+- **Compliance**: [Specify requirements, e.g., GDPR, HIPAA, PCI-DSS, SOC 2]
+- **Authentication**: [Specify method, e.g., JWT, OAuth2, Session-based]
+- **Deployment**: [Specify environment, e.g., AWS, Azure, GCP, On-premise]
+
+## Security Principles
+
+### 1. Core Security Principles (CIA Triad)
+- **Confidentiality**: Protect data from unauthorized access
+- **Integrity**: Ensure data accuracy and prevent unauthorized modification
+- **Availability**: Ensure systems and data are accessible when needed
+
+### 2. Additional Principles
+- **Defense in Depth**: Multiple layers of security
+- **Least Privilege**: Minimum necessary access
+- **Fail Securely**: Default to secure state on failure
+- **Separation of Duties**: No single point of control
+- **Keep It Simple**: Complexity is the enemy of security
+
+## Input Validation and Sanitization
+
+### 1. Input Validation Rules
+
+**Always Validate:**
+- Data type and format
+- Length and size limits
+- Allowed characters (use allow-lists)
+- Value ranges
+- Required vs. optional fields
+
+**Validation Layers:**
+- Client-side (user experience)
+- Server-side (security - ALWAYS required)
+- Database constraints (data integrity)
+
+### 2. Validation Patterns
+
+```
+[Replace with your language/framework]
+
+Example patterns:
+- Email validation with regex
+- Phone number format validation
+- Date range validation
+- File type and size validation
+- URL validation
+- Numeric range validation
+```
+
+**Common Validations:**
+```
+Email: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+Phone (US): ^\+?1?\d{10}$
+URL: ^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+Alphanumeric: ^[a-zA-Z0-9]+$
+Strong Password: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$
+```
+
+### 3. Input Sanitization
+
+**HTML Sanitization:**
+- Remove dangerous tags (`<script>`, `<iframe>`, `<object>`)
+- Escape special characters
+- Use established libraries (DOMPurify, bleach, etc.)
+
+**SQL Injection Prevention:**
+- ALWAYS use parameterized queries or ORM
+- NEVER concatenate user input into queries
+- Escape special characters if concatenation is unavoidable
+- Use least privilege database accounts
+
+**Command Injection Prevention:**
+- Avoid shell commands with user input
+- Use safe APIs instead of shell commands
+- If unavoidable, validate and escape all inputs
+- Use allow-lists for permitted commands
+
+**Path Traversal Prevention:**
+- Validate file paths
+- Canonicalize paths before use
+- Check that resolved path is within allowed directory
+- Never use user input directly in file operations
+
+## Authentication and Authorization
+
+### 1. Password Security
+
+**Password Requirements:**
+- Minimum 8 characters (12+ recommended)
+- Require complexity (uppercase, lowercase, numbers, symbols)
+- Check against common password lists
+- Implement password strength meter
+- Don't enforce frequent password changes (leads to weak passwords)
+
+**Password Storage:**
+```
+[Replace with your language/framework]
+
+Key principles:
+- NEVER store passwords in plain text
+- Use strong hashing algorithms (Argon2, bcrypt, scrypt)
+- Use salt (unique per password)
+- Use appropriate cost factor
+- Don't implement your own crypto
+```
+
+**Password Reset:**
+- Send reset token via email
+- Token should be random, long, and single-use
+- Token should expire (15-60 minutes)
+- Invalidate all sessions on password reset
+- Don't hint at whether email exists
+
+### 2. Session Management
+
+**Session Security:**
+- Generate secure, random session IDs
+- Use HttpOnly cookies (prevent XSS access)
+- Use Secure flag (HTTPS only)
+- Set SameSite attribute (CSRF protection)
+- Implement session timeout
+- Regenerate session ID on login
+- Clear session on logout
+
+**Example Cookie Settings:**
+```
+Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict; Max-Age=3600; Path=/
+```
+
+### 3. JWT (JSON Web Tokens)
+
+**JWT Best Practices:**
+- Use strong signing algorithms (RS256, ES256, not HS256 with shared secrets)
+- Set expiration time (exp claim)
+- Keep payload small
+- Don't store sensitive data in payload
+- Implement token refresh mechanism
+- Validate all claims
+- Use HTTPS only
+
+**Token Storage:**
+- Server-side: Secure, encrypted storage
+- Client-side: HttpOnly cookies (not localStorage)
+- Mobile: Secure storage (Keychain, Keystore)
+
+### 4. OAuth 2.0 and OpenID Connect
+
+**OAuth Best Practices:**
+- Use authorization code flow (not implicit flow)
+- Implement PKCE for public clients
+- Validate redirect URIs strictly
+- Use state parameter (CSRF protection)
+- Limit scope to minimum necessary
+- Store tokens securely
+
+### 5. Multi-Factor Authentication (MFA)
+
+**MFA Implementation:**
+- Support TOTP (Time-based One-Time Passwords)
+- Support SMS/Email codes (less secure but better than nothing)
+- Support hardware keys (FIDO2/WebAuthn)
+- Provide backup codes
+- Allow users to manage MFA settings
+- Don't make MFA optional for privileged accounts
+
+## Data Protection
+
+### 1. Encryption at Rest
+
+**What to Encrypt:**
+- Passwords (hashed, not encrypted)
+- Personal Identifiable Information (PII)
+- Financial data
+- Health information
+- API keys and secrets
+- Encryption keys (key encryption key)
+
+**Encryption Approach:**
+```
+[Replace with your language/framework]
+
+Key principles:
+- Use established libraries (don't roll your own)
+- Use strong algorithms (AES-256)
+- Use proper key management
+- Rotate keys periodically
+- Store keys separately from data
+```
+
+### 2. Encryption in Transit
+
+**HTTPS/TLS:**
+- Use TLS 1.2 or higher (TLS 1.3 preferred)
+- Use strong cipher suites
+- Implement HSTS (HTTP Strict Transport Security)
+- Use certificate pinning for mobile apps
+- Renew certificates before expiration
+- Redirect HTTP to HTTPS
+
+**Certificate Management:**
+- Use trusted Certificate Authorities
+- Monitor certificate expiration
+- Implement automatic renewal
+- Use wildcard or SAN certificates appropriately
+
+### 3. Sensitive Data Handling
+
+**Data Classification:**
+- **Public**: No restrictions
+- **Internal**: Company employees only
+- **Confidential**: Limited access, need-to-know basis
+- **Restricted**: Highest sensitivity (PII, financial, health)
+
+**Handling Sensitive Data:**
+- Encrypt at rest and in transit
+- Log access (audit trail)
+- Implement data retention policies
+- Provide data deletion capabilities
+- Mask data in logs and error messages
+- Minimize data collection (privacy by design)
+
+## Secure Logging
+
+### 1. What NOT to Log
+
+**Never Log:**
+- Passwords or password hashes
+- API keys or secrets
+- Session tokens or JWTs
+- Credit card numbers (PCI-DSS)
+- Social Security Numbers
+- Full personal information
+- Private keys
+- Security questions and answers
+
+### 2. What TO Log
+
+**Always Log:**
+- Authentication attempts (success/failure)
+- Authorization failures
+- Input validation failures
+- Session management events
+- System errors and exceptions
+- Security-relevant configuration changes
+- Privileged operations
+- Data access (for sensitive data)
+
+### 3. Secure Logging Practices
+
+```
+[Replace with your language/framework]
+
+Principles:
+- Use structured logging (JSON format)
+- Include correlation/request IDs
+- Include timestamps (UTC)
+- Include user identifier (not session ID)
+- Include IP address
+- Redact sensitive data
+- Implement log rotation
+- Secure log storage
+- Monitor logs for security events
+```
+
+**Example Log Entry:**
+```json
+{
+  "timestamp": "2024-01-15T10:30:00Z",
+  "level": "WARN",
+  "event": "authentication_failure",
+  "userId": "user_123",
+  "ipAddress": "192.168.1.1",
+  "userAgent": "Mozilla/5.0...",
+  "reason": "invalid_password",
+  "attemptCount": 3,
+  "requestId": "req_abc123"
+}
+```
+
+## API Security
+
+### 1. Authentication and Authorization
+
+**API Authentication:**
+- Require authentication for all endpoints (except public)
+- Use API keys for service-to-service
+- Use OAuth 2.0 for user authorization
+- Use JWT for stateless authentication
+- Implement token expiration and refresh
+
+**Authorization:**
+- Implement role-based access control (RBAC)
+- Validate permissions on every request
+- Don't trust client-provided user IDs or roles
+- Implement resource-level permissions
+- Log authorization failures
+
+### 2. Rate Limiting and Throttling
+
+**Rate Limit Strategy:**
+```
+- Per user: 100 requests per minute
+- Per IP: 1000 requests per minute
+- Per endpoint: Different limits based on cost
+- Burst protection: Allow short bursts, then throttle
+```
+
+**Rate Limit Headers:**
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1705320600
+Retry-After: 60
+```
+
+**Rate Limit Response:**
+```
+HTTP/1.1 429 Too Many Requests
+{
+  "error": "Rate limit exceeded",
+  "retryAfter": 60
+}
+```
+
+### 3. CORS (Cross-Origin Resource Sharing)
+
+**CORS Configuration:**
+```
+[Replace with your framework]
+
+Principles:
+- Whitelist specific origins (not *)
+- Be restrictive with methods
+- Limit exposed headers
+- Set appropriate max age
+- Don't allow credentials with wildcard origin
+```
+
+**Example:**
+```
+Access-Control-Allow-Origin: https://trusted-domain.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+```
+
+### 4. Security Headers
+
+**Essential Security Headers:**
+```
+# Prevent XSS attacks
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+
+# Content Security Policy
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'
+
+# HTTPS enforcement
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Referrer policy
+Referrer-Policy: strict-origin-when-cross-origin
+
+# Permissions policy
+Permissions-Policy: geolocation=(), microphone=(), camera=()
+```
+
+## File Upload Security
+
+### 1. File Upload Validation
+
+**Validation Checklist:**
+- [ ] File size limit enforced
+- [ ] File type validation (MIME type AND extension)
+- [ ] Scan file contents (not just extension)
+- [ ] Sanitize filename
+- [ ] Generate unique filename
+- [ ] Virus/malware scanning
+- [ ] Store outside web root
+- [ ] Use separate domain for uploads (if possible)
+
+### 2. File Upload Implementation
+
+```
+[Replace with your language/framework]
+
+Security measures:
+- Maximum file size: 5MB (adjust based on needs)
+- Allowed file types: Whitelist specific types
+- File content validation: Check magic numbers/headers
+- Filename sanitization: Remove special characters
+- Storage location: Outside web root or cloud storage
+- Access control: Implement authorization
+- Virus scanning: Integrate antivirus API
+```
+
+### 3. Image Upload Specific
+
+**Image Security:**
+- Validate image format
+- Re-encode images (strip metadata)
+- Generate thumbnails server-side
+- Use image processing library
+- Check image dimensions
+- Remove EXIF data (may contain sensitive info)
+
+## SQL Injection Prevention
+
+### 1. Parameterized Queries
+
+**Always Use:**
+```sql
+-- ✅ Good: Parameterized query
+SELECT * FROM users WHERE email = ? AND status = ?
+
+-- ❌ Bad: String concatenation
+SELECT * FROM users WHERE email = '" + userEmail + "' AND status = '" + status + "'"
+```
+
+### 2. ORM Usage
+
+```
+[Replace with your ORM]
+
+Safe patterns:
+- Use ORM query builders
+- Use parameterized methods
+- Avoid raw SQL when possible
+- If raw SQL needed, use parameters
+- Never interpolate user input into queries
+```
+
+### 3. Database Security
+
+**Database Hardening:**
+- Use least privilege accounts
+- Separate read/write accounts
+- Disable unnecessary features
+- Encrypt database connections
+- Implement query logging
+- Regular security updates
+- Backup regularly
+
+## XSS (Cross-Site Scripting) Prevention
+
+### 1. Output Encoding
+
+**Context-Specific Encoding:**
+```
+HTML Context: &lt;script&gt; → &lt;script&gt;
+HTML Attribute: " → &quot;
+JavaScript Context: ' → \'
+URL Context: <space> → %20
+CSS Context: Sanitize carefully
+```
+
+### 2. Content Security Policy (CSP)
+
+**CSP Implementation:**
+```
+Content-Security-Policy: 
+  default-src 'self';
+  script-src 'self' 'nonce-{random}';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  font-src 'self';
+  connect-src 'self';
+  frame-ancestors 'none';
+```
+
+### 3. XSS Prevention Checklist
+
+- [ ] Encode output based on context
+- [ ] Use framework's auto-escaping
+- [ ] Implement CSP
+- [ ] Sanitize HTML input
+- [ ] Use HttpOnly cookies
+- [ ] Validate input
+- [ ] Use templating engines with auto-escaping
+
+## CSRF (Cross-Site Request Forgery) Prevention
+
+### 1. CSRF Tokens
+
+**Token Implementation:**
+```
+[Replace with your framework]
+
+Pattern:
+1. Generate random token per session
+2. Include token in forms/AJAX requests
+3. Validate token on server
+4. Reject requests without valid token
+5. Use different tokens for different forms (optional)
+```
+
+### 2. SameSite Cookies
+
+**Cookie Configuration:**
+```
+Set-Cookie: sessionId=abc123; SameSite=Strict; Secure; HttpOnly
+```
+
+**SameSite Values:**
+- `Strict`: Never sent on cross-origin requests
+- `Lax`: Sent on top-level GET requests
+- `None`: Always sent (requires Secure flag)
+
+### 3. Additional CSRF Protection
+
+- Check Origin and Referer headers
+- Require re-authentication for sensitive actions
+- Use custom headers (e.g., X-Requested-With)
+- Implement CAPTCHA for sensitive operations
+
+## Secrets Management
+
+### 1. Never Commit Secrets
+
+**What to Avoid:**
+- API keys in code
+- Passwords in configuration files
+- Credentials in version control
+- Secrets in Docker images
+- Keys in client-side code
+
+### 2. Secrets Storage
+
+**Best Practices:**
+```
+Development: .env files (gitignored) + .env.example template
+Staging/Production: Environment variables or secret management services
+
+Secret Management Services:
+- AWS Secrets Manager
+- Azure Key Vault
+- Google Cloud Secret Manager
+- HashiCorp Vault
+- Doppler
+```
+
+### 3. Secret Rotation
+
+**Rotation Strategy:**
+- Rotate secrets periodically (90 days recommended)
+- Rotate immediately if compromised
+- Automate rotation where possible
+- Use versioning for secrets
+- Test rotation process
+
+## Error Handling Security
+
+### 1. Secure Error Messages
+
+**Production Errors:**
+```json
+❌ Bad:
+{
+  "error": "Error: SQL query failed: column 'password' not found in table 'users'",
+  "stack": "at Database.query (/app/db.js:42)"
+}
+
+✅ Good:
+{
+  "error": "An error occurred processing your request",
+  "requestId": "req_abc123"
+}
+```
+
+### 2. Error Logging vs. User Messages
+
+**Separate Concerns:**
+- Log detailed errors server-side (with stack traces)
+- Return generic messages to users
+- Include request ID for support lookup
+- Never expose system internals
+- Don't hint at valid vs. invalid usernames
+
+## Compliance and Privacy
+
+### 1. GDPR Compliance (if applicable)
+
+**GDPR Requirements:**
+- [ ] Data processing lawful basis
+- [ ] Privacy policy accessible
+- [ ] Consent mechanism implemented
+- [ ] Right to access data
+- [ ] Right to deletion
+- [ ] Right to data portability
+- [ ] Data breach notification process
+- [ ] Data Protection Impact Assessment
+
+### 2. PCI-DSS (for payment data)
+
+**PCI Requirements:**
+- Never store CVV/CVC
+- Never store full track data
+- Tokenize card numbers
+- Use PCI-compliant payment processor
+- Implement strong access controls
+- Regular security testing
+- Maintain vulnerability management
+
+### 3. Data Retention
+
+**Retention Policy:**
+```
+[Replace with your policy]
+
+Example:
+- User data: Retained until account deletion + 30 days
+- Logs: 90 days
+- Audit logs: 7 years
+- Backups: 30 days
+- Deleted data: Permanently deleted after retention period
+```
+
+## Security Checklist
+
+### Before Deploying:
+
+- [ ] All inputs validated and sanitized
+- [ ] Parameterized queries used throughout
+- [ ] Authentication implemented correctly
+- [ ] Authorization checked on every endpoint
+- [ ] Passwords hashed with strong algorithm
+- [ ] Sensitive data encrypted
+- [ ] HTTPS enforced
+- [ ] Security headers configured
+- [ ] Rate limiting implemented
+- [ ] CSRF protection enabled
+- [ ] XSS prevention measures in place
+- [ ] File uploads secured
+- [ ] Error messages don't leak information
+- [ ] Logging doesn't include sensitive data
+- [ ] Secrets not in code
+- [ ] Dependencies up to date
+- [ ] Security testing completed
+- [ ] Incident response plan exists
+
+---
+
+**Remember**: Security is not a feature; it's a requirement. Think like an attacker. Defense in depth. Keep learning about new vulnerabilities and best practices.

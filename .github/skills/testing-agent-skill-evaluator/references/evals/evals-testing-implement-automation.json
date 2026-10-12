@@ -1,0 +1,49 @@
+{
+  "skill_name": "testing-implement-automation",
+  "evals": [
+    {
+      "id": "eval-login-valid-invalid",
+      "prompt": "Create Playwright tests for login with valid credentials and invalid password. Follow Page Object Model structure. Target url: https://demo.nopcommerce.com/login ",
+      "expected_output": "Playwright test files with POM structure, meaningful assertions, and stable locators.",
+      "files": [],
+      "assertions": [
+        "The output includes at least one Playwright test file.",
+        "The test covers both valid login and invalid password scenarios.",
+        "The output separates test logic from page actions using Page Object Model.",
+        "The test uses stable locators such as getByRole, getByLabel, or data-testid.",
+        "The test includes meaningful assertions for success and error states."
+      ]
+    },
+       {
+      "id": "eval-add-single-product-to-cart",
+      "prompt": "Create a Playwright automation test for adding the product 'Build your own computer' to the shopping cart on https://demo.nopcommerce.com/. Follow the Page Object Model architecture and use stable Playwright locators.",
+      "expected_output": "A Playwright automation test using Page Object Model that successfully adds a single product to the shopping cart and verifies the cart contents.",
+      "files": [],
+      "assertions": [
+        "The output includes at least one Playwright test file.",
+        "The output follows the Page Object Model structure.",
+        "The output creates or uses a Product Page object.",
+        "The output creates or uses a Shopping Cart Page object.",
+        "The test uses stable locators such as getByRole, getByLabel, or data-testid when available.",
+        "The test verifies the success notification after adding the product.",
+        "The test verifies the shopping cart contains the expected product.",
+        "The test includes meaningful assertions."
+      ]
+    },
+   {
+      "id": "eval-add-product-guest-user",
+      "prompt": "Generate a Playwright automation test for a guest user adding a product to the shopping cart on https://demo.nopcommerce.com/. Follow Page Object Model architecture and verify guest shopping behavior.",
+      "expected_output": "A Playwright automation test validating that an anonymous user can successfully add a product to the shopping cart.",
+      "files": [],
+      "assertions": [
+        "The output follows the Page Object Model structure.",
+        "The test does not require user login.",
+        "The test successfully adds a product as a guest user.",
+        "The test verifies the shopping cart contains the selected product.",
+        "The output uses stable Playwright locators.",
+        "The test contains meaningful assertions.",
+        "The output includes human review notes before merge."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,603 @@
+---
+description: Guidelines for creating design notes and architectural decision documents.
+---
+
+# Design Notes & Architecture Rule
+
+You are assisting with creating design documentation and architectural decisions for software projects.
+
+## Project Context
+- **Architecture**: [Specify architecture pattern, e.g., Microservices, Monolith, Event-Driven]
+- **Domain**: [Specify domain, e.g., E-commerce, Healthcare, Finance]
+- **Technology Stack**: [Specify main technologies]
+- **Team Size**: [Specify team context for appropriate detail level]
+- **Documentation Tools**: [Specify tools, e.g., Confluence, Notion, Markdown]
+
+## Documentation Standards
+
+### 1. Architecture Decision Records (ADRs)
+
+**When to Create ADR:**
+- Significant architectural decisions
+- Technology choices
+- Design pattern selection
+- Major refactoring decisions
+- Trade-off decisions
+
+**ADR Template:**
+```markdown
+# ADR [Number]: [Short Title]
+
+## Status
+[Proposed | Accepted | Deprecated | Superseded by ADR-XXX]
+
+## Context
+What is the issue we're addressing? What forces are at play?
+Provide background and context for the decision.
+
+## Decision
+What is the change we're proposing or have agreed to implement?
+Use active voice: "We will..."
+
+## Consequences
+What becomes easier or more difficult as a result of this decision?
+
+### Positive Consequences
+- [Benefit 1]
+- [Benefit 2]
+
+### Negative Consequences
+- [Trade-off 1]
+- [Trade-off 2]
+
+### Risks
+- [Risk 1 and mitigation]
+- [Risk 2 and mitigation]
+
+## Alternatives Considered
+What other options were evaluated?
+
+### Alternative 1: [Name]
+Description, pros, cons, why not chosen
+
+### Alternative 2: [Name]
+Description, pros, cons, why not chosen
+
+## References
+- [Link to relevant documentation]
+- [Related ADRs]
+- [External resources]
+
+## Notes
+Additional context, implementation notes, or follow-up actions
+```
+
+**Example ADR:**
+```markdown
+# ADR 001: Use PostgreSQL as Primary Database
+
+## Status
+Accepted
+
+## Context
+We need to select a database for our application that will handle
+user data, transactions, and analytics. Requirements:
+- ACID compliance
+- Support for complex queries
+- Good performance for read-heavy workloads
+- Strong community and ecosystem
+
+## Decision
+We will use PostgreSQL 15 as our primary database.
+
+## Consequences
+
+### Positive
+- Strong ACID guarantees
+- Rich query capabilities (JSON, full-text search)
+- Excellent performance for our use case
+- Large ecosystem and community
+- Open source with commercial support available
+
+### Negative
+- Horizontal scaling requires more effort
+- More complex setup than simpler databases
+- Team needs PostgreSQL expertise
+
+### Risks
+- If we need to scale beyond single instance, will need to
+  implement sharding or read replicas
+  Mitigation: Start with read replicas, evaluate Citus if needed
+
+## Alternatives Considered
+
+### MySQL
+Pros: Wide adoption, simple replication
+Cons: Less feature-rich than PostgreSQL
+Why not: PostgreSQL's advanced features worth the complexity
+
+### MongoDB
+Pros: Flexible schema, horizontal scaling
+Cons: No ACID guarantees for multi-document transactions
+Why not: Need strong consistency for financial data
+
+## References
+- [PostgreSQL Documentation](https://postgresql.org/docs)
+- [Performance benchmarks](link)
+
+## Notes
+- Start with single instance
+- Plan for read replicas by Q2
+- Document migration strategy from current SQLite
+```
+
+### 2. API Design Documentation
+
+**API Documentation Template:**
+```markdown
+# [Feature] API Design
+
+## Overview
+Brief description of the feature and API purpose.
+
+## Business Requirements
+- [Requirement 1]
+- [Requirement 2]
+- [Requirement 3]
+
+## API Endpoints
+
+### Create [Resource]
+
+**Endpoint:** `POST /api/[resource]`
+
+**Description:** Creates a new [resource]
+
+**Authentication:** Required (JWT Bearer token)
+
+**Request Headers:**
+- `Authorization: Bearer {token}`
+- `Content-Type: application/json`
+
+**Request Body:**
+```json
+{
+  "field1": "string (required): Description",
+  "field2": "number (optional): Description",
+  "nested": {
+    "field3": "string: Description"
+  }
+}
+```
+
+**Validation Rules:**
+- field1: Required, 1-100 characters, alphanumeric
+- field2: Optional, range 0-1000
+- field3: Required if nested present
+
+**Success Response (201 Created):**
+```json
+{
+  "id": "resource_123",
+  "field1": "value",
+  "createdAt": "2024-01-15T10:30:00Z"
+}
+```
+
+**Error Responses:**
+- `400 Bad Request`: Validation error
+- `401 Unauthorized`: Missing or invalid token
+- `403 Forbidden`: Insufficient permissions
+- `409 Conflict`: Resource already exists
+- `500 Internal Server Error`: Server error
+
+**Example Request:**
+```bash
+curl -X POST https://api.example.com/api/resources \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{"field1": "example", "field2": 42}'
+```
+
+**Implementation Notes:**
+- [Note about implementation details]
+- [Special considerations]
+```
+
+### 3. Data Model Design
+
+**Data Model Documentation Template:**
+```markdown
+# [Feature] Data Model Design
+
+## Overview
+Description of data entities and their relationships.
+
+## Entity: [EntityName]
+
+**Purpose:** What this entity represents in the system
+
+**Attributes:**
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| id | UUID | PK, Required | Unique identifier |
+| name | String(100) | Required, Unique | Entity name |
+| status | Enum | Required, Default: 'active' | Current status |
+| createdAt | Timestamp | Required | Creation timestamp |
+
+**Relationships:**
+- **Has Many**: [RelatedEntity] (1:N)
+  - Foreign Key: entity_id in related_entities table
+  - On Delete: CASCADE
+- **Belongs To**: [ParentEntity] (N:1)
+  - Foreign Key: parent_id
+  - On Delete: SET NULL
+
+**Indexes:**
+- Primary: id (automatic)
+- Unique: name
+- Composite: (user_id, created_at) for user queries
+- Full-text: description for search
+
+**Business Rules:**
+- [Rule 1: Description]
+- [Rule 2: Description]
+
+**Example Data:**
+```json
+{
+  "id": "uuid-here",
+  "name": "Example Entity",
+  "status": "active",
+  "createdAt": "2024-01-15T10:30:00Z"
+}
+```
+
+**Migration Considerations:**
+- [How to migrate existing data]
+- [Backwards compatibility concerns]
+- [Performance impact]
+```
+
+## ERD (Entity Relationship Diagram)
+[Include or link to ERD diagram]
+
+## Query Patterns
+Common queries and their optimization:
+
+### Query 1: Get User's Recent Items
+```sql
+SELECT * FROM items
+WHERE user_id = ?
+ORDER BY created_at DESC
+LIMIT 20;
+
+-- Index: (user_id, created_at DESC)
+```
+```
+
+### 4. Service Layer Design
+
+**Service Documentation Template:**
+```markdown
+# [ServiceName] Service Design
+
+## Purpose
+What business capabilities this service provides.
+
+## Responsibilities
+- [Responsibility 1]
+- [Responsibility 2]
+- [Responsibility 3]
+
+## Dependencies
+- **Database**: [Tables accessed]
+- **External APIs**: [Services called]
+- **Internal Services**: [Other services used]
+- **Cache**: [Caching strategy]
+- **Queue**: [Message queues if applicable]
+
+## Interface
+
+### Method: methodName
+
+**Purpose:** What this method does
+
+**Parameters:**
+- `param1` (Type): Description
+- `param2` (Type, optional): Description
+
+**Returns:** Type - Description
+
+**Throws:**
+- `ValidationError`: When input is invalid
+- `NotFoundError`: When resource doesn't exist
+- `PermissionError`: When user lacks permission
+
+**Example Usage:**
+```[language]
+const result = await service.methodName(param1, param2);
+```
+
+**Implementation Notes:**
+- [Performance considerations]
+- [Caching strategy]
+- [Transaction boundaries]
+- [Error handling approach]
+
+## Error Handling
+How errors are handled and propagated:
+- Input validation: ValidationError (4xx)
+- Business logic: BusinessRuleError (422)
+- Infrastructure: ServiceUnavailableError (503)
+
+## Transaction Management
+- Transaction boundaries defined at [level]
+- Rollback strategy: [description]
+- Idempotency: [how ensured]
+
+## Performance Considerations
+- Expected load: [requests per second]
+- Response time SLA: [target latency]
+- Caching strategy: [description]
+- Optimization notes: [specific optimizations]
+
+## Testing Strategy
+- Unit tests: [what to test]
+- Integration tests: [what to test]
+- Performance tests: [benchmarks]
+- Mock strategy: [what to mock]
+
+## Monitoring
+- Key metrics: [metrics to track]
+- Alerts: [what triggers alerts]
+- Logging: [what to log]
+```
+
+## Design Documentation Format
+
+### 1. Feature Design Document
+
+**Template:**
+```markdown
+# [Feature Name] Design Document
+
+## Overview
+High-level description of the feature and its purpose.
+
+## Goals
+- [Goal 1]
+- [Goal 2]
+
+## Non-Goals
+- [Explicitly out of scope]
+
+## Requirements
+
+### Functional Requirements
+- FR1: [Description]
+- FR2: [Description]
+
+### Non-Functional Requirements
+- NFR1: Performance - [specific target]
+- NFR2: Security - [security requirements]
+- NFR3: Scalability - [scaling requirements]
+
+## User Stories / Use Cases
+
+### Use Case 1: [Name]
+**Actor:** [Who performs this action]
+**Preconditions:** [What must be true before]
+**Steps:**
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+**Postconditions:** [What is true after]
+**Exceptions:** [Error scenarios]
+
+## Design
+
+### High-Level Architecture
+[Diagram or description of components and their interactions]
+
+### Component Design
+
+#### Component 1: [Name]
+**Responsibilities:**
+- [Responsibility 1]
+
+**Interfaces:**
+- [Interface 1]
+
+**Dependencies:**
+- [Dependency 1]
+
+### Data Model
+[Link to or include data model documentation]
+
+### API Design
+[Link to or include API documentation]
+
+### Sequence Diagrams
+[For complex flows, include sequence diagrams]
+
+## Security Considerations
+- Authentication: [approach]
+- Authorization: [approach]
+- Data protection: [encryption, PII handling]
+- Input validation: [validation strategy]
+- Audit logging: [what to log]
+
+## Performance Considerations
+- Expected load: [quantify]
+- Caching strategy: [describe]
+- Database indexing: [required indexes]
+- Scalability: [how it scales]
+
+## Testing Strategy
+- Unit tests: [coverage expectations]
+- Integration tests: [key scenarios]
+- Performance tests: [benchmarks]
+- Security tests: [security testing approach]
+
+## Migration Strategy
+- Data migration: [if applicable]
+- Feature rollout: [gradual, feature flag, etc.]
+- Backwards compatibility: [concerns]
+- Rollback plan: [how to rollback]
+
+## Monitoring and Observability
+- Metrics: [key metrics to track]
+- Logging: [what to log]
+- Alerts: [alert conditions]
+- Dashboard: [what to visualize]
+
+## Risks and Mitigation
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| [Risk 1] | [L/M/H] | [L/M/H] | [Mitigation strategy] |
+| [Risk 2] | [L/M/H] | [L/M/H] | [Mitigation strategy] |
+
+## Dependencies and Timeline
+- Dependency 1: [what's needed, when]
+- Dependency 2: [what's needed, when]
+
+**Estimated Timeline:**
+- Design: [time]
+- Implementation: [time]
+- Testing: [time]
+- Deployment: [time]
+
+## Open Questions
+- [Question 1]
+- [Question 2]
+
+## Appendix
+- [Additional context]
+- [References]
+- [Prototypes or mockups]
+```
+
+## Quality Guidelines
+
+### 1. Documentation Quality Checklist
+
+**Clarity:**
+- [ ] Use clear, concise language
+- [ ] Avoid jargon (or explain when necessary)
+- [ ] Include examples
+- [ ] Use diagrams where helpful
+
+**Completeness:**
+- [ ] All requirements documented
+- [ ] All edge cases considered
+- [ ] Security implications addressed
+- [ ] Performance implications addressed
+- [ ] Testing strategy defined
+
+**Traceability:**
+- [ ] Links to requirements
+- [ ] Links to related documents
+- [ ] References to code
+- [ ] Decision rationale documented
+
+**Maintainability:**
+- [ ] Kept up-to-date with code
+- [ ] Version controlled
+- [ ] Review process defined
+- [ ] Owner identified
+
+### 2. Diagram Standards
+
+**Types of Diagrams:**
+- **Architecture Diagrams**: System components and relationships
+- **Sequence Diagrams**: Interaction flows over time
+- **Entity Relationship Diagrams**: Database schema
+- **Flow Charts**: Decision flows and processes
+- **State Diagrams**: State transitions
+
+**Diagram Tools:**
+- PlantUML / Mermaid (text-based, version controlled)
+- Draw.io / Lucidchart (visual editors)
+- C4 Model (for architecture diagrams)
+
+**Diagram Guidelines:**
+- Keep diagrams simple and focused
+- Include legend if needed
+- Use consistent notation
+- Date diagrams
+- Store with documentation
+
+## Review and Approval Process
+
+### 1. Design Review Checklist
+
+**Technical Review:**
+- [ ] Architecture sound
+- [ ] Scalable solution
+- [ ] Secure design
+- [ ] Performance acceptable
+- [ ] Maintainable code structure
+
+**Business Review:**
+- [ ] Meets requirements
+- [ ] Delivers business value
+- [ ] Acceptable timeline
+- [ ] Acceptable cost
+- [ ] Risk mitigation adequate
+
+**Team Review:**
+- [ ] Understandable by team
+- [ ] Testable design
+- [ ] Deployable solution
+- [ ] Monitorable implementation
+
+### 2. Approval Process
+
+1. **Draft**: Author creates initial design
+2. **Team Review**: Team provides feedback
+3. **Revision**: Author incorporates feedback
+4. **Architecture Review**: Tech lead/architect reviews
+5. **Stakeholder Review**: Business stakeholders review
+6. **Approval**: Formal approval to proceed
+7. **Implementation**: Build according to design
+8. **Retrospective**: Review design after implementation
+
+## Documentation Maintenance
+
+### 1. When to Update Documentation
+
+**Triggers for Update:**
+- Requirements change
+- Architecture evolves
+- Major refactoring
+- New patterns emerge
+- Lessons learned from implementation
+- Security vulnerabilities discovered
+
+### 2. Documentation Versioning
+
+- Version control all documentation
+- Tag documentation with code releases
+- Archive old versions
+- Link documentation to code commits
+- Update changelog
+
+### 3. Documentation Ownership
+
+- Assign owner to each document
+- Regular review schedule
+- Update documentation in code reviews
+- Include documentation in definition of done
+
+---
+
+**Remember**: Good documentation is:
+- **Accurate**: Reflects current reality
+- **Useful**: Helps developers make decisions
+- **Maintained**: Kept up-to-date
+- **Accessible**: Easy to find and understand
+- **Concise**: No unnecessary detail
+
+Document decisions and trade-offs, not just facts. Future developers (including your future self) will thank you.

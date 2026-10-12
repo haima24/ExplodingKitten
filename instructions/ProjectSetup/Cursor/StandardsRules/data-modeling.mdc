@@ -1,0 +1,685 @@
+---
+description: Data modeling and database design patterns for building scalable, maintainable data layers.
+---
+
+# Data Modeling Rule
+
+You are designing and implementing data models and database schemas following best practices.
+
+## Project Data Context
+- **Database**: [Specify database system, e.g., PostgreSQL, MySQL, MongoDB, SQL Server]
+- **ORM/ODM**: [Specify if applicable, e.g., Sequelize, TypeORM, Django ORM, Entity Framework]
+- **Migration Tool**: [Specify tool, e.g., Alembic, Flyway, EF Core Migrations, Sequelize]
+- **Architecture**: [Specify pattern, e.g., Code-First, Database-First, Repository Pattern]
+
+## Entity/Model Design Patterns
+
+### 1. Base Entity Pattern
+
+**Common Fields for All Entities:**
+```
+[Replace with your language/framework]
+
+Typical base fields:
+- id: Primary key (UUID or auto-increment integer)
+- createdAt: Timestamp of creation
+- updatedAt: Timestamp of last update
+- isDeleted: Soft delete flag (optional)
+- version: Optimistic concurrency control (optional)
+```
+
+**Implementation Approaches:**
+- **Inheritance**: Base class with common fields
+- **Composition**: Trait/mixin with common behavior
+- **Database**: Trigger-based timestamps
+- **ORM**: Model hooks/lifecycle methods
+
+### 2. Primary Key Strategies
+
+**Auto-Increment Integers:**
+```
+Pros: Simple, sequential, compact
+Cons: Predictable, reveals record count, not globally unique
+Use for: Internal systems, low-scale applications
+```
+
+**UUIDs/GUIDs:**
+```
+Pros: Globally unique, non-sequential, distributed-friendly
+Cons: Larger storage, harder to debug, index performance
+Use for: Distributed systems, public APIs, security-sensitive
+```
+
+**Composite Keys:**
+```
+Pros: Natural relationships, referential integrity
+Cons: Complex joins, harder to maintain
+Use for: Junction tables, multi-tenancy
+```
+
+## Database Schema Design
+
+### 1. Normalization
+
+**Normal Forms:**
+
+**1NF (First Normal Form):**
+- Atomic values (no arrays/lists in columns)
+- Each row is unique
+- Each column has a unique name
+
+**2NF (Second Normal Form):**
+- Meets 1NF
+- No partial dependencies on composite keys
+- All non-key attributes depend on entire key
+
+**3NF (Third Normal Form):**
+- Meets 2NF
+- No transitive dependencies
+- Non-key attributes depend only on primary key
+
+**When to Denormalize:**
+- Read performance is critical
+- Data is read-heavy, write-light
+- Aggregations are frequent
+- Acceptable trade-off for your use case
+
+### 2. Relationship Types
+
+**One-to-One (1:1):**
+```sql
+-- Example: User and Profile
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE profiles (
+  id INT PRIMARY KEY,
+  user_id INT UNIQUE NOT NULL,
+  bio TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+**One-to-Many (1:N):**
+```sql
+-- Example: User has many Posts
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  username VARCHAR(50)
+);
+
+CREATE TABLE posts (
+  id INT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255),
+  content TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+**Many-to-Many (N:M):**
+```sql
+-- Example: Students and Courses (with junction table)
+CREATE TABLE students (
+  id INT PRIMARY KEY,
+  name VARCHAR(100)
+);
+
+CREATE TABLE courses (
+  id INT PRIMARY KEY,
+  name VARCHAR(100)
+);
+
+CREATE TABLE student_courses (
+  student_id INT,
+  course_id INT,
+  enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (student_id, course_id),
+  FOREIGN KEY (student_id) REFERENCES students(id),
+  FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+```
+
+### 3. Constraints and Validation
+
+**Primary Key:**
+```sql
+id INT PRIMARY KEY AUTO_INCREMENT
+id UUID PRIMARY KEY DEFAULT gen_random_uuid()
+```
+
+**Foreign Key:**
+```sql
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL
+```
+
+**Unique Constraint:**
+```sql
+email VARCHAR(255) UNIQUE NOT NULL
+CONSTRAINT uq_user_email UNIQUE (email)
+```
+
+**Check Constraint:**
+```sql
+age INT CHECK (age >= 18 AND age <= 120)
+price DECIMAL(10,2) CHECK (price > 0)
+```
+
+**Not Null:**
+```sql
+email VARCHAR(255) NOT NULL
+created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+```
+
+### 4. Indexes
+
+**When to Index:**
+- Primary keys (automatic)
+- Foreign keys (manual, usually needed)
+- Frequently queried columns
+- Columns used in WHERE clauses
+- Columns used in JOIN conditions
+- Columns used in ORDER BY
+- Columns used in GROUP BY
+
+**Index Types:**
+```sql
+-- B-Tree Index (default, most common)
+CREATE INDEX idx_users_email ON users(email);
+
+-- Unique Index
+CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+
+-- Composite Index
+CREATE INDEX idx_posts_user_created ON posts(user_id, created_at);
+
+-- Partial Index (PostgreSQL)
+CREATE INDEX idx_active_users ON users(email) WHERE is_active = true;
+
+-- Full-Text Index
+CREATE FULLTEXT INDEX idx_posts_content ON posts(content);
+
+-- Hash Index (PostgreSQL, for equality only)
+CREATE INDEX idx_users_id_hash ON users USING HASH(id);
+```
+
+**Index Best Practices:**
+- Don't over-index (slows writes)
+- Index order matters for composite indexes
+- Monitor index usage
+- Drop unused indexes
+- Consider index size
+- Analyze query plans
+
+## ORM/Data Access Patterns
+
+### 1. Repository Pattern
+
+```
+[Replace with your language/framework]
+
+Pattern structure:
+- Interface defining data operations
+- Implementation handling database access
+- Abstracts database from business logic
+- Enables testing with mocks
+- Centralizes data access logic
+```
+
+**Repository Interface:**
+```
+findById(id)
+findAll(filters)
+create(data)
+update(id, data)
+delete(id)
+findByCondition(condition)
+count(filters)
+```
+
+### 2. Query Optimization
+
+**Eager Loading (N+1 Prevention):**
+```
+[Replace with your ORM]
+
+Problem: N+1 queries
+Solution: Load related data in single query
+- Use joins
+- Use includes/eager loading
+- Batch loading
+```
+
+**Lazy Loading:**
+```
+Pros: Only load when needed
+Cons: Can cause N+1 problem
+Use: When related data rarely needed
+```
+
+**Explicit Loading:**
+```
+Load related data on-demand
+Better than lazy loading (explicit)
+Control when data is loaded
+```
+
+**Projections/Select Specific Fields:**
+```sql
+-- Instead of SELECT *
+SELECT id, name, email FROM users WHERE ...
+
+-- Benefits: Less data transfer, faster queries
+```
+
+### 3. Pagination
+
+**Offset-Based:**
+```sql
+-- Page 2, 20 items per page
+SELECT * FROM users
+ORDER BY created_at DESC
+LIMIT 20 OFFSET 20;
+
+Pros: Simple, allows jumping to any page
+Cons: Slow for large offsets, inconsistent with new data
+```
+
+**Cursor-Based (Keyset):**
+```sql
+-- After user_id 100
+SELECT * FROM users
+WHERE id > 100
+ORDER BY id
+LIMIT 20;
+
+Pros: Fast, consistent results, scalable
+Cons: Can't jump to arbitrary page, requires indexed column
+```
+
+### 4. Transaction Management
+
+**Transaction Principles:**
+- **Atomicity**: All or nothing
+- **Consistency**: Valid state transitions
+- **Isolation**: Concurrent transactions don't interfere
+- **Durability**: Committed data persists
+
+**Transaction Patterns:**
+```
+[Replace with your language/framework]
+
+Basic transaction:
+1. Begin transaction
+2. Perform operations
+3. Commit if successful
+4. Rollback if error
+5. Handle exceptions
+```
+
+**Isolation Levels:**
+```
+READ UNCOMMITTED: Dirty reads possible
+READ COMMITTED: No dirty reads (default in many DBs)
+REPEATABLE READ: Same data in transaction
+SERIALIZABLE: Highest isolation, lowest concurrency
+```
+
+## Data Migration Patterns
+
+### 1. Migration Best Practices
+
+**Migration Structure:**
+```
+[Replace with your migration tool]
+
+Each migration:
+- Unique identifier (timestamp or sequential)
+- Up method (apply changes)
+- Down method (rollback changes)
+- Idempotent when possible
+- Backwards compatible
+```
+
+**Migration Types:**
+```
+CREATE: Add new tables/columns
+ALTER: Modify existing structure
+DROP: Remove tables/columns (dangerous)
+DATA: Migrate/transform data
+INDEX: Add/remove indexes
+```
+
+### 2. Safe Migration Patterns
+
+**Adding Columns:**
+```sql
+-- ✅ Safe: Add nullable column or with default
+ALTER TABLE users ADD COLUMN phone VARCHAR(20);
+ALTER TABLE users ADD COLUMN status VARCHAR(20) DEFAULT 'active';
+
+-- ❌ Risky: Add NOT NULL without default (fails if data exists)
+ALTER TABLE users ADD COLUMN email VARCHAR(255) NOT NULL;
+```
+
+**Removing Columns:**
+```sql
+-- Strategy: Multi-step process
+-- Step 1: Stop writing to column (code deployment)
+-- Step 2: Verify column not used
+-- Step 3: Drop column in migration
+ALTER TABLE users DROP COLUMN old_field;
+```
+
+**Renaming Columns:**
+```sql
+-- Strategy: Multi-step process
+-- Step 1: Add new column
+-- Step 2: Copy data
+-- Step 3: Update code to use new column
+-- Step 4: Drop old column (after verification)
+
+ALTER TABLE users ADD COLUMN full_name VARCHAR(255);
+UPDATE users SET full_name = name;
+-- Deploy code using full_name
+-- Later:
+ALTER TABLE users DROP COLUMN name;
+```
+
+### 3. Data Migration
+
+**Migrating Data:**
+```sql
+-- Migrate in batches for large tables
+UPDATE products
+SET category_id = (
+  SELECT id FROM categories 
+  WHERE name = products.old_category
+)
+WHERE id BETWEEN 1 AND 10000;
+-- Repeat for remaining batches
+```
+
+**Backfilling Data:**
+```sql
+-- Add column with default
+ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Backfill existing records
+UPDATE users SET created_at = '2024-01-01 00:00:00' WHERE created_at IS NULL;
+
+-- Make NOT NULL after backfill
+ALTER TABLE users MODIFY created_at TIMESTAMP NOT NULL;
+```
+
+## Data Types and Storage
+
+### 1. String Types
+
+**Best Practices:**
+```sql
+-- Fixed-length (faster for fixed data)
+CHAR(2) -- country code: 'US'
+
+-- Variable-length (most common)
+VARCHAR(255) -- email, names
+TEXT -- large content, no length limit
+
+-- Unicode support
+NVARCHAR(255) -- SQL Server
+TEXT -- PostgreSQL (always UTF-8)
+```
+
+### 2. Numeric Types
+
+```sql
+-- Integers
+TINYINT    -- -128 to 127
+SMALLINT   -- -32,768 to 32,767
+INT        -- -2 billion to 2 billion
+BIGINT     -- -9 quintillion to 9 quintillion
+
+-- Decimals (for money, precise values)
+DECIMAL(10,2)  -- Max 10 digits, 2 after decimal
+NUMERIC(18,4)  -- Same as DECIMAL
+
+-- Floating Point (for scientific, approximate)
+FLOAT      -- 4 bytes
+DOUBLE     -- 8 bytes
+```
+
+### 3. Date and Time
+
+```sql
+-- Date only
+DATE           -- '2024-01-15'
+
+-- Time only
+TIME           -- '14:30:00'
+
+-- Date and time
+DATETIME       -- '2024-01-15 14:30:00'
+TIMESTAMP      -- With timezone, seconds since epoch
+
+-- Best Practice: Use TIMESTAMP with timezone
+-- Store in UTC, convert to local for display
+```
+
+### 4. Boolean
+
+```sql
+-- Boolean (implementation varies)
+BOOLEAN        -- PostgreSQL
+BIT            -- SQL Server (0 or 1)
+TINYINT(1)     -- MySQL (0 or 1)
+```
+
+### 5. JSON
+
+```sql
+-- JSON type (PostgreSQL, MySQL 5.7+)
+JSON           -- Stores JSON text
+JSONB          -- PostgreSQL: Binary JSON, faster queries
+
+-- Query JSON
+SELECT data->>'name' FROM users WHERE id = 1;
+SELECT * FROM users WHERE data @> '{"active": true}';
+```
+
+## Performance Optimization
+
+### 1. Query Optimization
+
+**Analyze Query Plans:**
+```sql
+-- PostgreSQL
+EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'user@example.com';
+
+-- MySQL
+EXPLAIN SELECT * FROM users WHERE email = 'user@example.com';
+
+-- SQL Server
+SET STATISTICS IO ON;
+SET STATISTICS TIME ON;
+```
+
+**Optimization Techniques:**
+- Use indexes appropriately
+- Avoid SELECT *
+- Use LIMIT/TOP
+- Avoid OR in WHERE (use UNION)
+- Use EXISTS instead of IN for large subqueries
+- Avoid functions on indexed columns
+- Use prepared statements
+
+### 2. Indexing Strategy
+
+**Index Selection:**
+```sql
+-- Single column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Composite index (order matters!)
+-- Good for: WHERE email = ? AND status = ?
+CREATE INDEX idx_users_email_status ON users(email, status);
+
+-- Bad order: WHERE status = ? AND email = ?
+-- Index not fully utilized
+```
+
+**Index Maintenance:**
+```sql
+-- Check index usage (PostgreSQL)
+SELECT * FROM pg_stat_user_indexes WHERE schemaname = 'public';
+
+-- Rebuild index (if fragmented)
+REINDEX INDEX idx_users_email;
+
+-- Drop unused indexes
+DROP INDEX idx_users_old_field;
+```
+
+### 3. Database Denormalization (When Appropriate)
+
+**Caching Aggregates:**
+```sql
+-- Instead of expensive aggregate query
+ALTER TABLE users ADD COLUMN post_count INT DEFAULT 0;
+
+-- Update via trigger or application code
+CREATE TRIGGER update_post_count
+AFTER INSERT ON posts
+FOR EACH ROW
+UPDATE users SET post_count = post_count + 1 WHERE id = NEW.user_id;
+```
+
+## NoSQL Data Modeling (if applicable)
+
+### 1. Document Stores (MongoDB, CouchDB)
+
+**Document Structure:**
+```json
+{
+  "_id": "user_123",
+  "email": "user@example.com",
+  "profile": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 30
+  },
+  "addresses": [
+    {
+      "type": "home",
+      "street": "123 Main St",
+      "city": "Springfield"
+    }
+  ],
+  "createdAt": "2024-01-15T10:30:00Z"
+}
+```
+
+**Embedding vs. Referencing:**
+- Embed: One-to-few, data always needed together
+- Reference: One-to-many, data used independently
+
+### 2. Key-Value Stores (Redis, DynamoDB)
+
+**Use Cases:**
+- Caching
+- Session storage
+- Real-time analytics
+- Leaderboards
+- Rate limiting counters
+
+### 3. Graph Databases (Neo4j)
+
+**Use Cases:**
+- Social networks
+- Recommendation engines
+- Fraud detection
+- Network analysis
+
+## Common Anti-Patterns to Avoid
+
+### ❌ Don't Do This:
+
+1. **God Tables**: Tables with 50+ columns
+2. **No Foreign Keys**: Referential integrity only in code
+3. **No Indexes**: Relying on full table scans
+4. **Too Many Indexes**: Slowing down writes unnecessarily
+5. **Using SELECT ***: Loading unnecessary data
+6. **No Transactions**: Partial updates on failure
+7. **Premature Optimization**: Complex denormalization without measurement
+8. **Ignoring NULL semantics**: Not handling NULL properly
+9. **Wrong Data Types**: Using VARCHAR for numbers
+10. **No Soft Delete Strategy**: Hard deleting without backup
+
+### ✅ Do This Instead:
+
+1. **Normalized Tables**: Break into logical entities
+2. **Foreign Keys**: Enforce integrity at database level
+3. **Strategic Indexing**: Index frequently queried columns
+4. **Index Review**: Monitor and remove unused indexes
+5. **Select Specific Columns**: Only load needed data
+6. **Transaction Boundaries**: Use transactions for multi-step operations
+7. **Measure First**: Profile before optimizing
+8. **Handle NULLs**: Use NOT NULL where appropriate, handle NULL in queries
+9. **Appropriate Types**: Use INT for numbers, DATE for dates
+10. **Soft Deletes**: Add is_deleted flag, filter queries
+
+## Database Security
+
+### 1. Access Control
+
+**Principle of Least Privilege:**
+- Read-only users for reporting
+- Application user with limited permissions
+- Admin user only for maintenance
+- No shared accounts
+
+### 2. SQL Injection Prevention
+
+**Always Use:**
+- Parameterized queries
+- ORM query builders
+- Input validation
+- Least privilege database accounts
+
+### 3. Encryption
+
+- Encrypt sensitive columns
+- Use TLS for connections
+- Encrypt backups
+- Rotate encryption keys
+
+## Schema Documentation
+
+### 1. Entity Documentation
+
+```
+Entity: User
+Purpose: Represents a registered user in the system
+Relationships:
+  - Has many: Posts (one-to-many)
+  - Has one: Profile (one-to-one)
+  - Has many: Roles (many-to-many through UserRoles)
+Constraints:
+  - Email must be unique
+  - Email must be valid format
+  - Must be at least 18 years old
+```
+
+### 2. ERD (Entity Relationship Diagram)
+
+Create and maintain diagrams showing:
+- Entities/tables
+- Relationships
+- Cardinality
+- Key attributes
+
+---
+
+**Remember**: Good data modeling is foundational. Think about access patterns, scalability, and maintainability. Normalize first, denormalize for specific performance needs with measurement.

@@ -1,0 +1,21 @@
+{
+  "assertion_results": [
+    {
+      "text": "The output includes a Playwright test file",
+      "status": "PASS",
+      "evidence": "Found login.spec.ts in the output folder."
+    },
+    {
+      "text": "The test uses stable locators",
+      "status": "FAIL",
+      "evidence": "The script uses XPath selector //button[1], which is fragile."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 1,
+    "not_applicable": 0,
+    "total": 2,
+    "pass_rate": 0.5
+  }
+}

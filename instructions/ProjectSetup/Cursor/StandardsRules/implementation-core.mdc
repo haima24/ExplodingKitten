@@ -1,0 +1,344 @@
+---
+description: Core coding standards and implementation patterns for professional software development.
+---
+
+# Core Implementation Rule
+
+You are implementing code following established patterns and best practices for clean, maintainable software.
+
+## Project Context
+- **Framework**: [Specify your framework, e.g., .NET, Node.js, Django, Spring Boot]
+- **Architecture**: [Specify architecture pattern, e.g., Layered, Clean Architecture, Microservices]
+- **Patterns**: [Specify patterns used, e.g., Repository, Service Layer, CQRS]
+- **Dependency Injection**: [Specify DI approach if applicable]
+
+## Code Organization Standards
+
+### 1. Directory and File Structure
+```
+[Adapt to your project structure]
+src/
+├── controllers/     # HTTP handlers or route controllers
+├── services/        # Business logic layer
+├── models/          # Data models or domain entities
+├── repositories/    # Data access layer
+├── middleware/      # Request/response processing
+├── utils/           # Utility functions
+└── config/          # Configuration files
+```
+
+### 2. File Naming Conventions
+- **Classes/Components**: `PascalCase` or language convention
+- **Files**: Match language standards (e.g., `UserService.ts`, `user_service.py`, `UserService.cs`)
+- **Test files**: `[FileName].test.[ext]` or `test_[filename].[ext]`
+- **Configuration**: `config.[ext]`, `settings.[ext]`, or `appsettings.json`
+
+### 3. Module/Package Organization
+- **Single Responsibility**: Each file/module has one clear purpose
+- **Clear Dependencies**: Import/require statements at the top
+- **Explicit Exports**: Export only what's needed by other modules
+- **Avoid Circular Dependencies**: Structure imports hierarchically
+
+## Core Implementation Patterns
+
+### 1. Controller/Route Handler Pattern
+```
+[Replace with your language/framework]
+
+Example structure:
+- Dependency injection of services
+- Input validation
+- Business logic delegation to services
+- Error handling
+- Consistent response formatting
+- Logging at entry/exit points
+```
+
+**Key Principles:**
+- Controllers should be thin - delegate to services
+- Validate input at the boundary
+- Return consistent response formats
+- Handle errors gracefully
+- Log important operations
+
+### 2. Service Layer Pattern
+```
+[Replace with your language/framework]
+
+Example structure:
+- Interface definition (if using static typing)
+- Service implementation with dependencies
+- Business logic implementation
+- Transaction management
+- Error handling and propagation
+- Clear method naming
+```
+
+**Key Principles:**
+- Services contain business logic
+- Services orchestrate data operations
+- Each service has single responsibility
+- Services are testable (mockable dependencies)
+- Clear error handling strategy
+
+### 3. Data Access Pattern
+```
+[Replace with your language/framework]
+
+Example structure:
+- Repository interface
+- CRUD operations
+- Query methods
+- Transaction handling
+- Connection management
+```
+
+**Key Principles:**
+- Abstract database specifics
+- Use parameterized queries (prevent SQL injection)
+- Implement connection pooling
+- Handle transactions appropriately
+- Return domain models, not database models
+
+## Coding Standards
+
+### 1. General Guidelines
+
+**Naming Conventions:**
+- **Variables**: Descriptive names, avoid abbreviations
+- **Functions**: Verb-noun format (e.g., `getUserById`, `calculateTotal`)
+- **Constants**: UPPER_SNAKE_CASE or language convention
+- **Private members**: Prefix with underscore or use language convention
+
+**Code Style:**
+- Consistent indentation (2 or 4 spaces, never tabs)
+- Maximum line length: 80-120 characters
+- One statement per line
+- Use language formatter (Prettier, Black, gofmt, etc.)
+
+**Comments:**
+- Explain **why**, not **what**
+- Document public APIs
+- Keep comments up-to-date
+- Remove commented-out code (use version control)
+
+### 2. Error Handling
+```
+[Replace with your language/framework]
+
+Principles:
+- Catch specific exceptions, not generic
+- Provide meaningful error messages
+- Log errors with context
+- Don't expose internal details to users
+- Clean up resources (use try-finally or context managers)
+```
+
+**Error Handling Strategy:**
+- **Input Validation Errors**: Return 400-level HTTP status
+- **Business Logic Errors**: Return specific error codes
+- **Infrastructure Errors**: Log and return 500-level status
+- **Never swallow exceptions** without logging
+- **Fail fast** for critical errors
+
+### 3. Logging Patterns
+```
+[Replace with your language/framework]
+
+Principles:
+- Use structured logging
+- Include correlation IDs for request tracking
+- Log at appropriate levels (DEBUG, INFO, WARN, ERROR)
+- Don't log sensitive data (passwords, tokens, PII)
+- Include context in log messages
+```
+
+**Log Levels:**
+- **DEBUG**: Detailed debugging information (development only)
+- **INFO**: General informational messages (user actions, system events)
+- **WARN**: Warning messages (recoverable issues, deprecated usage)
+- **ERROR**: Error messages (exceptions, failures requiring attention)
+- **FATAL/CRITICAL**: Critical errors (system crash, data corruption)
+
+### 4. Async/Await Conventions
+```
+[Replace with your language/framework]
+
+Principles:
+- Use async for I/O operations (network, file, database)
+- Don't block async operations
+- Handle async errors properly
+- Use proper async patterns (Promise.all, Task.WhenAll, asyncio.gather)
+- Avoid mixing sync and async code
+```
+
+### 5. Validation and Input Sanitization
+```
+[Replace with your language/framework]
+
+Principles:
+- Validate at the entry point (controllers/routes)
+- Use validation libraries/decorators
+- Provide clear validation error messages
+- Sanitize user input (prevent injection attacks)
+- Validate data types, ranges, formats
+```
+
+## Performance Guidelines
+
+### 1. General Performance
+- **Avoid Premature Optimization**: Measure before optimizing
+- **Use Profiling Tools**: Identify actual bottlenecks
+- **Cache Expensive Operations**: Use caching layers appropriately
+- **Lazy Loading**: Load data only when needed
+- **Batch Operations**: Reduce network/database round trips
+
+### 2. Database Performance
+- **Use Indexes**: Index frequently queried fields
+- **Avoid N+1 Queries**: Use eager loading or joins
+- **Limit Result Sets**: Implement pagination
+- **Use Connection Pooling**: Reuse database connections
+- **Query Optimization**: Analyze and optimize slow queries
+
+### 3. Memory Management
+- **Avoid Memory Leaks**: Clean up resources, remove event listeners
+- **Stream Large Data**: Don't load everything into memory
+- **Use Appropriate Data Structures**: Choose based on access patterns
+- **Dispose Resources**: Close files, connections, streams
+
+## Security Guidelines
+
+### 1. Input Validation
+- Validate all user inputs
+- Use allow-lists, not deny-lists
+- Validate on the server-side (never trust client)
+- Sanitize HTML/SQL/shell inputs
+- Enforce length limits
+
+### 2. Authentication & Authorization
+- Never store passwords in plain text
+- Use established libraries for auth (don't roll your own)
+- Implement proper session management
+- Use secure password hashing (bcrypt, Argon2)
+- Implement rate limiting
+
+### 3. Data Protection
+- Encrypt sensitive data at rest
+- Use HTTPS for data in transit
+- Don't log sensitive information
+- Implement proper access controls
+- Follow principle of least privilege
+
+### 4. SQL Injection Prevention
+- Use parameterized queries/prepared statements
+- Use ORM query builders
+- Never concatenate user input into queries
+- Validate and sanitize all inputs
+- Use database user with minimal permissions
+
+## Testing Considerations
+
+### 1. Testability Principles
+- **Write Testable Code**: Keep functions small and focused
+- **Dependency Injection**: Allow dependencies to be mocked
+- **Avoid Static Dependencies**: Use interfaces/abstractions
+- **Pure Functions**: Favor functions without side effects
+- **Clear Separation**: Separate I/O from business logic
+
+### 2. Test Coverage
+- Aim for high coverage on business logic
+- Test edge cases and error conditions
+- Test happy path and failure scenarios
+- Don't test framework code
+- Focus on behavior, not implementation
+
+## Common Anti-Patterns to Avoid
+
+### ❌ Don't Do This:
+
+1. **God Objects**: Classes that do too much
+2. **Magic Numbers**: Hardcoded values without explanation
+3. **Deep Nesting**: Too many levels of indentation
+4. **Long Methods**: Methods spanning hundreds of lines
+5. **Global State**: Mutable global variables
+6. **Premature Optimization**: Optimizing before measuring
+7. **Copy-Paste Code**: Duplicating logic across files
+8. **Swallowing Exceptions**: Catching without handling or logging
+9. **Mixed Concerns**: Mixing business logic with presentation
+10. **Tight Coupling**: Direct dependencies on concrete implementations
+
+### ✅ Do This Instead:
+
+1. **Single Responsibility**: One class/function, one purpose
+2. **Named Constants**: `const MAX_RETRIES = 3`
+3. **Early Returns**: Reduce nesting with guard clauses
+4. **Extract Methods**: Break large methods into smaller ones
+5. **Dependency Injection**: Pass dependencies, don't create them
+6. **Measure First**: Profile, then optimize
+7. **DRY Principle**: Extract common logic into reusable functions
+8. **Proper Error Handling**: Log errors with context, handle gracefully
+9. **Separation of Concerns**: Keep layers independent
+10. **Depend on Abstractions**: Use interfaces/protocols
+
+## Code Review Checklist
+
+Before submitting code for review:
+
+- [ ] Code follows project conventions and style guide
+- [ ] All new code has appropriate test coverage
+- [ ] No commented-out code (use version control)
+- [ ] No debugging statements (console.log, print, etc.)
+- [ ] Error handling is comprehensive
+- [ ] Security considerations addressed (input validation, etc.)
+- [ ] Performance implications considered
+- [ ] Documentation updated (if needed)
+- [ ] No linter warnings or errors
+- [ ] Code is self-documenting with clear naming
+- [ ] Dependencies are justified and documented
+- [ ] Backward compatibility maintained (if applicable)
+
+## Documentation Standards
+
+### 1. Code Documentation
+- Document public APIs and interfaces
+- Explain complex algorithms or business logic
+- Include examples for non-obvious usage
+- Keep documentation close to code
+- Use language standard doc comments
+
+### 2. README and Docs
+- Clear setup instructions
+- Environment prerequisites
+- Configuration requirements
+- Common troubleshooting steps
+- Contributing guidelines
+
+## Best Practices Summary
+
+### Clean Code Principles
+1. **Meaningful Names**: Use intention-revealing names
+2. **Small Functions**: Functions should do one thing well
+3. **Comments**: Good code is self-documenting
+4. **Formatting**: Consistent, readable formatting
+5. **Error Handling**: Don't ignore errors
+6. **DRY**: Don't Repeat Yourself
+7. **SOLID Principles**: For object-oriented code
+8. **KISS**: Keep It Simple, Stupid
+9. **YAGNI**: You Aren't Gonna Need It
+10. **Composition over Inheritance**: Favor composition
+
+### Professional Practices
+1. **Version Control**: Commit often with meaningful messages
+2. **Code Reviews**: Participate in peer reviews
+3. **Testing**: Write tests as you code
+4. **Refactoring**: Regularly improve code structure
+5. **Continuous Learning**: Stay updated with best practices
+6. **Documentation**: Document decisions and complex logic
+7. **Pair Programming**: Collaborate when tackling complex problems
+8. **Technical Debt**: Address it regularly, don't accumulate
+9. **Monitoring**: Implement observability from the start
+10. **Security**: Think security first, not as an afterthought
+
+---
+
+**Remember**: These are guidelines, not laws. Use judgment based on your specific context, but understand the reasoning behind each practice before breaking from it.

@@ -1,0 +1,635 @@
+---
+description: Unit testing standards and patterns for writing effective, maintainable tests.
+---
+
+# Unit Testing Rule
+
+You are writing unit tests following established testing patterns and best practices.
+
+## Project Testing Context
+- **Framework**: [Specify test framework, e.g., Jest, pytest, xUnit, JUnit, Go testing]
+- **Mocking**: [Specify mocking library, e.g., Moq, unittest.mock, Jest mocks, Mockito]
+- **Assertions**: [Specify assertion library, e.g., FluentAssertions, Chai, assert, Hamcrest]
+- **Test Data**: [Specify approach, e.g., Fixtures, Factories, Builders]
+- **Coverage Tool**: [Specify tool, e.g., Istanbul, Coverage.py, coverlet]
+
+## Test Organization Standards
+
+### 1. Test File Structure
+```
+tests/ or __tests__/
+├── unit/                    # Unit tests
+│   ├── services/
+│   ├── models/
+│   └── utils/
+├── integration/             # Integration tests
+│   ├── api/
+│   └── database/
+├── e2e/                     # End-to-end tests
+├── fixtures/                # Test data
+├── helpers/                 # Test utilities
+└── mocks/                   # Mock objects/data
+```
+
+### 2. Test File Naming
+- **Test files**: `[FileName].test.[ext]` or `test_[filename].[ext]`
+- **Integration tests**: `[Feature].integration.test.[ext]`
+- **E2E tests**: `[Flow].e2e.test.[ext]`
+- **Match source structure**: Mirror the structure of your source code
+
+## Test Structure Patterns
+
+### 1. Arrange-Act-Assert (AAA) Pattern
+
+```
+[Replace with your language/framework]
+
+Example structure:
+describe('FeatureName', () => {
+  // Setup
+  beforeEach(() => {
+    // Common setup for all tests
+  });
+
+  test('methodName_withValidInput_returnsExpectedResult', () => {
+    // Arrange - Set up test data and dependencies
+    const input = createTestData();
+    const expectedOutput = {...};
+    
+    // Act - Execute the code under test
+    const result = methodName(input);
+    
+    // Assert - Verify the outcome
+    expect(result).toEqual(expectedOutput);
+  });
+  
+  // Cleanup
+  afterEach(() => {
+    // Cleanup after each test
+  });
+});
+```
+
+### 2. Given-When-Then (BDD Style)
+
+```
+[Replace with your language/framework]
+
+Example structure:
+describe('Feature: User Registration', () => {
+  test('Given valid user data, When registering, Then user is created', () => {
+    // Given (Arrange)
+    const validUserData = {
+      email: 'user@example.com',
+      password: 'SecurePass123!'
+    };
+    
+    // When (Act)
+    const result = userService.register(validUserData);
+    
+    // Then (Assert)
+    expect(result).toBeDefined();
+    expect(result.email).toBe(validUserData.email);
+  });
+});
+```
+
+## Test Naming Conventions
+
+### 1. Descriptive Test Names
+
+**Pattern:** `methodName_scenario_expectedOutcome`
+
+**Examples:**
+```
+✅ Good:
+- calculateTotal_withValidItems_returnsCorrectSum
+- getUserById_whenUserExists_returnsUser
+- getUserById_whenUserNotFound_throwsNotFoundException
+- processPayment_withInsufficientFunds_returnsFalse
+- validateEmail_withInvalidFormat_returnsValidationError
+
+❌ Bad:
+- test1
+- testGetUser
+- itWorks
+- basicTest
+- shouldPass
+```
+
+### 2. Behavior-Focused Names (BDD Style)
+
+```
+describe('Calculator', () => {
+  describe('add', () => {
+    it('should return the sum of two positive numbers', () => {...});
+    it('should handle negative numbers correctly', () => {...});
+    it('should return zero when adding zero', () => {...});
+  });
+});
+```
+
+## Assertion Patterns
+
+### 1. Common Assertions
+
+```
+[Replace with your language/framework]
+
+// Equality
+expect(actual).toBe(expected);              // Strict equality
+expect(actual).toEqual(expected);           // Deep equality
+
+// Truthiness
+expect(value).toBeTruthy();
+expect(value).toBeFalsy();
+expect(value).toBeNull();
+expect(value).toBeUndefined();
+expect(value).toBeDefined();
+
+// Numbers
+expect(number).toBeGreaterThan(5);
+expect(number).toBeLessThan(10);
+expect(number).toBeGreaterThanOrEqual(5);
+expect(float).toBeCloseTo(0.3, 2);          // Floating point
+
+// Strings
+expect(string).toMatch(/pattern/);
+expect(string).toContain('substring');
+expect(string).toHaveLength(10);
+
+// Arrays/Collections
+expect(array).toHaveLength(3);
+expect(array).toContain(element);
+expect(array).toContainEqual({id: 1});
+
+// Objects
+expect(object).toHaveProperty('key');
+expect(object).toHaveProperty('key', value);
+expect(object).toMatchObject({subset});
+
+// Exceptions
+expect(() => { throwError(); }).toThrow();
+expect(() => { throwError(); }).toThrow(ErrorType);
+expect(() => { throwError(); }).toThrow('error message');
+```
+
+### 2. Assertion Best Practices
+
+**Do:**
+- Use specific assertions (not just `toBeTruthy()`)
+- Assert one concept per test
+- Use meaningful assertion messages
+- Assert both positive and negative cases
+
+**Don't:**
+- Have tests with no assertions
+- Use multiple unrelated assertions in one test
+- Ignore assertion return values
+- Assert implementation details
+
+## Mocking and Test Doubles
+
+### 1. Types of Test Doubles
+
+**Mock:** Verify interactions (method calls, parameters)
+**Stub:** Return predefined values
+**Spy:** Record information about calls
+**Fake:** Working implementation (simpler than real)
+**Dummy:** Passed but never used
+
+### 2. Mocking Patterns
+
+```
+[Replace with your language/framework]
+
+// Mock a dependency
+const mockService = {
+  getData: jest.fn().mockResolvedValue(testData),
+  saveData: jest.fn().mockResolvedValue(true)
+};
+
+// Inject mock
+const controller = new Controller(mockService);
+
+// Execute
+await controller.processData(input);
+
+// Verify interactions
+expect(mockService.getData).toHaveBeenCalledTimes(1);
+expect(mockService.getData).toHaveBeenCalledWith(expectedParams);
+expect(mockService.saveData).toHaveBeenCalledWith(expectedData);
+```
+
+### 3. Mocking Best Practices
+
+**Do:**
+- Mock external dependencies (APIs, databases, file system)
+- Mock at service boundaries
+- Verify important interactions
+- Use mock builders for complex setups
+
+**Don't:**
+- Mock everything (test becomes meaningless)
+- Mock what you're testing (test the real implementation)
+- Create brittle tests with too many verifications
+- Mock standard library functions unless necessary
+
+## Test Data Management
+
+### 1. Test Data Patterns
+
+**Inline Data:**
+```javascript
+test('example', () => {
+  const testData = { id: 1, name: 'Test' };
+  // Use testData
+});
+```
+
+**Fixtures:**
+```javascript
+// fixtures/users.js
+export const validUser = {
+  id: 1,
+  email: 'user@example.com',
+  name: 'John Doe'
+};
+
+// In test
+import { validUser } from '../fixtures/users';
+test('example', () => {
+  // Use validUser
+});
+```
+
+**Factory Pattern:**
+```javascript
+class UserFactory {
+  static create(overrides = {}) {
+    return {
+      id: Math.random(),
+      email: 'user@example.com',
+      name: 'John Doe',
+      createdAt: new Date(),
+      ...overrides
+    };
+  }
+  
+  static createMany(count, overrides = {}) {
+    return Array.from({ length: count }, () => this.create(overrides));
+  }
+}
+
+// In test
+test('example', () => {
+  const user = UserFactory.create({ email: 'test@example.com' });
+  const users = UserFactory.createMany(5);
+});
+```
+
+**Builder Pattern:**
+```javascript
+class UserBuilder {
+  constructor() {
+    this.user = {
+      id: 1,
+      email: 'user@example.com',
+      name: 'John Doe',
+      active: true
+    };
+  }
+  
+  withEmail(email) {
+    this.user.email = email;
+    return this;
+  }
+  
+  withInactive() {
+    this.user.active = false;
+    return this;
+  }
+  
+  build() {
+    return this.user;
+  }
+}
+
+// In test
+test('example', () => {
+  const user = new UserBuilder()
+    .withEmail('test@example.com')
+    .withInactive()
+    .build();
+});
+```
+
+## Testing Asynchronous Code
+
+### 1. Async/Await Pattern
+
+```javascript
+test('async operation', async () => {
+  // Arrange
+  const mockData = { id: 1 };
+  mockService.getData.mockResolvedValue(mockData);
+  
+  // Act
+  const result = await service.fetchData();
+  
+  // Assert
+  expect(result).toEqual(mockData);
+});
+```
+
+### 2. Promise Pattern
+
+```javascript
+test('promise operation', () => {
+  return service.fetchData().then(data => {
+    expect(data).toBeDefined();
+  });
+});
+```
+
+### 3. Testing Async Errors
+
+```javascript
+test('async error handling', async () => {
+  // Arrange
+  mockService.getData.mockRejectedValue(new Error('API Error'));
+  
+  // Act & Assert
+  await expect(service.fetchData()).rejects.toThrow('API Error');
+});
+```
+
+## Test Lifecycle and Setup
+
+### 1. Setup and Teardown
+
+```javascript
+describe('TestSuite', () => {
+  // Runs once before all tests
+  beforeAll(() => {
+    // Expensive setup (database connection, etc.)
+  });
+  
+  // Runs before each test
+  beforeEach(() => {
+    // Reset state, create fresh mocks
+  });
+  
+  // Runs after each test
+  afterEach(() => {
+    // Cleanup, clear mocks
+  });
+  
+  // Runs once after all tests
+  afterAll(() => {
+    // Final cleanup (close connections, etc.)
+  });
+  
+  test('example 1', () => {});
+  test('example 2', () => {});
+});
+```
+
+### 2. Test Isolation
+
+**Each test should:**
+- Be independent of other tests
+- Not rely on test execution order
+- Clean up after itself
+- Not share mutable state
+
+## Testing Different Components
+
+### 1. Testing Pure Functions
+
+```javascript
+// Easy to test - no dependencies, no side effects
+test('pure function', () => {
+  const result = add(2, 3);
+  expect(result).toBe(5);
+});
+```
+
+### 2. Testing Services/Business Logic
+
+```javascript
+test('service method', async () => {
+  // Arrange
+  const mockRepository = {
+    findById: jest.fn().mockResolvedValue(userData)
+  };
+  const service = new UserService(mockRepository);
+  
+  // Act
+  const result = await service.getUserById('123');
+  
+  // Assert
+  expect(result).toEqual(userData);
+  expect(mockRepository.findById).toHaveBeenCalledWith('123');
+});
+```
+
+### 3. Testing Controllers/Handlers
+
+```javascript
+test('controller endpoint', async () => {
+  // Arrange
+  const mockService = {
+    getUser: jest.fn().mockResolvedValue(userData)
+  };
+  const controller = new UserController(mockService);
+  const req = { params: { id: '123' } };
+  const res = {
+    json: jest.fn(),
+    status: jest.fn().mockReturnThis()
+  };
+  
+  // Act
+  await controller.getUser(req, res);
+  
+  // Assert
+  expect(res.json).toHaveBeenCalledWith(userData);
+  expect(mockService.getUser).toHaveBeenCalledWith('123');
+});
+```
+
+### 4. Testing Error Scenarios
+
+```javascript
+test('handles error gracefully', async () => {
+  // Arrange
+  mockService.getData.mockRejectedValue(new Error('Database error'));
+  
+  // Act
+  const result = await service.processData();
+  
+  // Assert
+  expect(result.success).toBe(false);
+  expect(result.error).toContain('Database error');
+});
+
+test('throws appropriate exception', () => {
+  // Arrange
+  const invalidInput = null;
+  
+  // Act & Assert
+  expect(() => {
+    service.process(invalidInput);
+  }).toThrow('Input cannot be null');
+});
+```
+
+## Test Coverage
+
+### 1. Coverage Metrics
+- **Line Coverage**: Percentage of code lines executed
+- **Branch Coverage**: Percentage of conditional branches tested
+- **Function Coverage**: Percentage of functions called
+- **Statement Coverage**: Percentage of statements executed
+
+### 2. Coverage Goals
+- Aim for 80%+ coverage on business logic
+- 100% coverage on critical paths
+- Focus on meaningful tests, not just coverage numbers
+- Some code doesn't need tests (trivial getters/setters, generated code)
+
+### 3. Coverage Tools
+```bash
+# Examples for different ecosystems
+npm test -- --coverage              # Jest
+pytest --cov=app tests/             # pytest
+dotnet test --collect:"XPlat Code Coverage"  # .NET
+go test -cover ./...                # Go
+mvn test jacoco:report              # Java/Maven
+```
+
+## Test Organization Best Practices
+
+### 1. Test Categories
+
+```javascript
+// Unit tests
+describe('UserService', () => {
+  // Group related tests
+  describe('createUser', () => {
+    test('with valid data', () => {});
+    test('with duplicate email', () => {});
+    test('with invalid email format', () => {});
+  });
+  
+  describe('updateUser', () => {
+    test('with valid changes', () => {});
+    test('with non-existent user', () => {});
+  });
+});
+```
+
+### 2. Test Tagging/Marking
+
+```javascript
+// Mark slow tests
+test('expensive operation', () => {}, { timeout: 10000 });
+
+// Skip tests conditionally
+test.skip('not yet implemented', () => {});
+
+// Run only specific tests during development
+test.only('debugging this test', () => {});
+
+// Conditional tests
+(process.env.INTEGRATION_TESTS ? test : test.skip)('integration test', () => {});
+```
+
+## Common Testing Anti-Patterns
+
+### ❌ Don't Do This:
+
+1. **Testing Implementation Details**: Testing how something works, not what it does
+2. **Fragile Tests**: Break when implementation changes but behavior doesn't
+3. **Slow Tests**: Tests that take minutes to run discourage running them
+4. **Flaky Tests**: Tests that sometimes pass, sometimes fail
+5. **Testing Private Methods**: Test public interface instead
+6. **Too Many Mocks**: More mocks than real code
+7. **No Assertions**: Tests that don't verify anything
+8. **Shared State**: Tests that affect each other
+9. **Testing Frameworks**: Don't test library code
+10. **Copy-Paste Tests**: Duplication without parametrization
+
+### ✅ Do This Instead:
+
+1. **Test Behavior**: Test what the code does for users
+2. **Stable Tests**: Test against public interfaces
+3. **Fast Tests**: Keep unit tests under 100ms
+4. **Reliable Tests**: Deterministic, no random failures
+5. **Test Public API**: If you need to test private, it might need to be public or separate
+6. **Strategic Mocking**: Mock I/O and external dependencies
+7. **Always Assert**: Every test should verify something
+8. **Isolated Tests**: Each test is independent
+9. **Test Your Code**: Focus on your business logic
+10. **Parameterized Tests**: Test multiple cases with one test
+
+## Test Documentation
+
+### 1. Self-Documenting Tests
+
+```javascript
+// Test name explains what it tests
+test('calculateDiscount_forPremiumMembers_applies20PercentDiscount', () => {
+  // Arrange section is clear
+  const premiumMember = createPremiumMember();
+  const originalPrice = 100;
+  
+  // Act is simple
+  const discountedPrice = calculateDiscount(originalPrice, premiumMember);
+  
+  // Assert is specific
+  expect(discountedPrice).toBe(80); // 20% off 100 = 80
+});
+```
+
+### 2. Comments for Complex Logic
+
+```javascript
+test('complex business rule', () => {
+  // Given: A user with a premium subscription that expires next month,
+  // and they have used 8 out of 10 credits
+  const user = createUser({
+    subscription: 'premium',
+    expiresAt: addMonths(new Date(), 1),
+    creditsUsed: 8,
+    creditsTotal: 10
+  });
+  
+  // When: Checking if they can perform an action that costs 3 credits
+  const canPerform = service.canPerformAction(user, { creditCost: 3 });
+  
+  // Then: They should not be able to (8 + 3 > 10)
+  expect(canPerform).toBe(false);
+});
+```
+
+## Testing Checklist
+
+Before submitting code:
+
+- [ ] All new code has corresponding tests
+- [ ] Tests follow naming conventions
+- [ ] Tests are independent and isolated
+- [ ] Tests are fast (unit tests < 100ms)
+- [ ] Mocks are used appropriately
+- [ ] Edge cases are tested
+- [ ] Error scenarios are tested
+- [ ] Tests are readable and maintainable
+- [ ] No skipped tests (or documented why)
+- [ ] Test coverage meets project standards
+- [ ] Tests pass consistently
+- [ ] No console.log or debugging statements
+
+---
+
+**Remember**: Good tests serve as documentation, catch bugs early, enable refactoring with confidence, and make development faster in the long run. Write tests you'd want to maintain.

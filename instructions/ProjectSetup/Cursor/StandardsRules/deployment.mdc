@@ -1,0 +1,729 @@
+---
+description: Deployment and DevOps best practices for delivering reliable, scalable applications.
+---
+
+# Deployment Rule
+
+You are implementing deployment strategies and DevOps practices following industry best practices.
+
+## Project Deployment Context
+- **Platform**: [Specify hosting platform, e.g., AWS, Azure, GCP, Heroku, DigitalOcean]
+- **Deployment Method**: [Specify method, e.g., Docker, Kubernetes, Serverless, VM]
+- **CI/CD**: [Specify tool, e.g., GitHub Actions, GitLab CI, Jenkins, CircleCI]
+- **Monitoring**: [Specify tools, e.g., Datadog, New Relic, Application Insights]
+- **Infrastructure**: [Specify approach, e.g., Terraform, CloudFormation, Pulumi, Manual]
+
+## Containerization Patterns
+
+### 1. Multi-Stage Dockerfile
+
+**Best Practices:**
+```dockerfile
+# Build stage
+FROM [build-image]:[version] AS builder
+WORKDIR /app
+
+# Copy dependency files first (leverage caching)
+COPY package.json package-lock.json ./
+RUN [install dependencies]
+
+# Copy source code
+COPY . .
+RUN [build command]
+
+# Production stage
+FROM [runtime-image]:[version] AS production
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup --gid 1001 appgroup && \
+    adduser --disabled-password --gecos '' --uid 1001 --gid 1001 appuser
+
+# Copy built application
+COPY --from=builder --chown=appuser:appgroup /app/dist ./dist
+COPY --from=builder --chown=appuser:appgroup /app/node_modules ./node_modules
+
+# Switch to non-root user
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD [health check command]
+
+# Expose port
+EXPOSE 3000
+
+# Start application
+CMD ["node", "dist/main.js"]
+```
+
+**Dockerfile Optimization:**
+- Use specific image versions (not `latest`)
+- Use smaller base images (alpine variants)
+- Minimize layers (combine RUN commands)
+- Order instructions from least to most frequently changing
+- Use .dockerignore to exclude unnecessary files
+- Don't run as root user
+- Include health checks
+- Set proper environment variables
+
+### 2. Docker Compose for Development
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://user:pass@db:5432/myapp
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=myapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+## CI/CD Pipeline Configuration
+
+### 1. CI/CD Best Practices
+
+**Pipeline Stages:**
+1. **Build**: Compile/build application
+2. **Test**: Run automated tests
+3. **Security Scan**: Check for vulnerabilities
+4. **Build Artifacts**: Create deployment artifacts
+5. **Deploy to Staging**: Test in staging environment
+6. **Deploy to Production**: Deploy to production
+7. **Post-Deployment**: Smoke tests, monitoring
+
+**Key Principles:**
+- Fast feedback (fail fast)
+- Build once, deploy many times
+- Automated testing at every stage
+- Environment parity
+- Rollback capability
+- Security scanning
+- Deployment approval gates (for production)
+
+### 2. GitHub Actions Example
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup [Runtime]
+      uses: [setup-action]
+      with:
+        version: '[version]'
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: [dependency-cache-path]
+        key: ${{ runner.os }}-deps-${{ hashFiles('**/[lock-file]') }}
+    
+    - name: Install dependencies
+      run: [install-command]
+    
+    - name: Lint
+      run: [lint-command]
+    
+    - name: Type check
+      run: [type-check-command]
+    
+    - name: Run tests
+      run: [test-command]
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/coverage.xml
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run security scan
+      run: [security-scan-command]
+    
+    - name: Dependency audit
+      run: [dependency-audit-command]
+
+  build-image:
+    needs: [build-and-test, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Log in to registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    
+    - name: Build and push image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  deploy-staging:
+    needs: build-image
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Deploy to staging
+      run: |
+        # Deploy to staging environment
+        [deployment-command]
+    
+    - name: Run smoke tests
+      run: [smoke-test-command]
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy to production
+      run: |
+        # Deploy to production
+        [deployment-command]
+    
+    - name: Verify deployment
+      run: [verification-command]
+    
+    - name: Notify team
+      uses: [notification-action]
+      with:
+        status: ${{ job.status }}
+```
+
+## Environment Configuration
+
+### 1. Environment Variables
+
+**Best Practices:**
+```bash
+# Development (.env.development)
+NODE_ENV=development
+PORT=3000
+DATABASE_URL=postgres://localhost/myapp_dev
+LOG_LEVEL=debug
+API_KEY=dev-key
+
+# Production
+NODE_ENV=production
+PORT=8080
+DATABASE_URL=${{ secrets.DATABASE_URL }}
+LOG_LEVEL=warn
+API_KEY=${{ secrets.API_KEY }}
+```
+
+**Environment Variable Management:**
+- Never commit secrets to version control
+- Use environment-specific files
+- Use secret management services in production
+- Validate required variables on startup
+- Provide .env.example template
+- Document all variables
+- Use strong defaults where appropriate
+
+### 2. Configuration Files
+
+**Configuration Hierarchy:**
+```
+1. Default config (checked in)
+2. Environment-specific config
+3. Local config (gitignored)
+4. Environment variables (highest priority)
+```
+
+## Health Checks and Monitoring
+
+### 1. Health Check Implementation
+
+**Health Check Endpoint:**
+```
+[Replace with your language/framework]
+
+Health check endpoint:
+GET /health
+
+Response:
+{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "version": "1.2.3",
+  "checks": {
+    "database": "healthy",
+    "cache": "healthy",
+    "externalApi": "degraded"
+  },
+  "uptime": 3600
+}
+
+Status codes:
+- 200: Healthy
+- 503: Unhealthy
+```
+
+**Liveness vs. Readiness:**
+```
+Liveness: Is the application running?
+- Returns 200 if app is alive
+- If fails, restart container
+
+Readiness: Can the application handle traffic?
+- Returns 200 if ready to serve requests
+- If fails, remove from load balancer
+```
+
+### 2. Monitoring and Observability
+
+**The Three Pillars:**
+
+**Logs:**
+- Structured logging (JSON format)
+- Log aggregation (ELK, Splunk, CloudWatch)
+- Log levels (DEBUG, INFO, WARN, ERROR)
+- Correlation IDs for request tracking
+- Don't log sensitive data
+
+**Metrics:**
+- Application metrics (requests, latency, errors)
+- System metrics (CPU, memory, disk)
+- Business metrics (signups, conversions)
+- Use time-series databases (Prometheus, InfluxDB)
+- Set up dashboards (Grafana, Datadog)
+
+**Traces:**
+- Distributed tracing (OpenTelemetry, Jaeger)
+- Request flow across services
+- Performance bottleneck identification
+- Error tracking (Sentry, Rollbar)
+
+### 3. Alerting
+
+**Alert Best Practices:**
+- Alert on symptoms, not causes
+- Actionable alerts only
+- Clear severity levels (critical, warning, info)
+- Runbooks for common alerts
+- Avoid alert fatigue
+- Set appropriate thresholds
+
+**Alert Examples:**
+```
+Critical: 
+- Service down
+- Error rate > 5%
+- Response time > 2s
+- Disk usage > 90%
+
+Warning:
+- Error rate > 1%
+- Response time > 1s
+- Disk usage > 80%
+- Unusual traffic patterns
+```
+
+## Deployment Strategies
+
+### 1. Rolling Deployment
+
+**Process:**
+1. Deploy to subset of instances
+2. Verify health checks pass
+3. Continue to next subset
+4. Repeat until all updated
+
+**Pros:** Zero downtime, gradual rollout  
+**Cons:** Multiple versions running simultaneously
+
+### 2. Blue-Green Deployment
+
+**Process:**
+1. Deploy new version to "green" environment
+2. Test thoroughly
+3. Switch traffic from "blue" to "green"
+4. Keep "blue" for quick rollback
+
+**Pros:** Easy rollback, testing before traffic  
+**Cons:** Requires double resources
+
+### 3. Canary Deployment
+
+**Process:**
+1. Deploy to small subset (1-5%)
+2. Monitor metrics
+3. Gradually increase traffic
+4. Complete or rollback based on metrics
+
+**Pros:** Risk mitigation, early problem detection  
+**Cons:** Complex routing, longer deployment
+
+### 4. Feature Flags
+
+**Use Cases:**
+- Gradual feature rollout
+- A/B testing
+- Emergency kill switch
+- Environment-specific features
+
+```
+[Replace with your feature flag library]
+
+if (featureFlags.isEnabled('new-feature')) {
+  // New code path
+} else {
+  // Old code path
+}
+```
+
+## Database Migrations
+
+### 1. Migration Strategy
+
+**Best Practices:**
+- Run migrations before deployment
+- Make migrations backwards compatible
+- Test rollback procedure
+- Use migration tools (Flyway, Liquibase, Alembic)
+- Version migrations
+- Keep migrations idempotent
+
+**Migration Patterns:**
+```
+Safe migrations:
+- Add nullable columns
+- Add tables
+- Add indexes (with CONCURRENTLY)
+- Insert data
+
+Risky migrations:
+- Drop columns/tables
+- Rename columns
+- Change column types
+- Add NOT NULL constraint
+```
+
+### 2. Zero-Downtime Migrations
+
+**Multi-Step Process:**
+```
+Step 1: Add new column (nullable)
+  Deploy code that writes to both old and new
+
+Step 2: Backfill data
+  Migrate data from old to new column
+
+Step 3: Deploy code that reads from new column
+  Still writes to both
+
+Step 4: Remove old column
+  Stop writing to old column, then drop it
+```
+
+## Secrets Management
+
+### 1. Secret Storage
+
+**Options:**
+- **Cloud Provider**: AWS Secrets Manager, Azure Key Vault, GCP Secret Manager
+- **Third-Party**: HashiCorp Vault, Doppler
+- **Kubernetes**: Kubernetes Secrets (with encryption)
+- **CI/CD**: GitHub Secrets, GitLab CI Variables
+
+**Best Practices:**
+- Rotate secrets regularly
+- Least privilege access
+- Audit secret access
+- Encrypt secrets at rest
+- Never commit secrets to version control
+- Use secret scanning tools
+
+### 2. Secret Injection
+
+**Methods:**
+- Environment variables (most common)
+- Configuration files (generated at deployment)
+- Secret volumes (Kubernetes)
+- Secret management APIs
+
+## Infrastructure as Code
+
+### 1. IaC Benefits
+
+- Version controlled infrastructure
+- Reproducible environments
+- Self-documenting
+- Automated provisioning
+- Disaster recovery
+
+### 2. IaC Tools
+
+**Terraform:**
+- Multi-cloud support
+- Declarative syntax
+- State management
+- Large community
+
+**CloudFormation / ARM / Deployment Manager:**
+- Native cloud integration
+- Tight integration with cloud services
+
+**Pulumi:**
+- Use programming languages
+- Type safety
+- Familiar tooling
+
+### 3. IaC Best Practices
+
+- Keep state files secure
+- Use modules for reusability
+- Separate environments
+- Plan before apply
+- Use remote state
+- Version IaC code
+- Code review infrastructure changes
+
+## Rollback Procedures
+
+### 1. Rollback Strategy
+
+**Preparation:**
+- Maintain previous versions
+- Test rollback in staging
+- Document rollback process
+- Set rollback time limits
+- Monitor after rollback
+
+**Triggers for Rollback:**
+- Increased error rate
+- Failed health checks
+- Performance degradation
+- Failed smoke tests
+- Customer reports
+
+### 2. Database Rollback
+
+**Challenges:**
+- Data might have changed
+- Schema changes are harder to revert
+- May need data migration
+
+**Strategies:**
+- Avoid destructive migrations
+- Maintain backwards compatibility
+- Use feature flags to disable features
+- Restore from backup (last resort)
+
+## Disaster Recovery
+
+### 1. Backup Strategy
+
+**What to Backup:**
+- Database (regular automated backups)
+- Application configuration
+- User-uploaded files
+- Secrets and certificates
+- Infrastructure configuration
+
+**Backup Types:**
+- Full backups (weekly)
+- Incremental backups (daily)
+- Continuous backups (transaction logs)
+
+**Backup Testing:**
+- Regular restore tests
+- Document restore procedure
+- Measure Recovery Time Objective (RTO)
+- Measure Recovery Point Objective (RPO)
+
+### 2. Disaster Recovery Plan
+
+**Components:**
+- Backup and restore procedures
+- Failover procedures
+- Communication plan
+- Roles and responsibilities
+- Post-incident review process
+
+## Performance and Scaling
+
+### 1. Horizontal vs. Vertical Scaling
+
+**Horizontal (Scale Out):**
+- Add more instances
+- Better for stateless applications
+- Requires load balancing
+- More resilient
+
+**Vertical (Scale Up):**
+- Increase resources per instance
+- Simpler to implement
+- Hardware limitations
+- Single point of failure
+
+### 2. Load Balancing
+
+**Load Balancer Types:**
+- Layer 4 (Transport): TCP/UDP
+- Layer 7 (Application): HTTP/HTTPS
+
+**Load Balancing Algorithms:**
+- Round Robin
+- Least Connections
+- IP Hash
+- Weighted distribution
+
+### 3. Caching Strategy
+
+**Cache Layers:**
+- CDN (static assets)
+- Application cache (Redis, Memcached)
+- Database query cache
+- HTTP cache headers
+
+**Cache Invalidation:**
+- Time-based (TTL)
+- Event-based
+- Manual invalidation
+- Cache-aside pattern
+
+## Security in Deployment
+
+### 1. Supply Chain Security
+
+- Scan dependencies for vulnerabilities
+- Pin dependency versions
+- Use private registries
+- Sign and verify artifacts
+- Regular security updates
+
+### 2. Runtime Security
+
+- Run containers as non-root
+- Read-only file systems
+- Drop unnecessary capabilities
+- Network policies
+- Secret management
+- Regular security scans
+
+### 3. Access Control
+
+- Principle of least privilege
+- Role-based access (RBAC)
+- Multi-factor authentication
+- Audit logs
+- Regular access reviews
+
+## Deployment Checklist
+
+### Before Deployment:
+
+- [ ] All tests pass
+- [ ] Security scans completed
+- [ ] Dependency audit clean
+- [ ] Code review approved
+- [ ] Documentation updated
+- [ ] Changelog updated
+- [ ] Database migrations tested
+- [ ] Rollback plan documented
+- [ ] Stakeholders notified
+
+### During Deployment:
+
+- [ ] Monitoring active
+- [ ] Health checks passing
+- [ ] Logs being collected
+- [ ] Metrics being recorded
+- [ ] Smoke tests passing
+- [ ] Performance acceptable
+
+### After Deployment:
+
+- [ ] Verify functionality
+- [ ] Check error rates
+- [ ] Monitor performance
+- [ ] Review logs
+- [ ] Notify team
+- [ ] Update status page
+
+---
+
+**Remember**: Deployment is not just pushing code. It's a process that includes monitoring, rollback capability, and continuous improvement. Automate everything, monitor everything, and always have a rollback plan.

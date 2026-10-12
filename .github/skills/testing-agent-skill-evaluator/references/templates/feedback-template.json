@@ -1,0 +1,8 @@
+{
+  "human_review_required": true,
+  "review_notes": [
+    "Verify whether the generated assertion matches the real login behavior.",
+    "Confirm locator strategy with the automation standard.",
+    "Check whether this test could be flaky in CI."
+  ]
+}

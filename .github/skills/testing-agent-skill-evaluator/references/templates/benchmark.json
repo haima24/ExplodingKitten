@@ -1,0 +1,20 @@
+{
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": 0.85,
+      "average_duration_ms": 21000,
+      "average_tokens": 4600
+    },
+    "without_skill": {
+      "pass_rate": 0.55,
+      "average_duration_ms": 16000,
+      "average_tokens": 3200
+    },
+    "delta": {
+      "pass_rate": 0.30,
+      "duration_ms": 5000,
+      "tokens": 1400
+    }
+  },
+  "recommendation": "The target skill adds clear value, but locator quality should be improved before team-wide adoption."
+}
