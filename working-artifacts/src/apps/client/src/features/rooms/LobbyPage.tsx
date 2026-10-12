@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { formatName, type MemberView } from '@wb/protocol/shared';
+import type { MemberView } from '@wb/protocol/shared';
+import { displayName } from '../../copy/names';
 import { t } from '../../copy';
 import { messageForError } from '../../copy/errors';
 import { Avatar } from '../../components/common/Avatar';
@@ -63,7 +64,7 @@ export function LobbyPage(): JSX.Element | null {
         <h2 id="players-title">{t('lobby.players', { n: members.length, max: room.capacity })}</h2>
         <ul className={r['players']}>
           {members.map((m) => {
-            const name = formatName(m.name);
+            const name = displayName(m.name);
             return (
               <li key={m.playerId} className={r['player']}>
                 <Avatar avatarId={m.avatarId} size={48} />
@@ -138,7 +139,7 @@ export function LobbyPage(): JSX.Element | null {
             ) : null}
           </>
         ) : (
-          <p role="status">{t('lobby.waitingHost', { name: host ? formatName(host.name) : '…' })}</p>
+          <p role="status">{t('lobby.waitingHost', { name: host ? displayName(host.name) : '…' })}</p>
         )}
       </div>
 
@@ -166,7 +167,7 @@ export function LobbyPage(): JSX.Element | null {
 
       {removing ? (
         <ConfirmDialog
-          title={t('confirm.remove.title', { name: formatName(removing.name) })}
+          title={t('confirm.remove.title', { name: displayName(removing.name) })}
           body={t('confirm.remove.body')}
           safeLabel={t('confirm.remove.cancel')}
           dangerLabel={t('confirm.remove.confirm')}

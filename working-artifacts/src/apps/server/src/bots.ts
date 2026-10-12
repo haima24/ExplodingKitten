@@ -17,6 +17,8 @@ export function chooseAction(view: PlayerView, rng: Rng): PlayerAction | null {
         return { type: 'USE_TREAT' };
       case 'REINSERT':
         return { type: 'REINSERT_BOOM', position: 'RANDOM' };
+      case 'STEAL_PICK':
+        return { type: 'PICK_STEAL', position: rng.nextInt(view.decision.count) };
       case 'FAVOR_PICK': {
         const hand = view.you.hand;
         const pick = hand[rng.nextInt(hand.length)];

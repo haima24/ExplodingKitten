@@ -37,6 +37,8 @@ As a **player** I want to **play two matching Cat cards together to take a rando
 | Favor is the only card that picks a target | A pair also picks a target |
 | Nope can stop any action card ([US-062](../release-1.0.1/US-062-nope-card.md)) | Nope can also stop a pair |
 
+**Update:** the steal is a chosen face-down card, not a random one, from [US-066](US-066-pick-a-card-from-a-fanned-hand.md).
+
 **Decision (team):** the three-of-a-kind combo (name a card) is **not** part of the game. Only pairs exist.
 
 ---
@@ -120,8 +122,8 @@ As a **player** I want to **play two matching Cat cards together to take a rando
 | AC ID | Description |
 | --- | --- |
 | AC11 | **Choose a target.** Given I play a pair, then I pick one active player who holds at least one card. Players with no cards and players who are out are not offered. |
-| AC12 | **Take a random card.** Given the pair is not stopped, then one random card from the target's hand moves to my hand. I see which card it is; the target and everyone else see only that a card was taken. |
-| AC13 | **Server decides the card.** Given the pair resolves, then the server chooses the card; neither player can influence or see it in advance. |
+| AC12 | **Choose a card.** Given the pair is not stopped, then I choose one face-down card from the target's hand ([US-066](US-066-pick-a-card-from-a-fanned-hand.md)) and it moves to my hand. I see which card it is; the target and everyone else see only that a card was taken. |
+| AC13 | **Server resolves the pick.** Given I chose a face-down position, then the server maps it to the real card; no one can see it in advance. If time runs out the server picks at random. |
 | AC14 | **The two cards are spent either way.** Given a pair, then both cards go to the discard pile whether or not a Nope stops it. |
 
 ### 6.4 Stopping and edge cases
@@ -155,7 +157,7 @@ As a **player** I want to **play two matching Cat cards together to take a rando
 | --- | --- |
 | BR01 | A Cat card is played only as a pair of the **same design**. There is no three-of-a-kind combo. |
 | BR02 | A pair is an action card for Nope purposes and for the turn flow: it can be stopped and it does not end the turn. |
-| BR03 | The server picks the random card and applies the pair; the client never decides the outcome. |
+| BR03 | The taker chooses a face-down position (US-066); the server turns it into the real card and applies the pair. The client never knows which card is where. |
 | BR04 | Only the player who takes a card learns its identity. |
 | BR05 | A pair always needs a target who holds at least one card. |
 | BR06 | The two cards are always spent, even when the pair is stopped. |

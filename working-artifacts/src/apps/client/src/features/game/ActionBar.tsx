@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CARD_CATALOG } from '@wb/engine/cards';
-import { formatName } from '@wb/protocol/shared';
+import { displayName } from '../../copy/names';
 import { t } from '../../copy';
 import { cardEffect, cardName, cardNotPlayableReason } from '../../copy/cards';
 import { Avatar } from '../../components/common/Avatar';
@@ -65,7 +65,7 @@ function TargetPicker({
       <div className={g['targets']}>
         {targets.map((o, index) => {
           const m = members.find((x) => x.playerId === o.id);
-          const name = m ? formatName(m.name) : t('common.someone');
+          const name = m ? displayName(m.name) : t('common.someone');
           return (
             <button
               key={o.id}

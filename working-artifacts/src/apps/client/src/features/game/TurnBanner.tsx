@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { formatName } from '@wb/protocol/shared';
+import { displayName } from '../../copy/names';
 import { t } from '../../copy';
 import { Button } from '../../components/common/Button';
 import { announcer } from '../../lib/announcer';
@@ -103,7 +103,7 @@ export function AbsentPlayerBanner(): JSX.Element | null {
     <div className={g['absent']}>
       <p>
         <span aria-hidden="true">◌ </span>
-        {t('absent.waiting', { name: member ? formatName(member.name) : name })}
+        {t('absent.waiting', { name: member ? displayName(member.name) : name })}
       </p>
       {!hostMayDecide ? <p>{t('absent.countdown', { n: seconds })}</p> : null}
       {hostMayDecide && isHost ? (

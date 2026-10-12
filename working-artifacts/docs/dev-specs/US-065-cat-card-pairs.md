@@ -10,7 +10,7 @@
 
 ## 1. Goal
 
-Make Cat cards useful: two Cat cards of the same design, played together at another player, take one random card from that player's hand. No three-of-a-kind. The deck becomes 5 designs × 4 cards (20 Cat cards). The engine stays pure, the server stays authoritative, and the taken card is revealed only to the player who took it.
+Make Cat cards useful: two Cat cards of the same design, played together at another player, take one card from that player's hand, chosen by the taker from face-down cards ([US-066](US-066-pick-a-card-from-a-fanned-hand.md)). No three-of-a-kind. The deck becomes 5 designs × 4 cards (20 Cat cards). The engine stays pure, the server stays authoritative, and the taken card is revealed only to the player who took it.
 
 ## 2. Decisions taken for the open questions
 
@@ -31,7 +31,7 @@ Make Cat cards useful: two Cat cards of the same design, played together at anot
 - New player action `PLAY_PAIR { cardIds: [string, string], targetId: string }`.
 - `playPair` in `game.ts` checks, in order: it is the player's turn (`NOT_YOUR_TURN`), phase is `turn` (`WRONG_PHASE`), the two ids differ and both are in hand (`CARD_NOT_IN_HAND`), both are `COZY_CAT` of the same `variant` (`NOT_PLAYABLE`), the target is another active player holding at least one card (`INVALID_TARGET`). No new error code.
 - On success: both cards go to the discard pile (the first on top), public `CARD_PLAYED { playerId, kind: 'COZY_CAT', cardId, pair: true, targetId, variant }`, then `openWindowOrResolve` with the first card. So the **Nope window works as for any action card** (US-062), and the pair does not end the turn.
-- Effect (`effects.ts`, case `COZY_CAT`): if the target is still active and holds a card, `rng` chooses one, it moves to the actor's hand, public `CARD_STOLEN { fromId, toId }` (no card id) and private `STOLEN_CARD { card }` to the actor. Otherwise the pair ends quietly (the same re-check Favor does).
+- Effect (`effects.ts`, case `COZY_CAT`): if the target is still active and holds a card, the engine opens a `STEAL_PICK` step (see [US-066](US-066-pick-a-card-from-a-fanned-hand.md)): the taker chooses a face-down slot, and the chosen card moves to the actor's hand with public `CARD_STOLEN { fromId, toId }` (no card id) and private `STOLEN_CARD { card }`. A timeout picks a random slot. Otherwise the pair ends quietly (the same re-check Favor does).
 - New events: `CARD_STOLEN` (public), `STOLEN_CARD` (private).
 - Invariants are unchanged (cards only move between hands and the discard pile). The existing leak scan holds: the stolen card id appears only in the actor's private event and hand.
 

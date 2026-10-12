@@ -37,6 +37,12 @@ export type Pending =
   | { kind: 'REINSERT'; playerId: string; boomCard: Card }
   | { kind: 'FAVOR_PICK'; playerId: string; requesterId: string }
   /**
+   * A Cat card pair stood (US-066). `playerId` is the taker, who chooses one
+   * face-down slot. `order` is the target's card ids in a fresh random order; it
+   * is never sent to any client, so a slot tells nothing about its card.
+   */
+  | { kind: 'STEAL_PICK'; playerId: string; targetId: string; order: string[] }
+  /**
    * Response window after an action card was played and at least one other
    * player holds a Nope. `playerId` is the player who played `card`; `nopes`
    * counts Nopes played so far (odd = the card is stopped); `responders` are the
@@ -89,7 +95,9 @@ export type PlayerAction =
   | { type: 'NOPE' }
   | { type: 'PASS_NOPE' }
   /** Two Cat cards of the same design: take a random card from `targetId` (US-065). */
-  | { type: 'PLAY_PAIR'; cardIds: [string, string]; targetId: string };
+  | { type: 'PLAY_PAIR'; cardIds: [string, string]; targetId: string }
+  /** The taker's choice of face-down slot (0-based) after a pair stood (US-066). */
+  | { type: 'PICK_STEAL'; position: number };
 
 /** Actions only the server may issue. */
 export type ServerAction =
@@ -151,6 +159,7 @@ export type EventType =
   | 'NOPE_RESOLVED'
   | 'TURN_TIMEOUT'
   | 'CARD_STOLEN'
+  | 'STEAL_STARTED'
   // private
   | 'DRAWN_CARD'
   | 'PEEK_RESULT'
@@ -187,6 +196,7 @@ export type DecisionView =
   | { kind: 'TREAT_DECISION' }
   | { kind: 'REINSERT' }
   | { kind: 'FAVOR_PICK'; requesterId: string }
+  | { kind: 'STEAL_PICK'; targetId: string; count: number }
   | { kind: 'NOPE_WINDOW'; actorId: string; cardKind: CardKind; nopes: number };
 
 /** The only game data ever sent to a device. */
@@ -205,6 +215,8 @@ export interface PlayerView {
   waitingFor?: string;
   /** Public: an action card is waiting to see whether anyone plays a Nope. */
   nopeWindow?: { actorId: string; cardKind: CardKind; nopes: number };
+  /** Public: someone is choosing a face-down card from another player's hand (US-066). */
+  steal?: { thiefId: string; targetId: string; count: number };
   /** Added by the server (the engine has no clock): when the window times out. */
   nopeDeadlineAt?: number;
   winnerId?: string;

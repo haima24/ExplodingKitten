@@ -34,6 +34,12 @@ export function eliminate(
       (pending.playerId === playerId || pending.requesterId === playerId)
     ) {
       state.pending = null;
+    } else if (
+      pending.kind === 'STEAL_PICK' &&
+      (pending.playerId === playerId || pending.targetId === playerId)
+    ) {
+      // The taker or the target left: nothing is taken and the game goes on.
+      state.pending = null;
     } else if (pending.kind === 'NOPE_WINDOW') {
       if (pending.playerId === playerId) {
         // The player whose card is waiting left: the card is dropped.

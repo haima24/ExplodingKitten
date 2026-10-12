@@ -140,7 +140,7 @@ export class Hub {
     if (!successor) return false;
     room.hostId = successor.playerId;
     room.hostAwayDeadline = null;
-    this.broadcastRoom(room, [{ kind: 'NEW_HOST', name: formatName(successor.name) }]);
+    this.broadcastRoom(room, [{ kind: 'NEW_HOST', name: formatName(successor.name), who: successor.name }]);
     if (room.absent) this.broadcastAbsent(room);
     return true;
   }
@@ -187,7 +187,7 @@ export class Hub {
     const notices: RoomNotice[] = [];
     if (member.playerId === room.hostId && !member.left) {
       room.hostAwayDeadline = this.clock.now() + this.config.hostAwayMs;
-      notices.push({ kind: 'LOST_CONNECTION', name: formatName(member.name) });
+      notices.push({ kind: 'LOST_CONNECTION', name: formatName(member.name), who: member.name });
     }
     this.broadcastRoom(room, notices);
     this.recomputeAbsent(room);

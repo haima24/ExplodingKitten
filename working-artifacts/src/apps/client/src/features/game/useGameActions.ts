@@ -16,6 +16,7 @@ export function useGameActions(): {
   reinsert: (position: InsertPosition) => Promise<boolean>;
   pickFavor: (cardId: string) => Promise<boolean>;
   playPair: (cardIds: [string, string], targetId: string) => Promise<boolean>;
+  pickSteal: (position: number) => Promise<boolean>;
   nope: () => Promise<boolean>;
   passNope: () => Promise<boolean>;
 } {
@@ -51,6 +52,7 @@ export function useGameActions(): {
     reinsert: (position) => run({ type: 'REINSERT_BOOM', position }),
     pickFavor: (cardId) => run({ type: 'PICK_FAVOR_CARD', cardId }),
     playPair: (cardIds, targetId) => run({ type: 'PLAY_PAIR', cardIds, targetId }, 'COZY_CAT'),
+    pickSteal: (position) => run({ type: 'PICK_STEAL', position }, 'COZY_CAT'),
     nope: () => run({ type: 'NOPE' }),
     passNope: () => run({ type: 'PASS_NOPE' }),
   };

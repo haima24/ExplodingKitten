@@ -35,6 +35,7 @@ const gameActionSchema = z.discriminatedUnion('type', [
     cardIds: z.tuple([text(64), text(64)]),
     targetId: text(64),
   }),
+  z.object({ type: z.literal('PICK_STEAL'), position: z.number().int().min(0).max(99) }),
   z.object({ type: z.literal('NOPE') }),
   z.object({ type: z.literal('PASS_NOPE') }),
 ]);
@@ -57,6 +58,8 @@ export const clientSchemas = {
   'game.action': z.object({ actionId: z.string().min(1).max(64), action: gameActionSchema }),
   'game.end': empty,
   'game.skipAbsent': z.object({ playerId: text(64), decision: z.enum(['WAIT', 'SKIP']) }),
+  /** The taker's finger position over the fan, shown live to the others (US-066). */
+  'game.hover': z.object({ position: z.number().int().min(0).max(99).nullable() }),
   ping: z.object({ t: z.number().optional() }),
 } as const;
 

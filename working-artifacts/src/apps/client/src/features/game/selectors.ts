@@ -1,5 +1,6 @@
 import type { PlayerView } from '@wb/engine/types';
-import { formatName, type MemberView, type RoomView } from '@wb/protocol/shared';
+import type { MemberView, RoomView } from '@wb/protocol/shared';
+import { displayName } from '../../copy/names';
 import { t, type CopyKey, type CopyParams } from '../../copy';
 import { cardName } from '../../copy/cards';
 import { CARD_CATALOG } from '@wb/engine/cards';
@@ -7,7 +8,7 @@ import type { State } from '../../net/state';
 
 export function nameOf(room: RoomView | null, playerId: string | undefined): string {
   const member = room?.members.find((m) => m.playerId === playerId);
-  return member ? formatName(member.name) : t('common.someone');
+  return member ? displayName(member.name) : t('common.someone');
 }
 
 export const selectMyId = (s: State): string | null =>
@@ -98,7 +99,7 @@ export function selectChips(s: State): Chip[] {
     const current = view.phase !== 'finished' && r.id === view.currentPlayerId && !r.out;
     return {
       id: r.id,
-      name: m ? formatName(m.name) : t('common.someone'),
+      name: m ? displayName(m.name) : t('common.someone'),
       avatarId: m?.avatarId ?? 'biscuit',
       isBot: m?.isBot ?? false,
       isMe: r.id === view.you.id,
@@ -128,6 +129,7 @@ export function selectHint(s: State): Hint | null {
   if (view.decision) {
     if (view.decision.kind === 'TREAT_DECISION') return { key: 'hint.treat' };
     if (view.decision.kind === 'REINSERT') return { key: 'hint.reinsert' };
+    if (view.decision.kind === 'STEAL_PICK') return { key: 'steal.hint' };
     return { key: 'hint.favor' };
   }
   if (view.waitingFor && view.waitingFor !== view.you.id) {

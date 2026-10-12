@@ -19,7 +19,9 @@ export type SoundName =
   | 'nope'
   | 'fizzle'
   | 'warn'
-  | 'timeout';
+  | 'timeout'
+  | 'tick'
+  | 'flip';
 
 /** A pitched tone. `endFreq` glides the pitch; `gain` is relative (default 1). */
 interface Tone {
@@ -109,6 +111,9 @@ const SOUNDS: Record<SoundName, Part[]> = {
   fizzle: [noise(0, 0.3, 'lowpass', 2400, { to: 150, gain: 1.4 })],
   // Turn timer: a double beep (5 s left) and a falling "time's up".
   warn: [tone(880, 0, 0.08), tone(880, 0.15, 0.08)],
+  // Fan: a soft tick as the highlight moves, and a flip when the card is taken (US-066).
+  tick: [tone(1250, 0, 0.03, { gain: 0.5 })],
+  flip: [noise(0, 0.07, 'highpass', 2600, { gain: 1.4 }), tone(700, 0, 0.12, { endFreq: 1150, type: 'triangle' })],
   timeout: [tone(440, 0, 0.1, { type: 'triangle' }), tone(330, 0.12, 0.1, { type: 'triangle' }), tone(196, 0.24, 0.25, { type: 'triangle' })],
 };
 

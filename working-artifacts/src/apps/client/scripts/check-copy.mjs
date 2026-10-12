@@ -25,6 +25,29 @@ if (noAudio.length > 0) {
   process.exit(1);
 }
 
+// Every curated name word needs a Vietnamese form (US-067), including the Bot Buddy words.
+const identity = readFileSync(fileURLToPath(new URL('../../../packages/protocol/src/identity.ts', import.meta.url)), 'utf8');
+const names = readFileSync(dir + 'names.ts', 'utf8');
+const listed = (name) => {
+  const body = identity.match(new RegExp(`export const ${name} = \\[([\\s\\S]*?)\\] as const`))?.[1] ?? '';
+  return [...body.matchAll(/'([^']+)'/g)].map((m) => m[1]);
+};
+const mapped = (name) => {
+  const body = names.match(new RegExp(`export const ${name}[^=]*= \\{([\\s\\S]*?)\\n\\};`))?.[1] ?? '';
+  return new Set([...body.matchAll(/^ {2}(\w+):/gm)].map((m) => m[1]));
+};
+const botWords = [...identity.matchAll(/adjective: '([^']+)', noun: '([^']+)'/g)];
+const viAdjectives = mapped('VI_ADJECTIVES');
+const viNouns = mapped('VI_NOUNS');
+const noName = [
+  ...[...listed('ADJECTIVES'), ...botWords.map((m) => m[1])].filter((w) => !viAdjectives.has(w)).map((w) => `adjective ${w}`),
+  ...[...listed('NOUNS'), ...botWords.map((m) => m[2])].filter((w) => !viNouns.has(w)).map((w) => `noun ${w}`),
+];
+if (noName.length > 0 || listed('ADJECTIVES').length === 0 || listed('NOUNS').length === 0) {
+  console.error(`Name words without a Vietnamese form (copy/names.ts):\n  ${noName.join('\n  ') || '(lists not found)'}`);
+  process.exit(1);
+}
+
 if (missing.length > 0 || extra.length > 0) {
   if (missing.length > 0) console.error(`Missing in vi.ts (${missing.length}):\n  ${missing.join('\n  ')}`);
   if (extra.length > 0) console.error(`Not in en.ts (${extra.length}):\n  ${extra.join('\n  ')}`);

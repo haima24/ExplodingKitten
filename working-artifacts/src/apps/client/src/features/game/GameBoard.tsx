@@ -16,6 +16,7 @@ import {
 import { GameMenu } from './GameMenu';
 import { Hand } from './Hand';
 import { PlayerChips } from './PlayerChips';
+import { StealPickDialog, StealReveal, StealWatch } from './StealFan';
 import { TurnClockEffects } from './TurnClock';
 import { Piles } from './Piles';
 import { AbsentPlayerBanner, TurnBanner } from './TurnBanner';
@@ -103,6 +104,7 @@ export function GameBoard(): JSX.Element | null {
       </div>
       <div className={g['alerts']}>
         <AbsentPlayerBanner />
+        <StealWatch />
         <CoachMark />
       </div>
       <div className={g['bannerArea']}>
@@ -128,6 +130,8 @@ export function GameBoard(): JSX.Element | null {
       {decisionKind === 'REINSERT' ? <ReinsertPicker /> : null}
       {decisionKind === 'FAVOR_PICK' ? <FavorPickDialog /> : null}
       {decisionKind === 'NOPE_WINDOW' ? <NopeDialog /> : null}
+      {decisionKind === 'STEAL_PICK' ? <StealPickDialog /> : null}
+      <StealReveal />
       {nap ? <NapDialog /> : null}
       {peek ? <PeekOverlay cards={peek} /> : null}
     </div>

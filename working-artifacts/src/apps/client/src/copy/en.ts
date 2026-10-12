@@ -443,6 +443,15 @@ export const en = {
   'settings.voice.using': 'Voice used: {name}',
   'settings.voice.unavailable': "This device has no voice for the chosen language, so you may hear nothing. The text still shows.",
 
+  // Pick a card from a fanned-out hand (US-066)
+  'steal.title': 'Pick a card from {name}',
+  'steal.hint': 'Sweep across the cards, then tap Take this card.',
+  'steal.take': 'Take this card',
+  'steal.position': 'Card {n} of {total}, face down',
+  'steal.watching': '{thief} is choosing a card from {target}',
+  'steal.fanLabel': 'Cards of {name}, face down',
+  'voice.V21': 'Pick a card.',
+
   // Cat card pairs (US-065)
   'cat.1': 'Tacocat',
   'cat.2': 'Potato Cat',
@@ -453,7 +462,7 @@ export const en = {
   'pair.sameDesign': 'A pair needs two Cat cards of the same design.',
   'pair.max': 'A pair is two cards. Tap one of them to take it out.',
   'pair.target.title': 'Take a card from who?',
-  'pair.target.prompt': 'Pick a player. You take one random card from their hand.',
+  'pair.target.prompt': 'Pick a player. Then you choose one of their cards, face down.',
   'hint.pairNext': 'Tap another {card} to make a pair.',
   'hint.catAlone': 'A Cat card needs a matching Cat card to play.',
   'hint.pairReady': 'Tap Play pair, then pick who to take a card from.',

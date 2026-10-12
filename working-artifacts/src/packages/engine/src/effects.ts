@@ -39,15 +39,19 @@ export function applyEffect(
       break;
     }
     case 'COZY_CAT': {
-      // A pair of Cat cards: take one random card from the target (US-065).
+      // A pair of Cat cards: the taker will choose one of the target's cards (US-065, US-066).
       const target = targetId === undefined ? undefined : s.players.find((p) => p.id === targetId);
       const actor = getPlayer(s, actorId);
       if (!target || target.status !== 'active' || target.hand.length < 1 || actor.status !== 'active') break;
-      const [stolen] = target.hand.splice(rng.nextInt(target.hand.length), 1);
-      if (!stolen) break;
-      actor.hand.push(stolen);
-      emit(s, ev, 'CARD_STOLEN', { fromId: target.id, toId: actorId });
-      emit(s, ev, 'STOLEN_CARD', { card: stolen }, actorId);
+      // The taker now picks one face-down slot. The order is shuffled for this steal,
+      // so a slot reveals nothing about the card behind it (US-066).
+      const order = shuffle(
+        target.hand.map((c) => c.id),
+        rng,
+      );
+      s.pending = { kind: 'STEAL_PICK', playerId: actorId, targetId: target.id, order };
+      s.phase = 'decision';
+      emit(s, ev, 'STEAL_STARTED', { thiefId: actorId, targetId: target.id, count: order.length });
       break;
     }
     default:

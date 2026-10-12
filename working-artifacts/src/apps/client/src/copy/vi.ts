@@ -41,8 +41,8 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'conn.status.idle': 'Chưa kết nối',
 
   // Identity
-  'identity.adjective': 'Từ thứ nhất',
-  'identity.noun': 'Từ thứ hai',
+  'identity.adjective': 'Tên',
+  'identity.noun': 'Tên đệm',
   'identity.name': 'Tên của bạn',
   'identity.preview': 'Bạn sẽ là {name}',
   'identity.shuffle': 'Đổi tên khác',
@@ -445,6 +445,15 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'settings.voice.unavailable':
     'Thiết bị này chưa có giọng đọc cho ngôn ngữ đã chọn nên có thể bạn không nghe thấy gì. Chữ vẫn hiện bình thường.',
 
+  // Pick a card from a fanned-out hand (US-066)
+  'steal.title': 'Chọn một lá bài của {name}',
+  'steal.hint': 'Lướt qua các lá bài, rồi chạm Lấy lá này.',
+  'steal.take': 'Lấy lá này',
+  'steal.position': 'Lá {n} trên {total}, úp mặt',
+  'steal.watching': '{thief} đang chọn một lá bài của {target}',
+  'steal.fanLabel': 'Bài của {name}, úp mặt',
+  'voice.V21': 'Hãy chọn một lá bài.',
+
   // Cat card pairs (US-065)
   'cat.1': 'Mèo Taco',
   'cat.2': 'Mèo Khoai',
@@ -455,7 +464,7 @@ export const vi: Partial<Record<CopyKey, string>> = {
   'pair.sameDesign': 'Một cặp cần hai lá mèo cùng kiểu.',
   'pair.max': 'Một cặp gồm hai lá. Chạm vào một lá để bỏ chọn.',
   'pair.target.title': 'Lấy bài của ai?',
-  'pair.target.prompt': 'Chọn một người chơi. Bạn lấy ngẫu nhiên một lá từ tay họ.',
+  'pair.target.prompt': 'Chọn một người chơi. Rồi bạn chọn một lá bài úp của họ.',
   'hint.pairNext': 'Chạm thêm một lá {card} để thành cặp.',
   'hint.catAlone': 'Lá mèo cần thêm một lá mèo giống để chơi.',
   'hint.pairReady': 'Chạm Chơi cặp, rồi chọn người để lấy bài.',

@@ -57,11 +57,17 @@ export function viewFor(state: GameState, playerId: string): PlayerView {
     }
   } else if (pending) {
     view.waitingFor = pending.playerId;
+    if (pending.kind === 'STEAL_PICK') {
+      // Everyone sees that a pick is under way and how many cards are in the fan; the slot order stays on the server.
+      view.steal = { thiefId: pending.playerId, targetId: pending.targetId, count: pending.order.length };
+    }
     if (pending.playerId === playerId) {
       const decision: DecisionView =
         pending.kind === 'FAVOR_PICK'
           ? { kind: 'FAVOR_PICK', requesterId: pending.requesterId }
-          : { kind: pending.kind };
+          : pending.kind === 'STEAL_PICK'
+            ? { kind: 'STEAL_PICK', targetId: pending.targetId, count: pending.order.length }
+            : { kind: pending.kind };
       view.decision = decision;
     }
   }

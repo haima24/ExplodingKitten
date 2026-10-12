@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { formatName } from '@wb/protocol/shared';
+import { displayName } from '../../copy/names';
 import { t } from '../../copy';
 import { useShell } from '../../components/common/AppShell';
 import { Button } from '../../components/common/Button';
@@ -107,7 +107,7 @@ export function GameMenu({ showLog }: { showLog: boolean }): JSX.Element {
                   setConfirm({ kind: 'remove', id: m.playerId });
                 }}
               >
-                {formatName(m.name)}
+                {displayName(m.name)}
               </Button>
             ))}
             <Button block onClick={() => setPicking(false)}>

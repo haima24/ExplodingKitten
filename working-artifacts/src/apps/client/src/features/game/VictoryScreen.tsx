@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { formatName, type MemberView } from '@wb/protocol/shared';
+import type { MemberView } from '@wb/protocol/shared';
+import { displayName } from '../../copy/names';
 import { t } from '../../copy';
 import { Avatar } from '../../components/common/Avatar';
 import { Button } from '../../components/common/Button';
@@ -44,7 +45,7 @@ function Celebration(): JSX.Element {
 }
 
 function names(members: MemberView[]): string {
-  return members.map((m) => formatName(m.name)).join(', ');
+  return members.map((m) => displayName(m.name)).join(', ');
 }
 
 export function VictoryScreen(): JSX.Element | null {
@@ -63,7 +64,7 @@ export function VictoryScreen(): JSX.Element | null {
     heading.current?.focus();
     if (winnerId && room) {
       const winner = room.members.find((m) => m.playerId === winnerId);
-      if (winner) announcer.announce(t('victory.title', { name: formatName(winner.name) }), { key: 'victory' });
+      if (winner) announcer.announce(t('victory.title', { name: displayName(winner.name) }), { key: 'victory' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -105,7 +106,7 @@ export function VictoryScreen(): JSX.Element | null {
       <Celebration />
       {winner ? <Avatar avatarId={winner.avatarId} size={112} /> : null}
       <h1 ref={heading} tabIndex={-1}>
-        {t('victory.title', { name: winner ? formatName(winner.name) : '…' })}
+        {t('victory.title', { name: winner ? displayName(winner.name) : '…' })}
       </h1>
       <ul className={g['recap']}>
         {groups.BOOM.length ? <li>{t('victory.naps', { names: names(groups.BOOM) })}</li> : null}
@@ -132,7 +133,7 @@ export function VictoryScreen(): JSX.Element | null {
           </>
         ) : (
           <>
-            <p role="status">{t('victory.waitingHost', { name: host ? formatName(host.name) : '…' })}</p>
+            <p role="status">{t('victory.waitingHost', { name: host ? displayName(host.name) : '…' })}</p>
             <Button block onClick={() => void leave()}>
               {t('lobby.leave')}
             </Button>

@@ -40,6 +40,8 @@ export interface State {
   room: { view: RoomView | null; ended: RoomEndedReason | 'NO_SEAT' | null };
   game: { view: PlayerView | null; log: LogEntry[]; playedThisTurn: boolean };
   absent: AbsentInfo | null;
+  /** Where the taker is pointing in the fan, relayed live (US-066). */
+  hover: { playerId: string; position: number | null } | null;
   ui: {
     selectedCardId: string | null;
     /** Second Cat card of a pair (US-065). */
@@ -51,6 +53,8 @@ export interface State {
     /** Secret See the Future result: memory only, cleared on close. */
     peek: Card[] | null;
     nap: boolean;
+    /** The card just taken, flipped face up for a moment (taker only). */
+    reveal: Card | null;
     /** Player whose chip is briefly highlighted (Attack). */
     flash: { playerId: string; id: number } | null;
     menuOpen: boolean;
@@ -69,6 +73,7 @@ export function initialState(): State {
     room: { view: null, ended: null },
     game: { view: null, log: [], playedThisTurn: false },
     absent: null,
+    hover: null,
     ui: {
       selectedCardId: null,
       pairCardId: null,
@@ -78,6 +83,7 @@ export function initialState(): State {
       toast: null,
       peek: null,
       nap: false,
+      reveal: null,
       flash: null,
       menuOpen: false,
       overlays: 0,
@@ -104,6 +110,8 @@ export type Action =
   | { type: 'ui/toast'; message: Message | null }
   | { type: 'ui/peek'; cards: Card[] | null }
   | { type: 'ui/nap'; on: boolean }
+  | { type: 'game/hover'; hover: { playerId: string; position: number | null } | null }
+  | { type: 'ui/reveal'; card: Card | null }
   | { type: 'ui/flash'; flash: { playerId: string; id: number } | null }
   | { type: 'ui/menu'; open: boolean }
   | { type: 'ui/overlay'; delta: 1 | -1 }
@@ -153,6 +161,7 @@ export function reducer(state: State, action: Action): State {
       return {
         ...state,
         game: { view: action.view, log: action.log, playedThisTurn: action.playedThisTurn },
+        hover: action.view.steal ? state.hover : null,
         // Pending actions are resolved by the next snapshot; a stale selection is dropped.
         ui: {
           ...state.ui,
@@ -188,6 +197,10 @@ export function reducer(state: State, action: Action): State {
       return { ...state, ui: { ...state.ui, peek: action.cards } };
     case 'ui/nap':
       return { ...state, ui: { ...state.ui, nap: action.on } };
+    case 'game/hover':
+      return { ...state, hover: action.hover };
+    case 'ui/reveal':
+      return { ...state, ui: { ...state.ui, reveal: action.card } };
     case 'ui/flash':
       return { ...state, ui: { ...state.ui, flash: action.flash } };
     case 'ui/menu':

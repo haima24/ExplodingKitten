@@ -10,6 +10,7 @@ import {
 } from '@wb/protocol/shared';
 import { t } from '../copy';
 import { speechTag } from '../copy/locale';
+import { displayName } from '../copy/names';
 import { processGameUpdate, type Processed } from '../features/game/events';
 import { announcer } from '../lib/announcer';
 import { clearSession, saveSession } from '../lib/session';
@@ -255,6 +256,11 @@ export class GameClient {
       case 'game.update':
         this.onGameUpdate(message.p as ServerPayloads['game.update']);
         break;
+      case 'game.hover': {
+        const hover = message.p as ServerPayloads['game.hover'];
+        this.dispatch({ type: 'game/hover', hover: hover.position === null ? null : hover });
+        break;
+      }
       case 'absent.update':
         this.dispatch({ type: 'absent/set', absent: (message.p as ServerPayloads['absent.update']).absent });
         break;
@@ -284,7 +290,7 @@ export class GameClient {
     // A rematch or "end game" sends everyone back to the lobby: drop the old game.
     if (p.room.phase === 'LOBBY' && state.game.view) this.dispatch({ type: 'game/clear' });
     for (const notice of p.notices ?? []) {
-      const text = t(`notice.${notice.kind}` as const, { name: notice.name });
+      const text = t(`notice.${notice.kind}` as const, { name: notice.who ? displayName(notice.who) : notice.name });
       announcer.announce(text);
       if (notice.kind === 'NEW_HOST' || notice.kind === 'LOST_CONNECTION') this.toast(text);
     }
@@ -312,6 +318,7 @@ export class GameClient {
     if (result.toast) this.toast(result.toast);
     if (result.peek) this.dispatch({ type: 'ui/peek', cards: result.peek });
     if (result.nap) this.dispatch({ type: 'ui/nap', on: true });
+    if (result.reveal) this.dispatch({ type: 'ui/reveal', card: result.reveal });
     for (const tip of result.tips) this.dispatch({ type: 'tips/trigger', tip });
     if (result.flash) this.dispatch({ type: 'ui/flash', flash: { playerId: result.flash, id: ++this.toastId } });
     this.feedback(result.sounds, result.voice);
@@ -432,6 +439,12 @@ export class GameClient {
 
   async skipAbsent(playerId: string, decision: 'WAIT' | 'SKIP'): Promise<void> {
     await this.request('game.skipAbsent', { playerId, decision });
+  }
+
+  /** Sends a message that needs no answer (the taker's finger position, US-066). */
+  fire<T extends ClientType>(type: T, payload: ClientPayload<T>): void {
+    const ws = this.ws;
+    if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ v: PROTOCOL_VERSION, t: type, p: payload }));
   }
 
   /** One in-flight game action at a time; the next snapshot is the truth. */

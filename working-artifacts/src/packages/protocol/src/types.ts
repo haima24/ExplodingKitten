@@ -44,7 +44,10 @@ export interface RoomView {
 
 export interface RoomNotice {
   kind: 'JOINED' | 'LEFT' | 'REMOVED' | 'NEW_HOST' | 'LOST_CONNECTION';
+  /** Plain English text, kept for old clients. */
   name: string;
+  /** The name's words, so each device can show it in its own language (US-067). */
+  who?: DisplayName;
 }
 
 export interface AbsentInfo {
@@ -62,6 +65,8 @@ export interface ServerPayloads {
   'room.update': { room: RoomView; notices?: RoomNotice[] };
   'game.update': { version: number; view: PlayerView; events: GameEvent[] };
   'absent.update': { absent: AbsentInfo | null; hostId: string };
+  /** Where the taker is pointing in the fan, or null; relayed to everyone else (US-066). */
+  'game.hover': { playerId: string; position: number | null };
   'room.ended': { reason: RoomEndedReason };
   pong: { t?: number; serverTime: number };
 }

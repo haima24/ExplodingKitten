@@ -3,7 +3,7 @@ import type { RoomView } from '@wb/protocol/shared';
 import { t, type CopyKey } from '../../copy';
 import { cardName } from '../../copy/cards';
 import type { LogEntry } from '../../net/state';
-import { nameOf } from './selectors';
+import { nameToken, resolveNameTokens } from '../../copy/names';
 import type { SoundName } from '../../lib/audio';
 import type { VoicePriority } from '../../lib/voice';
 
@@ -36,7 +36,8 @@ export type VoiceId =
   | 'V17'
   | 'V18'
   | 'V19'
-  | 'V20';
+  | 'V20'
+  | 'V21';
 
 export interface Processed {
   log: LogEntry[];
@@ -53,6 +54,8 @@ export interface Processed {
   voice: VoiceCue[];
   /** Player to highlight for a moment (Attack). */
   flash: string | null;
+  /** The card just taken from a fan, flipped face up (taker only). */
+  reveal: Card | null;
 }
 
 /** Each card has its own sound (US-063). Cat cards are not playable today. */
@@ -82,7 +85,12 @@ export function processGameUpdate(input: {
 }): Processed {
   const { events, view, room, firstUpdate } = input;
   const me = view.you.id;
-  const name = (id: unknown): string => nameOf(room, typeof id === 'string' ? id : undefined);
+  // Names stay as tokens inside stored log lines (so a language change re-words them);
+  // announcements and toasts are resolved to the viewer's language at the end.
+  const name = (id: unknown): string => {
+    const member = room?.members.find((m) => m.playerId === id);
+    return member ? nameToken(member.name) : t('common.someone');
+  };
 
   const entries: LogEntry[] = [];
   const out: Processed = {
@@ -96,6 +104,7 @@ export function processGameUpdate(input: {
     sounds: [],
     voice: [],
     flash: null,
+    reveal: null,
   };
   const log = (
     seq: number,
@@ -107,7 +116,7 @@ export function processGameUpdate(input: {
     entries.push(entry);
     const filled: Record<string, string | number> = { ...params };
     for (const [k, kind] of Object.entries(cards ?? {})) filled[k] = cardName(kind);
-    return t(key, filled);
+    return resolveNameTokens(t(key, filled));
   };
   const say = (id: VoiceId, priority: VoicePriority = 0): void => void out.voice.push({ id, priority });
 
@@ -227,6 +236,11 @@ export function processGameUpdate(input: {
         log(e.seq, 'log.favorAsked', { from: name(d['requesterId']), to: name(d['targetId']) });
         if (d['targetId'] === me) say('V10', 1);
         break;
+      case 'STEAL_STARTED': {
+        out.sounds.push('shuffle');
+        if (d['thiefId'] === me) say('V21', 1);
+        break;
+      }
       case 'CARD_STOLEN': {
         const text = log(e.seq, 'log.steal', { from: name(d['fromId']), to: name(d['toId']) });
         out.announcements.push(text);
@@ -269,6 +283,8 @@ export function processGameUpdate(input: {
         out.toast = t('favor.got', { card: cardName((d['card'] as Card).kind, (d['card'] as Card).variant) });
         break;
       case 'STOLEN_CARD':
+        out.reveal = { ...(d['card'] as Card) };
+        out.sounds.push('flip');
         out.toast = t('steal.got', { card: cardName((d['card'] as Card).kind, (d['card'] as Card).variant) });
         break;
     }
@@ -277,6 +293,8 @@ export function processGameUpdate(input: {
   // A player who holds a Nope is asked whether to play it.
   if (opensNopeWindow && view.decision?.kind === 'NOPE_WINDOW') say('V12');
 
+  out.announcements = out.announcements.map(resolveNameTokens);
+  if (out.toast) out.toast = resolveNameTokens(out.toast);
   out.log = [...entries.reverse(), ...input.previousLog].slice(0, MAX_LOG);
   return out;
 }

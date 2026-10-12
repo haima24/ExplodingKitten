@@ -107,6 +107,8 @@ function dispatch(s: GameState, a: Action, rng: Rng, ev: GameEvent[]): EngineErr
       return passNope(s, a.playerId, rng, ev);
     case 'PLAY_PAIR':
       return playPair(s, a.playerId, a.cardIds, a.targetId, rng, ev);
+    case 'PICK_STEAL':
+      return pickSteal(s, a.playerId, a.position, ev);
     case 'EXPIRE_NOPE':
       return expireNope(s, rng, ev);
     case 'TIMEOUT':
@@ -201,6 +203,32 @@ function playPair(
   return null;
 }
 
+/**
+ * The taker's choice after a pair stood. The server maps the slot to the real
+ * card; nothing is revealed before this moment, and only the taker sees the face.
+ */
+function pickSteal(s: GameState, playerId: string, position: number, ev: GameEvent[]): EngineError | null {
+  const pending = s.pending;
+  if (!pending || pending.kind !== 'STEAL_PICK') return engineError('WRONG_PHASE');
+  if (pending.playerId !== playerId) return engineError('NOT_YOUR_TURN');
+  if (!Number.isInteger(position) || position < 0 || position >= pending.order.length) {
+    return engineError('INVALID_POSITION');
+  }
+  const target = getPlayer(s, pending.targetId);
+  const thief = getPlayer(s, playerId);
+  const cardId = pending.order[position];
+  s.pending = null;
+  s.phase = 'turn';
+  const at = target.hand.findIndex((c) => c.id === cardId);
+  if (at < 0 || target.status !== 'active') return null;
+  const [card] = target.hand.splice(at, 1);
+  if (!card) return null;
+  thief.hand.push(card);
+  emit(s, ev, 'CARD_STOLEN', { fromId: target.id, toId: playerId });
+  emit(s, ev, 'STOLEN_CARD', { card }, playerId);
+  return null;
+}
+
 function playNope(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): EngineError | null {
   const pending = s.pending;
   if (!pending || pending.kind !== 'NOPE_WINDOW') return engineError('WRONG_PHASE');
@@ -254,6 +282,8 @@ function timeout(s: GameState, playerId: string, rng: Rng, ev: GameEvent[]): Eng
       return useTreat(s, playerId, ev);
     case 'REINSERT':
       return reinsertBoom(s, playerId, 'RANDOM', rng, ev);
+    case 'STEAL_PICK':
+      return pickSteal(s, playerId, rng.nextInt(pending.order.length), ev);
     case 'FAVOR_PICK': {
       const hand = getPlayer(s, playerId).hand;
       const pick = hand[rng.nextInt(hand.length)];

@@ -198,7 +198,7 @@ function onJoin(ctx: Ctx, p: ClientPayload<'room.join'>): void {
     { playerId: member.playerId, token: token ?? '', isHost: false, room: hub.roomView(room) },
     ctx.id,
   );
-  hub.broadcastRoom(room, [{ kind: 'JOINED', name: formatName(member.name) }], conn);
+  hub.broadcastRoom(room, [{ kind: 'JOINED', name: formatName(member.name), who: member.name }], conn);
 }
 
 function onRejoin(ctx: Ctx, p: ClientPayload<'room.rejoin'>): void {
@@ -251,6 +251,7 @@ function onRejoin(ctx: Ctx, p: ClientPayload<'room.rejoin'>): void {
 /** Removes a member by their own choice (`LEAVE`) or by the host (`KICK`). */
 function removeMember(hub: Hub, room: Room, member: Member, how: 'LEAVE' | 'KICK'): void {
   const name = formatName(member.name);
+  const who = member.name;
   if (room.hostId === member.playerId) hub.transferHost(room, true);
 
   const conn = member.conn;
@@ -272,7 +273,7 @@ function removeMember(hub: Hub, room: Room, member: Member, how: 'LEAVE' | 'KICK
     applyEngine(hub, room, { type: how === 'KICK' ? 'REMOVE' : 'LEAVE', playerId: member.playerId });
   }
   if (room.phase === 'CLOSED') return;
-  hub.broadcastRoom(room, [{ kind: how === 'KICK' ? 'REMOVED' : 'LEFT', name }]);
+  hub.broadcastRoom(room, [{ kind: how === 'KICK' ? 'REMOVED' : 'LEFT', name, who }]);
   hub.recomputeAbsent(room);
 }
 
@@ -416,6 +417,9 @@ function onGameAction(ctx: Ctx, p: ClientPayload<'game.action'>): void {
     case 'PLAY_PAIR':
       action = { type: 'PLAY_PAIR', playerId, cardIds: a.cardIds, targetId: a.targetId };
       break;
+    case 'PICK_STEAL':
+      action = { type: 'PICK_STEAL', playerId, position: a.position };
+      break;
     case 'NOPE':
       action = { type: 'NOPE', playerId };
       break;
@@ -456,6 +460,18 @@ function onSkipAbsent(ctx: Ctx, p: ClientPayload<'game.skipAbsent'>): void {
   applyEngine(hub, room, { type: 'SKIP_ABSENT', playerId: absent.playerId });
 }
 
+/** Relays the taker's finger position to everyone else; ignored from anyone who is not the taker. */
+function onHover(ctx: Ctx, p: ClientPayload<'game.hover'>): void {
+  const b = bound(ctx);
+  if (!b) return;
+  const pending = b.room.game?.pending;
+  if (!pending || pending.kind !== 'STEAL_PICK' || pending.playerId !== b.member.playerId) return;
+  if (p.position !== null && p.position >= pending.order.length) return;
+  for (const m of b.room.members) {
+    if (m.conn && m !== b.member) ctx.hub.send(m.conn, 'game.hover', { playerId: b.member.playerId, position: p.position });
+  }
+}
+
 function onPing(ctx: Ctx, p: ClientPayload<'ping'>): void {
   ctx.hub.send(
     ctx.conn,
@@ -482,5 +498,6 @@ export const handlers: Handlers = {
   'game.action': onGameAction,
   'game.end': onEndGame,
   'game.skipAbsent': onSkipAbsent,
+  'game.hover': onHover,
   ping: onPing,
 };

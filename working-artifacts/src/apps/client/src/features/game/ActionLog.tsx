@@ -1,5 +1,6 @@
 import { t } from '../../copy';
 import { cardName } from '../../copy/cards';
+import { resolveNameTokens } from '../../copy/names';
 import { useStore } from '../../net/context';
 import type { LogEntry } from '../../net/state';
 import g from './game.module.css';
@@ -8,7 +9,7 @@ import g from './game.module.css';
 export function logText(entry: LogEntry): string {
   const params: Record<string, string | number> = { ...entry.params };
   for (const [name, kind] of Object.entries(entry.cards ?? {})) params[name] = cardName(kind);
-  return t(entry.key, params);
+  return resolveNameTokens(t(entry.key, params));
 }
 
 /**

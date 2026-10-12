@@ -16,10 +16,10 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 
 | Q | Question | Implemented |
 | --- | --- | --- |
-| Q2 | Pre-recorded or text-to-speech | **Pre-rendered files**, as the story recommends. The browser's speech engine gave a wrong or missing Vietnamese voice on Chrome and Firefox (Windows), so every line is a small MP3 (`public/voice/<lang>/<id>.mp3`, about 12 KB each, 40 files) made by `apps/client/scripts/generate-voice.py` from the catalog with Microsoft neural voices (Jenny for English, HoaiMy for Vietnamese). They sound the same in every browser. The browser's speech engine is only a fallback if a file cannot be played. Licence of the generated audio must be checked before a commercial release; recordings can replace the files (same names) |
+| Q2 | Pre-recorded or text-to-speech | **Pre-rendered files**, as the story recommends. The browser's speech engine gave a wrong or missing Vietnamese voice on Chrome and Firefox (Windows), so every line is a small MP3 (`public/voice/<lang>/<id>.mp3`, about 12 KB each, 46 files) made by `apps/client/scripts/generate-voice.py` from the catalog with Microsoft neural voices (Jenny for English, HoaiMy for Vietnamese). They sound the same in every browser. The browser's speech engine is only a fallback if a file cannot be played. Licence of the generated audio must be checked before a commercial release; recordings can replace the files (same names) |
 | Q3 | "Vả" or "Tấn Công" | Card name "Vả" |
 | Q4 | V01 wording | "Đến lượt bạn rút." (team's wording) |
-| Q5 | Player names | Shown as created, never translated |
+| Q5 | Player names | ~~Shown as created, never translated~~ **Reversed by [US-067](US-067-vietnamese-player-names.md):** the curated name words have Vietnamese forms and each viewer sees names in their own language |
 | Q6 | English voice | Yes, same 18 lines |
 | Q7 | Screen readers | Voice-over stays off by default; one-step off switch |
 | Q8 | Stale line | 3 s |
@@ -91,6 +91,8 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 | V14 | `TREAT_USED` | 0 | all |
 | V15 / V16 | `PLAYER_OUT` (me / someone else) | 2 / 0 | all |
 | V17 / V18 | `GAME_FINISHED` (I won / someone else) | 2 | all |
+| V19 / V20 | `CARD_STOLEN` (I took / was taken from) | 0 / 1 | the taker / the target (US-065) |
+| V21 | `STEAL_STARTED` with me as the taker | 1 | the taker (US-066) |
 
 - Because these use the same events as the log, a voice line can never reveal more than the log or the player's private events already show. Attack, Skip and the Nope result use `EFFECT_APPLIED` / `NOPE_RESOLVED`, so a stopped card is not voiced as if it happened.
 - Playback (`enqueueVoice`): one line at a time, highest priority first, lines older than 3 s are dropped, a priority-2 line cuts off a low-priority line, nothing speaks while the tab is hidden, and nothing is replayed after a reconnect (snapshots carry no events). A sound effect plays first (the voice starts after it, up to 1.5 s).
@@ -110,7 +112,7 @@ Let a device play the whole game in Vietnamese or English, and optionally hear s
 | Vietnamese browser, saved English choice | English (saved choice wins) |
 | No speech engine or no Vietnamese voice | Voice-over works as far as the browser allows; Settings explains; text unchanged |
 | Reload | Language and voice setting restored; no spoken backlog |
-| Player names | Not translated; word lists stay English (Q5) |
+| Player names | Shown in each viewer's language (US-067, reverses Q5) |
 | Privacy page | Vietnamese draft with a legal-review notice |
 
 ## 5. Verification

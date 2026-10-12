@@ -1,11 +1,19 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
-import { ADJECTIVES, AVATARS, NOUNS, formatName, type DisplayName } from '@wb/protocol/shared';
-import { t } from '../../copy';
+import { ADJECTIVES, AVATARS, NOUNS, type DisplayName } from '@wb/protocol/shared';
+import { getLocale, t } from '../../copy';
+import { displayName, wordLabel, type NameKind } from '../../copy/names';
 import { Avatar } from '../../components/common/Avatar';
 import { Button } from '../../components/common/Button';
 import { Choice } from '../../components/common/Choice';
 import f from '../../components/common/forms.module.css';
 import r from './rooms.module.css';
+
+/** Words in the viewer's language; Vietnamese is sorted with Vietnamese rules. */
+function wordsFor(kind: NameKind, list: readonly string[]): string[] {
+  if (getLocale() !== 'vi') return [...list];
+  const collator = new Intl.Collator('vi');
+  return [...list].sort((a, b) => collator.compare(wordLabel(kind, a), wordLabel(kind, b)));
+}
 
 const pick = <T,>(list: readonly T[]): T => list[Math.floor(Math.random() * list.length)] as T;
 
@@ -40,6 +48,32 @@ export function IdentityStep({
     }
   }, [taken, avatarId]);
 
+  const vietnamese = getLocale() === 'vi';
+  const adjectiveList = (
+    <fieldset className={f['fieldset']}>
+      <legend className={f['label']}>{t('identity.adjective')}</legend>
+      <div className={`${f['grid']} ${r['scroller']}`}>
+        {wordsFor('adjective', ADJECTIVES).map((word) => (
+          <Choice key={word} name="adjective" value={word} checked={adjective === word} onChange={setAdjective}>
+            {wordLabel('adjective', word)}
+          </Choice>
+        ))}
+      </div>
+    </fieldset>
+  );
+  const nounList = (
+    <fieldset className={f['fieldset']}>
+      <legend className={f['label']}>{t('identity.noun')}</legend>
+      <div className={`${f['grid']} ${r['scroller']}`}>
+        {wordsFor('noun', NOUNS).map((word) => (
+          <Choice key={word} name="noun" value={word} checked={noun === word} onChange={setNoun}>
+            {wordLabel('noun', word)}
+          </Choice>
+        ))}
+      </div>
+    </fieldset>
+  );
+
   const submit = (event: FormEvent): void => {
     event.preventDefault();
     onSubmit({ adjective, noun }, avatarId);
@@ -51,7 +85,7 @@ export function IdentityStep({
         <legend className={f['legend']}>{t('identity.name')}</legend>
         <p className={f['help']}>{t('identity.noRealNames')}</p>
         <p className={f['preview']} role="status">
-          {t('identity.preview', { name: formatName({ adjective, noun }) })}
+          {t('identity.preview', { name: displayName({ adjective, noun }) })}
         </p>
         <Button
           compact
@@ -63,32 +97,8 @@ export function IdentityStep({
           🎲 {t('identity.shuffle')}
         </Button>
 
-        <fieldset className={f['fieldset']}>
-          <legend className={f['label']}>{t('identity.adjective')}</legend>
-          <div className={`${f['grid']} ${r['scroller']}`}>
-            {ADJECTIVES.map((word) => (
-              <Choice
-                key={word}
-                name="adjective"
-                value={word}
-                checked={adjective === word}
-                onChange={setAdjective}
-              >
-                {word}
-              </Choice>
-            ))}
-          </div>
-        </fieldset>
-        <fieldset className={f['fieldset']}>
-          <legend className={f['label']}>{t('identity.noun')}</legend>
-          <div className={`${f['grid']} ${r['scroller']}`}>
-            {NOUNS.map((word) => (
-              <Choice key={word} name="noun" value={word} checked={noun === word} onChange={setNoun}>
-                {word}
-              </Choice>
-            ))}
-          </div>
-        </fieldset>
+        {vietnamese ? nounList : adjectiveList}
+        {vietnamese ? adjectiveList : nounList}
       </fieldset>
 
       <fieldset className={f['fieldset']}>
